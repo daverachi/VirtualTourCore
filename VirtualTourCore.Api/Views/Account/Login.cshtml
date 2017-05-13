@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+
+<form method="post" action="/Account/Login">
+    <input type="hidden" name="ReturnURL" value="@System.Web.HttpContext.Current.Request["ReturnURL"]" />
+    <input type="text" name="Username" value="MasterAdmin" />
+    <input type="Password" name="Password" value="V8c38Q7wr5p%=5=5CfY+r+V8GZQu4Dqv" />
+    <input type="submit" name="Login" value="Login" />
+</form>

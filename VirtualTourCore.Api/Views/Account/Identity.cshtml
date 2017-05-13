@@ -1,0 +1,11 @@
+﻿@model List<System.Security.Claims.Claim>
+@{
+    ViewBag.Title = "Identity";
+}
+
+<h2>Identity</h2>
+<h4>@ViewBag.Username</h4>
+@foreach (var claim in Model)
+{
+    <h4>@claim.Type : @claim.Value</h4>
+}

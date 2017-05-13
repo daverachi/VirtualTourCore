@@ -1,0 +1,23 @@
+﻿CREATE TABLE [dbo].[Location]
+(
+	[Id] INT IDENTITY (1,1) NOT NULL,
+	ClientId INT NOT NULL,
+	Name NVARCHAR(50) NOT NULL,
+	Description VARCHAR (MAX) NULL,
+    DescriptionHtml VARCHAR (MAX) NULL,
+    DescriptionJson VARCHAR (MAX) NULL,
+    StreetAddress	VARCHAR (200) NULL,
+    City	VARCHAR (100) NULL,
+    State	VARCHAR(5) NULL,
+    Zipcode	VARCHAR (20) NULL,
+	CreateUserID    INT NOT NULL,
+    CreateDate      DATETIME      NOT NULL,
+    UpdateUserID    INT			NULL,
+    UpdateDate      DATETIME      NULL, 
+	CONSTRAINT PK_Location PRIMARY KEY CLUSTERED (Id ASC),
+    --CONSTRAINT FK_Location_ItemStatus FOREIGN KEY (ItemStatusID) REFERENCES dbo.ItemStatus (ItemStatusID),
+    --CONSTRAINT FK_Location_AssetImg FOREIGN KEY ([AssetLogoID]) REFERENCES dbo.AssetStore (AssetStoreID),
+	CONSTRAINT FK_Location_Client FOREIGN KEY (ClientId) REFERENCES dbo.Client (Id),
+	CONSTRAINT FK_Location_CreateUser FOREIGN KEY (CreateUserId) REFERENCES dbo.SecurityUser (Id),
+    CONSTRAINT FK_Location_UpdateUser FOREIGN KEY (UpdateUserId) REFERENCES dbo.SecurityUser (Id),
+)

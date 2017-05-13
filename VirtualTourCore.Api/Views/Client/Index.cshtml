@@ -1,0 +1,45 @@
+﻿@model IEnumerable<VirtualTourCore.Api.Models.ClientVO>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @if(User.IsInRole("Admin")){
+        @Html.ActionLink("Create New", "Create")
+    }
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Client.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Client.Link)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Client.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Client.Link)
+            </td>
+            <td>
+                @if (item.IsModifiable)
+                {
+                    @Html.ActionLink("Edit ", "Edit", new { id = item.Client.Id })
+                    @Html.ActionLink(" Manage Locations ", "ClientLocations", "Location", new { id = item.Client.Id }, null)
+                    @Html.ActionLink(" Delete", "Delete", new { id = item.Client.Id })
+                }
+            </td>
+
+        </tr>
+    }
+</table>
