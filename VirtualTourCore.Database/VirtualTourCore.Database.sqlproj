@@ -69,6 +69,8 @@
     <Build Include="Tables\SecurityUserClients.sql" />
     <Build Include="Tables\SystemAdminClientAccess.sql" />
     <Build Include="Tables\Location.sql" />
+    <Build Include="Tables\Area.sql" />
+    <Build Include="Tables\Tour.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="VirtualTourCore.Database.refactorlog" />

@@ -2,7 +2,7 @@
 
 namespace VirtualTourCore.Common.DataAccess
 {
-    public abstract class EntityBase
+    public abstract class EntityBase : VTCoreEntity
     {
         public int? CreateUserId { get; set; }
         public DateTime? CreateDate { get; set; }

@@ -1,16 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using VirtualTourCore.Common.DataAccess;
 
 namespace VirtualTourCore.Core.Models
 {
-    public partial class SecurityUser
+    public partial class SecurityUser : VTCoreEntity
     {
         public SecurityUser()
         {
             Clients = new List<SecurityUserClient>();
         }
 
-        public int Id { get; set; }
         public int RegistrationCodeId { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }

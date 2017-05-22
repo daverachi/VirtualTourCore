@@ -105,8 +105,10 @@
     <Compile Include="DataAccess\ReadOnlyBaseRepository.cs" />
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\UnitOfWorkBase.cs" />
+    <Compile Include="DataAccess\VTCoreEntity.cs" />
     <Compile Include="Exceptions\Asserter.cs" />
     <Compile Include="Extensions\AutoMapperExtensions.cs" />
+    <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Helper\AssemblyHelper.cs" />
     <Compile Include="Helper\CommonConfigurationHelper.cs" />

@@ -17,7 +17,7 @@ namespace VirtualTourCore.Core.Repositories
         private INlogger _log;
 
         public RegistrationCodeRepository(IUnitOfWork UnitOfWork, INlogger log)
-            : base(UnitOfWork)
+            : base(UnitOfWork, log)
         {
             _UnitOfWork = UnitOfWork;
             _log = log;

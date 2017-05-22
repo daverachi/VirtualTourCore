@@ -13,13 +13,16 @@ namespace VirtualTourCore.Core.Services
     {
         private IClientRepository _clientRepository;
         private IRegistrationCodeRepository _registrationCodeRepository;
+        private ILocationRepository _locationRepository;
         public AdminService(
             IClientRepository clientRepository,
-            IRegistrationCodeRepository registrationCodeRepository
+            IRegistrationCodeRepository registrationCodeRepository,
+            ILocationRepository locationRepository
             )
         {
             _clientRepository = clientRepository;
             _registrationCodeRepository = registrationCodeRepository;
+            _locationRepository = locationRepository;
         }
         public int? CreateClient(Client client)
         {
@@ -51,7 +54,36 @@ namespace VirtualTourCore.Core.Services
             existingClient.MarketingEmail = client.MarketingEmail;
             existingClient.City = client.City;
             existingClient.State = client.State;
-            return _clientRepository.Update(existingClient);
+            return _clientRepository.UpdateEntity(existingClient);
+        }
+        public int? CreateLocation(Location location)
+        {
+            var locationId = _locationRepository.Create(location);
+            // need to have identity service add claim for location to users cookie.
+            return locationId;
+        }
+        public int? UpdateLocation(Location location)
+        {
+            var existingLocation = _locationRepository.GetById(location.Id);
+            existingLocation.UpdateDate = DateTime.Now;
+            existingLocation.Name = location.Name;
+            existingLocation.Description = location.Description;
+            existingLocation.DescriptionHtml = location.DescriptionHtml;
+            existingLocation.DescriptionJson = location.DescriptionJson;
+            existingLocation.StreetAddress = location.StreetAddress;
+            existingLocation.Zipcode = location.Zipcode;
+            existingLocation.City = location.City;
+            existingLocation.State = location.State;
+            return _locationRepository.UpdateEntity(existingLocation);
+        }
+
+        public bool DeleteClient(Client client)
+        {
+            return _clientRepository.DeleteEntity(client);
+        }
+        public bool DeleteLocation(Location location)
+        {
+            return _locationRepository.DeleteEntity(location);
         }
 
         internal static void SendRegistrationEmail(RegistrationCode registrationCode)

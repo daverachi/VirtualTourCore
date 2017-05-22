@@ -27,3 +27,4 @@ F:\Projects\VirtualTourCore\VirtualTourCore\VirtualTourCore.Common\bin\Debug\Mic
 F:\Projects\VirtualTourCore\VirtualTourCore\VirtualTourCore.Common\bin\Debug\NLog.xml
 F:\Projects\VirtualTourCore\VirtualTourCore\VirtualTourCore.Common\obj\Debug\VirtualTourCore.Common.dll
 F:\Projects\VirtualTourCore\VirtualTourCore\VirtualTourCore.Common\obj\Debug\VirtualTourCore.Common.pdb
+F:\Projects\VirtualTourCore\VirtualTourCore\VirtualTourCore.Common\obj\Debug\VirtualTourCore.Common.csprojResolveAssemblyReference.cache

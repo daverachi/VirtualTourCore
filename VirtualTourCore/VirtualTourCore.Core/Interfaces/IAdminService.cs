@@ -11,5 +11,9 @@ namespace VirtualTourCore.Core.Interfaces
     {
         int? CreateClient(Client client);
         int? UpdateClient(Client client);
+        int? CreateLocation(Location location);
+        int? UpdateLocation(Location location);
+        bool DeleteClient(Client client);
+        bool DeleteLocation(Location location);
     }
 }

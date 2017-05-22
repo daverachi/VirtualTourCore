@@ -9,7 +9,6 @@ namespace VirtualTourCore.Core.Models
 {
     public class Location : EntityBase
     {
-        public int Id { get; set; }
         public int ClientId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

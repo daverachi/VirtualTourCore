@@ -8,9 +8,14 @@ namespace VirtualTourCore.Core.Services
     public class LookupService : ILookupService
     {
         private IClientRepository _clientRepository;
-        public LookupService(IClientRepository clientRepository)
+        private ILocationRepository _locationRepository;
+        public LookupService(
+             IClientRepository clientRepository
+            ,ILocationRepository locationRepository
+             )
         {
             _clientRepository = clientRepository;
+            _locationRepository = locationRepository;
         }
         public Client GetClientByGuid(Guid guid)
         {
@@ -27,6 +32,23 @@ namespace VirtualTourCore.Core.Services
         public IEnumerable<Client> GetClients()
         {
             return _clientRepository.Get();
+        }
+        public IEnumerable<Location> GetLocationsByClientId(int id)
+        {
+            return _locationRepository.GetByClientId(id);
+        }
+        public Location GetLocationByIdAndClientId(IEnumerable<string> clientIds, int id)
+        {
+            List<int> _validClientIds = new List<int>();
+            foreach (var clientId in clientIds)
+            {
+                int validClientId = 0;
+                if (int.TryParse(clientId, out validClientId))
+                {
+                    _validClientIds.Add(validClientId);
+                }
+            }
+            return _locationRepository.GetByIdFilteredByClientIds(id, _validClientIds);
         }
     }
 }

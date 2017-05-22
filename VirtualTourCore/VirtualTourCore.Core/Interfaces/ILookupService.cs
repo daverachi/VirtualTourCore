@@ -13,5 +13,7 @@ namespace VirtualTourCore.Core.Interfaces
         Client GetClientByGuid(Guid guid);
         Client GetClientById(int id);
         IEnumerable<Client> GetClients();
+        IEnumerable<Location> GetLocationsByClientId(int clientId);
+        Location GetLocationByIdAndClientId(IEnumerable<string> clientIds, int id);
     }
 }

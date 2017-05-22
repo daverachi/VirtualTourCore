@@ -101,4 +101,5 @@ F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\Microsoft.Practices.Unity.Re
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\Microsoft.Practices.Unity.Mvc.dll
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\WebActivatorEx.dll
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\Microsoft.Practices.Unity.Mvc.xml
-F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\AutoMapper.Net4.dll
+F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\VirtualTourCore.Common.dll.config
+F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\VirtualTourCore.Core.dll.config

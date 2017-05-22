@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using VirtualTourCore.Common.Logging;
 
 namespace VirtualTourCore.Common.DataAccess
 {
     public class LookupRepositoryBase<TLookupEntity, TKnownValuesEnum> : BaseRepository<TLookupEntity>, ILookupRepositoryBase<TLookupEntity, TKnownValuesEnum>
        where TLookupEntity : LookupBase
     {
-        public LookupRepositoryBase(IUnitOfWork UnitOfWork)
-            : base(UnitOfWork)
+        public LookupRepositoryBase(IUnitOfWork UnitOfWork, INlogger log)
+            : base(UnitOfWork, log)
         {
         }
 
@@ -34,12 +35,12 @@ namespace VirtualTourCore.Common.DataAccess
         }
     }
     public class LookupRepositoryBase<TLookupEntity> : BaseRepository<TLookupEntity>, ILookupRepositoryBase<TLookupEntity>
-            where TLookupEntity : class
+            where TLookupEntity : EntityBase
     {
         protected DbSet<TLookupEntity> _set;
 
-        public LookupRepositoryBase(IUnitOfWork uow)
-            : base(uow)
+        public LookupRepositoryBase(IUnitOfWork uow, INlogger log)
+            : base(uow, log)
         {
             _set = DbSet;
         }

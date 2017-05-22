@@ -15,7 +15,7 @@ namespace VirtualTourCore.Core.Repositories
         private INlogger _log;
 
         public SecurityUserClientRepository(IUnitOfWork UnitOfWork, INlogger log)
-            : base(UnitOfWork)
+            : base(UnitOfWork, log)
         {
             _UnitOfWork = UnitOfWork;
             _log = log;

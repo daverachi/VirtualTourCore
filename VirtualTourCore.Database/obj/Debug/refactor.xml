@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0">
+  <Operation Name="Rename Refactor" Key="101f8e75-e4c0-4046-a130-5a5884c66ae9" ChangeDateTime="04/21/2017 18:31:48" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+    <Property Name="ElementName" Value="[dbo].[RegistrationCode].[Usages]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[RegistrationCode]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Consumed" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2e3696eb-121a-418c-9855-9039e4b18b00" ChangeDateTime="04/21/2017 18:32:23" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+    <Property Name="ElementName" Value="[dbo].[RegistrationCode].[Consumed]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[RegistrationCode]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Usable" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b49d0139-a3c0-4f64-87a1-9ebd7d2f14f6" ChangeDateTime="04/21/2017 18:33:27" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+    <Property Name="ElementName" Value="[dbo].[SecurityUser].[RegistrationCode]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[SecurityUser]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="RegistrationCodeID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6eac14bc-d44a-4c12-81db-105cbc49ee96" ChangeDateTime="04/21/2017 18:34:39" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+    <Property Name="ElementName" Value="[dbo].[SecurityUser].[RegistrationCodeID]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[SecurityUser]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="RegistrationCodeId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d61d70c7-fc71-4aa6-a96b-815c034d1085" ChangeDateTime="05/02/2017 00:56:13" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+    <Property Name="ElementName" Value="[dbo].[Client].[ClientCode]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Client]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ClientGuid" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="05ba1023-1366-4c42-b734-8463f84e1da9" ChangeDateTime="05/04/2017 20:56:05" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+    <Property Name="ElementName" Value="[dbo].[SecurityUserClients].[ClientGuid]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[SecurityUserClients]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ClientId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0475cfd3-e6e4-4ec3-ad9d-425c41061795" ChangeDateTime="05/04/2017 20:58:14" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+    <Property Name="ElementName" Value="[dbo].[RegistrationCode].[Usable]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[RegistrationCode]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="AvailableUsages" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="381f1769-c8ae-4cab-a1c4-ce2cd1c5d073" ChangeDateTime="05/04/2017 20:58:34" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+    <Property Name="ElementName" Value="[dbo].[RegistrationCode].[GUID]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[RegistrationCode]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Guid" />
+  </Operation>
+</Operations>
