@@ -68,13 +68,13 @@ namespace VirtualTourCore.Api.Controllers
             {
                 area.CreateUserId = IdentityService.GetUserIdFromClaim(User);
                 _adminService.CreateArea(area);
-
             }
             else
             {
                 area.UpdateUserId = IdentityService.GetUserIdFromClaim(User);
                 _adminService.UpdateArea(area);
             }
+            // todo : do something about success or failure
             return RedirectToAction("ClientAreas", new { id = area.ClientId });
         }
 

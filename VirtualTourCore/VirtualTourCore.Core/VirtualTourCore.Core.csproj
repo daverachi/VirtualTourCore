@@ -104,10 +104,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IAdminService.cs" />
+    <Compile Include="Interfaces\IAreaRepository.cs" />
     <Compile Include="Interfaces\IClientRepository.cs" />
     <Compile Include="Interfaces\ILocationRepository.cs" />
     <Compile Include="Interfaces\ILookupService.cs" />
     <Compile Include="Interfaces\ISecurityUserClientRepository.cs" />
+    <Compile Include="Interfaces\ITourRepository.cs" />
     <Compile Include="Interfaces\IVirtualTourCoreContext.cs" />
     <Compile Include="Interfaces\ISecurityService.cs" />
     <Compile Include="Interfaces\IRegistrationCodeRepository.cs" />
@@ -129,11 +131,13 @@
     <Compile Include="Models\UnmappedPartials\SecurityUser.cs" />
     <Compile Include="Models\VirtualTourCoreContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\AreaRepository.cs" />
     <Compile Include="Repositories\ClientRepository.cs" />
     <Compile Include="Repositories\LocationRepository.cs" />
     <Compile Include="Repositories\RegistrationCodeRepository.cs" />
     <Compile Include="Repositories\SecurityUserClientRepository.cs" />
     <Compile Include="Repositories\SecurityUserRepository.cs" />
+    <Compile Include="Repositories\TourRepository.cs" />
     <Compile Include="Repositories\UnitOfWork.cs" />
     <Compile Include="Security\Auth\AuthorizationManager.cs" />
     <Compile Include="Security\Principal\SecurityUserPrincipal.cs" />

@@ -9,13 +9,18 @@ namespace VirtualTourCore.Core.Services
     {
         private IClientRepository _clientRepository;
         private ILocationRepository _locationRepository;
+        private IAreaRepository _areaRepository;
+        private ITourRepository _tourRepository;
         public LookupService(
-             IClientRepository clientRepository
-            ,ILocationRepository locationRepository
-             )
+            IClientRepository clientRepository,
+            ILocationRepository locationRepository,
+            IAreaRepository areaRepository,
+            ITourRepository tourRepository)
         {
             _clientRepository = clientRepository;
             _locationRepository = locationRepository;
+            _areaRepository = areaRepository;
+            _tourRepository = tourRepository;
         }
         public Client GetClientByGuid(Guid guid)
         {
@@ -39,6 +44,29 @@ namespace VirtualTourCore.Core.Services
         }
         public Location GetLocationByIdAndClientId(IEnumerable<string> clientIds, int id)
         {
+
+            return _locationRepository.GetByIdFilteredByClientIds(id, GetValidClientIds(clientIds));
+        }
+
+        public IEnumerable<Area> GetAreasByClientId(int id)
+        {
+            return _areaRepository.GetByClientId(id);
+        }
+
+        public Area GetAreaByIdAndClientId(IEnumerable<string> clientIds, int id)
+        {
+            return _areaRepository.GetByIdAndByClientId(id, GetValidClientIds(clientIds));
+        }
+
+
+
+
+
+
+
+        // this should probably just be a helper method somewhere for parsing.
+        private IEnumerable<int> GetValidClientIds(IEnumerable<string> clientIds)
+        {
             List<int> _validClientIds = new List<int>();
             foreach (var clientId in clientIds)
             {
@@ -48,7 +76,7 @@ namespace VirtualTourCore.Core.Services
                     _validClientIds.Add(validClientId);
                 }
             }
-            return _locationRepository.GetByIdFilteredByClientIds(id, _validClientIds);
+            return _validClientIds;
         }
     }
 }

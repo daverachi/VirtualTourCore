@@ -15,5 +15,8 @@ namespace VirtualTourCore.Core.Interfaces
         int? UpdateLocation(Location location);
         bool DeleteClient(Client client);
         bool DeleteLocation(Location location);
+        void CreateArea(Area area);
+        void UpdateArea(Area area);
+        void DeleteArea(Area area);
     }
 }

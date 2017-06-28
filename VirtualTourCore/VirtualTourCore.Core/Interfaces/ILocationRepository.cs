@@ -11,6 +11,6 @@ namespace VirtualTourCore.Core.Interfaces
     public interface ILocationRepository : IBaseRepository<Location>
     {
         IEnumerable<Location> GetByClientId(int clientId);
-        Location GetByIdFilteredByClientIds(int id, List<int> _validClientIds);
+        Location GetByIdFilteredByClientIds(int id, IEnumerable<int> _validClientIds);
     }
 }

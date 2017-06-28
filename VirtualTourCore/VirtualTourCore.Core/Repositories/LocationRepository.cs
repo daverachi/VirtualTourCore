@@ -35,7 +35,7 @@ namespace VirtualTourCore.Core.Repositories
             return locations;
         }
 
-        public Location GetByIdFilteredByClientIds(int id, List<int> _validClientIds)
+        public Location GetByIdFilteredByClientIds(int id, IEnumerable<int> _validClientIds)
         {
             var location = GetQueryable()
                .FirstOrDefault(x => _validClientIds.Contains(x.ClientId) && x.Id == id);

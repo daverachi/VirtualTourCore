@@ -8,7 +8,7 @@ namespace VirtualTourCore.Common.Extensions
 {
     public static class ListExtensions
     {
-        public static string ConvertIntListToCSV(this List<int> items)
+        public static string ConvertIntListToCSV(this IEnumerable<int> items)
         {
             return string.Join(", ", items.Select(x => x.ToString()).ToArray());
         }

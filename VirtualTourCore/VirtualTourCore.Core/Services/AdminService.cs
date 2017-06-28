@@ -14,15 +14,22 @@ namespace VirtualTourCore.Core.Services
         private IClientRepository _clientRepository;
         private IRegistrationCodeRepository _registrationCodeRepository;
         private ILocationRepository _locationRepository;
+        private IAreaRepository _areaRepository;
+        private ITourRepository _tourRepository;
+
         public AdminService(
             IClientRepository clientRepository,
             IRegistrationCodeRepository registrationCodeRepository,
-            ILocationRepository locationRepository
+            ILocationRepository locationRepository,
+            IAreaRepository areaRepository,
+            ITourRepository tourRepository
             )
         {
             _clientRepository = clientRepository;
             _registrationCodeRepository = registrationCodeRepository;
             _locationRepository = locationRepository;
+            _areaRepository = areaRepository;
+            _tourRepository = tourRepository;
         }
         public int? CreateClient(Client client)
         {
@@ -117,6 +124,26 @@ namespace VirtualTourCore.Core.Services
                     smtp.Send(mail);
                 }
             }
+        }
+
+        public void CreateArea(Area area)
+        {
+            _areaRepository.Create(area);
+        }
+
+        public void UpdateArea(Area area)
+        {
+            var existingArea = _areaRepository.GetById(area.Id);
+            existingArea.Description = area.Description;
+            existingArea.DescriptionHtml = area.DescriptionHtml;
+            existingArea.DescriptionJson = area.DescriptionJson;
+            existingArea.Name = area.Name;
+            _areaRepository.UpdateEntity(existingArea);
+        }
+
+        public void DeleteArea(Area area)
+        {
+            _areaRepository.DeleteEntity(area);
         }
     }
 }
