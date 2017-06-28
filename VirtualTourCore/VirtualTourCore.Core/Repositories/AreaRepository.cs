@@ -32,5 +32,11 @@ namespace VirtualTourCore.Core.Repositories
             var area = GetQueryable().FirstOrDefault(x => clientIds.Contains(x.ClientId) && x.Id == id);
             return area;
         }
+
+        public IEnumerable<Area> GetByLocationId(int id)
+        {
+            var areas = GetQueryable().Where(x => x.LocationId == id);
+            return areas;
+        }
     }
 }

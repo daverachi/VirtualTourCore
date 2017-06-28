@@ -23,6 +23,8 @@ namespace VirtualTourCore.Core.Models
         public DbSet<SecurityUserClient> SecurityUserClients { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Location> Locations { get; set; }
+        public DbSet<Area> Areas { get; set; }
+        public DbSet<Tour> Tours { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             // Prevent cascading delete
@@ -34,6 +36,8 @@ namespace VirtualTourCore.Core.Models
             modelBuilder.Configurations.Add(new SecurityUserClientsMap());
             modelBuilder.Configurations.Add(new ClientMap());
             modelBuilder.Configurations.Add(new LocationMap());
+            modelBuilder.Configurations.Add(new AreaMap());
+            modelBuilder.Configurations.Add(new TourMap());
         }
 
     }

@@ -78,5 +78,10 @@ namespace VirtualTourCore.Core.Services
             }
             return _validClientIds;
         }
+
+        public IEnumerable<Area> GetAreasByLocationId(int id)
+        {
+            return _areaRepository.GetByLocationId(id);
+        }
     }
 }

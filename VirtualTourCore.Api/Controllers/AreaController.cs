@@ -38,20 +38,22 @@ namespace VirtualTourCore.Api.Controllers
             var clients = _lookupService.GetClients();
             return View(clients);
         }
-        [VTAuthFilter("Client")]
-        public ActionResult ClientAreas(int id)
+        [VTAuthFilter("Location")]
+        public ActionResult ClientAreas(int id, int locationId)
         {
             // get available clients -> if only one redirect to client areas with client id
             // else redirect to clients and have user click the client
             ViewBag.ClientId = id;
-            var areas = _lookupService.GetAreasByClientId(id);
+            ViewBag.LocationId = locationId;
+            // update to call including client id for better security.
+            var areas = _lookupService.GetAreasByLocationId(id);
             return View(areas);
         }
 
-        public ActionResult Create(int id)
+        public ActionResult Create(int id, int locationId)
         {
             ModelState.Clear();
-            return View("AreaCreateEdit", new Area { Id = default(int), ClientId = id });
+            return View("AreaCreateEdit", new Area { Id = default(int), LocationId = locationId, ClientId = id });
         }
 
         public ActionResult Edit(int id)
@@ -75,7 +77,7 @@ namespace VirtualTourCore.Api.Controllers
                 _adminService.UpdateArea(area);
             }
             // todo : do something about success or failure
-            return RedirectToAction("ClientAreas", new { id = area.ClientId });
+            return RedirectToAction("ClientAreas", new { id = area.ClientId, locationId = area.LocationId });
         }
 
         //[VTAuthFilter("Client")]
@@ -85,7 +87,7 @@ namespace VirtualTourCore.Api.Controllers
             Area area = _lookupService.GetAreaByIdAndClientId(clientIds, id);
             _adminService.DeleteArea(area);
             // TODO Error handling!
-            return RedirectToAction("ClientAreas", new { id = area.ClientId });
+            return RedirectToAction("ClientAreas", new { id = area.ClientId, locationId = area.LocationId });
         }
     }
 }

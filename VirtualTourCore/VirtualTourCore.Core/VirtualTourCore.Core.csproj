@@ -118,12 +118,14 @@
     <Compile Include="Models\Base\ClientEntity.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\Location.cs" />
+    <Compile Include="Models\ModelMaps\AreaMap.cs" />
     <Compile Include="Models\ModelMaps\BaseMap.cs" />
     <Compile Include="Models\ModelMaps\ClientMap.cs" />
     <Compile Include="Models\ModelMaps\LocationMap.cs" />
     <Compile Include="Models\ModelMaps\RegistrationCodeMap.cs" />
     <Compile Include="Models\ModelMaps\SecurityUserClientsMap.cs" />
     <Compile Include="Models\ModelMaps\SecurityuserMap.cs" />
+    <Compile Include="Models\ModelMaps\TourMap.cs" />
     <Compile Include="Models\RegistrationCode.cs" />
     <Compile Include="Models\SecurityUser.cs" />
     <Compile Include="Models\SecurityUserClient.cs" />

@@ -8,5 +8,6 @@ namespace VirtualTourCore.Core.Interfaces
     {
         IEnumerable<Area> GetByClientId(int id);
         Area GetByIdAndByClientId(int id, IEnumerable<int> enumerable);
+        IEnumerable<Area> GetByLocationId(int id);
     }
 }

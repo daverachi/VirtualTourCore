@@ -17,5 +17,6 @@ namespace VirtualTourCore.Core.Interfaces
         Location GetLocationByIdAndClientId(IEnumerable<string> clientIds, int id);
         IEnumerable<Area> GetAreasByClientId(int id);
         Area GetAreaByIdAndClientId(IEnumerable<string> clientIds, int id);
+        IEnumerable<Area> GetAreasByLocationId(int id);
     }
 }

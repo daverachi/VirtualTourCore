@@ -334,10 +334,11 @@
     <Content Include="Views\Account\NotAuthorized.cshtml" />
     <Content Include="Views\Location\ClientLocations.cshtml" />
     <Content Include="Views\Location\LocationCreateEdit.cshtml" />
+    <Content Include="Views\Area\ClientAreas.cshtml" />
+    <Content Include="Views\Area\AreaCreateEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Area\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
