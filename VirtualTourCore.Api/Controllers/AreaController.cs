@@ -46,7 +46,7 @@ namespace VirtualTourCore.Api.Controllers
             ViewBag.ClientId = id;
             ViewBag.LocationId = locationId;
             // update to call including client id for better security.
-            var areas = _lookupService.GetAreasByLocationId(id);
+            var areas = _lookupService.GetAreasByLocationId(locationId);
             return View(areas);
         }
 

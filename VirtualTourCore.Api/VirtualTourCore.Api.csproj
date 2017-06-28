@@ -255,6 +255,7 @@
     <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LocationController.cs" />
+    <Compile Include="Controllers\TourController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Filter\VTAuthFilter.cs" />
     <Compile Include="Global.asax.cs">
@@ -336,6 +337,9 @@
     <Content Include="Views\Location\LocationCreateEdit.cshtml" />
     <Content Include="Views\Area\ClientAreas.cshtml" />
     <Content Include="Views\Area\AreaCreateEdit.cshtml" />
+    <Content Include="Views\Tour\ClientTours.cshtml" />
+    <Content Include="Views\Tour\TourCreateEdit.cshtml" />
+    <Content Include="Views\Tour\TourDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Web;
+using VirtualTourCore.Api.Areas.HelpPage.Controllers;
 using VirtualTourCore.Common.DataAccess;
 using VirtualTourCore.Common.DataAccess.Interfaces;
 using VirtualTourCore.Common.Unity;
@@ -21,7 +22,8 @@ namespace VirtualTourCore.Api.Unity
             container.RegisterType<IUnitOfWork, UnitOfWork>(new PerHttpRequestLifetime());
             container.RegisterType<HttpContextBase, HttpContextWrapper>();
             container.RegisterType<HttpContext>(new InjectionFactory(c => HttpContext.Current));
-
+            container.RegisterType<HelpController>(new TransientLifetimeManager());
+            container.RegisterInstance<HelpController>(new HelpController(), new TransientLifetimeManager());
             container = helper.BuildUnityContainer();
             return container;
         }

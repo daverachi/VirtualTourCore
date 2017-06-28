@@ -1,4 +1,7 @@
-﻿using VirtualTourCore.Common.DataAccess;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using VirtualTourCore.Common.DataAccess;
 using VirtualTourCore.Common.DataAccess.Interfaces;
 using VirtualTourCore.Common.Logging;
 using VirtualTourCore.Core.Interfaces;
@@ -16,6 +19,16 @@ namespace VirtualTourCore.Core.Repositories
         {
             _UnitOfWork = UnitOfWork;
             _log = log;
+        }
+
+        public IEnumerable<Tour> GetByAreaId(int areaId)
+        {
+            return GetQueryable().Where(x => x.AreaId == areaId);
+        }
+
+        public Tour GetByIdAndClientId(int id, IEnumerable<int> validClientIds)
+        {
+            return GetQueryable().FirstOrDefault(x => validClientIds.Contains(x.ClientId) && x.Id == id);
         }
     }
 }

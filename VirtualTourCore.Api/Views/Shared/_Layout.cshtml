@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using VirtualTourCore.Api.Identity
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -6,6 +8,7 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -20,16 +23,29 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                    @*<li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>*@
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li>@Html.ActionLink("Log out", "Logout", "Account", new { area = "" }, null)</li>
-                        if (User.IsInRole("Admin"))
-                        {
-                            <li>@Html.ActionLink("Register", "Register", "Account", new { area = "" }, null)</li>
-                        }
                         <li>@Html.ActionLink("Clients", "Index", "Client", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("Check Identity", "Identity", "Account", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
+                    }
+                </ul>
+                <ul class="nav navbar-nav">
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Welcome @IdentityService.GetUserNameFromClaim(User) <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Log out", "Logout", "Account")</li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                            <li role="separator" class="divider"></li>
+                            <li>@Html.ActionLink("Check Identity", "Identity", "Account", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("Register New User", "Register", "Account")</li>
+                            }
+                        </ul>
+                    </li>
                     }
                     else
                     {

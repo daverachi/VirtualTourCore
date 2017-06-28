@@ -18,5 +18,8 @@ namespace VirtualTourCore.Core.Interfaces
         void CreateArea(Area area);
         void UpdateArea(Area area);
         void DeleteArea(Area area);
+        void CreateTour(Tour tour);
+        void UpdateTour(Tour tour);
+        void DeleteTour(Tour tour);
     }
 }

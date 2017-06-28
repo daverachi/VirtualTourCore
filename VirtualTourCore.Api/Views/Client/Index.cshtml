@@ -4,7 +4,7 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Clients</h2>
 
 <p>
     @if(User.IsInRole("Admin")){
@@ -30,11 +30,15 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Client.Link)
+                @if (!string.IsNullOrWhiteSpace(item.Client.Link))
+                {
+                    <a href="@item.Client.Link" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                }
             </td>
             <td>
                 @if (item.IsModifiable)
                 {
-                    @Html.ActionLink("Edit ", "Edit", new { id = item.Client.Id })
+                    @Html.ActionLink("Edit ", "Edit", new { id = item.Client.Id }) 
                     @Html.ActionLink(" Manage Locations ", "ClientLocations", "Location", new { id = item.Client.Id }, null)
                     @Html.ActionLink(" Delete", "Delete", new { id = item.Client.Id })
                 }

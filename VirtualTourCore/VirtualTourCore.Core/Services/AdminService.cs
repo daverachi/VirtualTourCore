@@ -47,7 +47,6 @@ namespace VirtualTourCore.Core.Services
             var existingClient = _clientRepository.GetById(client.Id);
             existingClient.UpdateDate = DateTime.Now;
             existingClient.Name = client.Name;
-            existingClient.Guid = client.Guid;
             existingClient.Description = client.Description;
             existingClient.DescriptionHtml = client.DescriptionHtml;
             existingClient.DescriptionJson = client.DescriptionJson;
@@ -144,6 +143,26 @@ namespace VirtualTourCore.Core.Services
         public void DeleteArea(Area area)
         {
             _areaRepository.DeleteEntity(area);
+        }
+
+        public void CreateTour(Tour tour)
+        {
+            _tourRepository.Create(tour);
+        }
+
+        public void UpdateTour(Tour tour)
+        {
+            var existingTour = _tourRepository.GetById(tour.Id);
+            existingTour.Description = tour.Description;
+            existingTour.DescriptionHtml = tour.DescriptionHtml;
+            existingTour.DescriptionJson = tour.DescriptionJson;
+            existingTour.Name = tour.Name;
+            _tourRepository.UpdateEntity(existingTour);
+        }
+
+        public void DeleteTour(Tour tour)
+        {
+            _tourRepository.DeleteEntity(tour);
         }
     }
 }

@@ -56,6 +56,10 @@ namespace VirtualTourCore.Api.Filter
                 case ("Client"):
                     return (IdentityService.GetClientIdsFromClaim(user)).Contains(id);
                 case ("Location"):
+                // need to implement
+                case ("Area"):
+                // need to implement
+                case ("Tour"):
                     // need to implement
                     return true;
             }
