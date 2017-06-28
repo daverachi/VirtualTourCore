@@ -2,6 +2,7 @@
 (
 	[Id] INT IDENTITY (1,1) NOT NULL,
 	ClientId INT NOT NULL,
+	AreaId INT NOT NULL,
 	Name NVARCHAR(50) NOT NULL,
 	Description VARCHAR (MAX) NULL,
     DescriptionHtml VARCHAR (MAX) NULL,
@@ -14,6 +15,7 @@
     --CONSTRAINT FK_Tour_ItemStatus FOREIGN KEY (ItemStatusID) REFERENCES dbo.ItemStatus (ItemStatusID),
     --CONSTRAINT FK_Tour_AssetImg FOREIGN KEY ([AssetLogoID]) REFERENCES dbo.AssetStore (AssetStoreID),
 	CONSTRAINT FK_Tour_Client FOREIGN KEY (ClientId) REFERENCES dbo.Client (Id),
+	CONSTRAINT FK_Tour_Area FOREIGN KEY (AreaId) REFERENCES dbo.Area (Id),
 	CONSTRAINT FK_Tour_CreateUser FOREIGN KEY (CreateUserId) REFERENCES dbo.SecurityUser (Id),
     CONSTRAINT FK_Tour_UpdateUser FOREIGN KEY (UpdateUserId) REFERENCES dbo.SecurityUser (Id),
 )

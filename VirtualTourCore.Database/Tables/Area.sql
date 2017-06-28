@@ -1,7 +1,8 @@
 ﻿CREATE TABLE [dbo].[Area]
 (
-	[Id] INT IDENTITY (1,1) NOT NULL,
+	Id INT IDENTITY (1,1) NOT NULL,
 	ClientId INT NOT NULL,
+	LocationId INT NOT NULL,
 	Name NVARCHAR(50) NOT NULL,
 	Description VARCHAR (MAX) NULL,
     DescriptionHtml VARCHAR (MAX) NULL,
@@ -14,6 +15,7 @@
     --CONSTRAINT FK_Area_ItemStatus FOREIGN KEY (ItemStatusID) REFERENCES dbo.ItemStatus (ItemStatusID),
     --CONSTRAINT FK_Area_AssetImg FOREIGN KEY ([AssetLogoID]) REFERENCES dbo.AssetStore (AssetStoreID),
 	CONSTRAINT FK_Area_Client FOREIGN KEY (ClientId) REFERENCES dbo.Client (Id),
+	CONSTRAINT FK_Area_Location FOREIGN KEY (LocationId) REFERENCES dbo.Location (Id),
 	CONSTRAINT FK_Area_CreateUser FOREIGN KEY (CreateUserId) REFERENCES dbo.SecurityUser (Id),
     CONSTRAINT FK_Area_UpdateUser FOREIGN KEY (UpdateUserId) REFERENCES dbo.SecurityUser (Id),
 )

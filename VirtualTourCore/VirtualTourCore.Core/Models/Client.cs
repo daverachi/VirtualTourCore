@@ -6,7 +6,6 @@ namespace VirtualTourCore.Core.Models
 {
     public partial class Client : EntityBase
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public Guid Guid { get; set; }
         public string Link { get; set; }
