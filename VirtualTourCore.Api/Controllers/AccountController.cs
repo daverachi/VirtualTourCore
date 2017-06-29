@@ -41,7 +41,12 @@ namespace VirtualTourCore.Api.Controllers
         }
         public ActionResult Register()
         {
-            return View(new RegisterBindingModel());
+            var regModel = new RegisterBindingModel();
+            if (User.IsInRole("Admin"))
+            {
+                regModel.RegistrationCode = IdentityService.GetUserCodeFromClaim(User);
+            }
+            return View(regModel);
         }
         public ActionResult Logout()
         {
@@ -87,7 +92,7 @@ namespace VirtualTourCore.Api.Controllers
                 PasswordPlaintextConfirm = model.ConfirmPassword,
                 Admin = User.Identity.IsAuthenticated && User.IsInRole("Admin") && model.Admin
             };
-            if (_securityService.CreateUser(securityUser, model.RegistrationCode))
+            if (_securityService.CreateUser(securityUser, model.RegistrationCode) && !(User.Identity.IsAuthenticated && User.IsInRole("Admin")))
             {
                 IdentityService.AuthorizeUser(securityUser);
             }

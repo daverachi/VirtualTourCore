@@ -63,6 +63,14 @@ namespace VirtualTourCore.Api.Controllers
             // TODO Error handling!
             return View("AreaCreateEdit", area);
         }
+        public ActionResult Details(int id)
+        {
+            var clientIds = IdentityService.GetClientIdsFromClaim(User);
+            Area area = _lookupService.GetAreaByIdAndClientId(clientIds, id);
+            // TODO Error handling!
+            return View("AreaDetails", area);
+        }
+
         [HttpPost]
         public ActionResult ModifyAreas(Area area)
         {

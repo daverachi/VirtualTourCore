@@ -12,5 +12,6 @@ namespace VirtualTourCore.Core.Interfaces
         RegistrationCode GetByGuid(Guid guid);
         bool Create(int clientId, out RegistrationCode regCode);
         RegistrationCode Consume(string guid);
+        RegistrationCode GetById(int id);
     }
 }

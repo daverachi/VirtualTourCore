@@ -35,7 +35,7 @@ namespace VirtualTourCore.Api.Controllers
         public ActionResult Index()
         {
             var clients = _lookupService.GetClients().SetClientAccess(User);
-            return View(clients);
+            return View("ClientList", clients);
         }
 
         [Authorize(Roles="Admin")]
@@ -79,7 +79,13 @@ namespace VirtualTourCore.Api.Controllers
             return RedirectToAction("Index");
         }
 
-
+        [VTAuthFilter("Client")]
+        public ActionResult Details(int id)
+        {
+            Client client = _lookupService.GetClientById(id);
+            // error handling
+            return View("ClientDetails", client);
+        }
         //private bool CreateClient(ClientView clientView)
         //{
         //    Client client = (Client)SetDefaults(ClientViewMapper.ToClient(clientView));

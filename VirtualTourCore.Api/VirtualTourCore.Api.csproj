@@ -310,6 +310,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\quill.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Web.config" />
@@ -331,7 +332,7 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\Identity.cshtml" />
     <Content Include="Views\Client\ClientCreateEdit.cshtml" />
-    <Content Include="Views\Client\Index.cshtml" />
+    <Content Include="Views\Client\ClientList.cshtml" />
     <Content Include="Views\Account\NotAuthorized.cshtml" />
     <Content Include="Views\Location\ClientLocations.cshtml" />
     <Content Include="Views\Location\LocationCreateEdit.cshtml" />
@@ -340,6 +341,9 @@
     <Content Include="Views\Tour\ClientTours.cshtml" />
     <Content Include="Views\Tour\TourCreateEdit.cshtml" />
     <Content Include="Views\Tour\TourDetails.cshtml" />
+    <Content Include="Views\Location\LocationDetails.cshtml" />
+    <Content Include="Views\Client\ClientDetails.cshtml" />
+    <Content Include="Views\Area\AreaDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

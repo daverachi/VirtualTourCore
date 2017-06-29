@@ -46,6 +46,10 @@ namespace VirtualTourCore.Core.Services
             }
             if (user != null)
             {
+                if (user.Admin)
+                {
+                    user.AdminRegCode = _registrationCodeRepository.GetById(user.RegistrationCodeId);
+                }
                 user.Clients = _securityUserClientRepository.GetByUserId(user.Id);
                 //_log.Warn("Failed to retrieve SecurityUser with login credentials");
             }

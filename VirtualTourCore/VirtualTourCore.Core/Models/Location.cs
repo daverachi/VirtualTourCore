@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Web.Mvc;
 using VirtualTourCore.Common.DataAccess;
 
 namespace VirtualTourCore.Core.Models
@@ -12,6 +8,7 @@ namespace VirtualTourCore.Core.Models
         public int ClientId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        [AllowHtml]
         public string DescriptionHtml { get; set; }
         public string DescriptionJson { get; set; }
         public string StreetAddress { get; set; }

@@ -24,27 +24,6 @@ namespace VirtualTourCore.Core.Repositories
             _log = log;
         }
 
-        public IEnumerable<SecurityUser> Get()
-        {
-            var areas = GetQueryable();
-            if (areas == null)
-            {
-                _log.Warn("Failed to retrieve areas ", new ArgumentException());
-            }
-            return areas;
-        }
-
-        public SecurityUser GetById(int Id)
-        {
-            var area = GetQueryable()
-                .FirstOrDefault(m => m.Id == Id);
-            if (area == null)
-            {
-                _log.Warn("Failed to retrieve by id: " + Id, new ArgumentException());
-            }
-            return area;
-        }
-
         public SecurityUser GetByUsername(string username)
         {
             var area = GetQueryable()
@@ -56,7 +35,7 @@ namespace VirtualTourCore.Core.Repositories
             return area;
         }
 
-        public int? Create(SecurityUser securityUser)
+        public new int? Create(SecurityUser securityUser)
         {
             int? id = null;
             if (securityUser != null)
@@ -102,39 +81,6 @@ namespace VirtualTourCore.Core.Repositories
                 }
             }
             return isValid;
-        }
-        public SecurityUser Update(SecurityUser area)
-        {
-            int? id = null;
-            if (area != null)
-            {
-                _log.Info("Update Area: " + area.UserName + " ID: " + area.UserName);
-                base.Update(area);
-                int unit = _UnitOfWork.SaveChanges();
-                if (unit < 1)
-                {
-                    _log.Warn("Failed to Update Area: " + area.UserName + " ID: " + area.UserName, new ArgumentNullException());
-                }
-            }
-            return area;
-        }
-
-        public int Delete(int id)
-        {
-            int deleteId = id;
-            _log.Info("Deleting Area with ID: " + id);
-            SecurityUser area = GetById(id);
-            if (area != null)
-            {
-                base.Delete(area);
-                int unit = _UnitOfWork.SaveChanges();
-                if (unit < 1)
-                {
-                    deleteId = unit;
-                    _log.Warn("Failed to Delete Area with ID: " + id, new ArgumentNullException());
-                }
-            }
-            return id;
         }
 
         public SecurityUser GetByLogin(string username, string password)

@@ -14,7 +14,6 @@ namespace VirtualTourCore.Core.Interfaces
         SecurityUser GetByUsername(string username);
         int? Create(SecurityUser user);
         SecurityUser Update(SecurityUser user);
-        int Delete(int id);
         SecurityUser GetByLogin(string username, string password);
     }
 }

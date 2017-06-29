@@ -61,6 +61,10 @@ namespace VirtualTourCore.Api.Identity
             claims.Add(new Claim("User_LastName", securityUser.LastName));
             claims.Add(new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", string.Format("{0}, {1}", securityUser.LastName, securityUser.FirstName)));
             claims.Add(new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "VirtualTourCore"));
+            if (securityUser.Admin && securityUser.AdminRegCode != null)
+            {
+                claims.Add(new Claim("UserCode", securityUser.AdminRegCode.Guid.ToString()));
+            }
             return claims;
         }
 
@@ -81,6 +85,13 @@ namespace VirtualTourCore.Api.Identity
             var claimsIdentity = (ClaimsIdentity)user.Identity;
             var firstNameClaim = claimsIdentity.Claims.FirstOrDefault(x => x.Type == "User_FirstName");
             return firstNameClaim != null ? firstNameClaim.Value : "Unknown"; 
+        }
+
+        public static string GetUserCodeFromClaim(IPrincipal user)
+        {
+            var claimsIdentity = (ClaimsIdentity)user.Identity;
+            var userCodeClaim = claimsIdentity.Claims.FirstOrDefault(x => x.Type == "UserCode");
+            return userCodeClaim.Value;
         }
 
         internal static IEnumerable<ClientVO> SetClientAccess(this IEnumerable<Client> clients, IPrincipal user)

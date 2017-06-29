@@ -15,6 +15,7 @@ namespace VirtualTourCore.Core.Repositories
     {
         private IUnitOfWork _UnitOfWork;
         private INlogger _log;
+        private const int AdminRegCode = -999;
 
         public RegistrationCodeRepository(IUnitOfWork UnitOfWork, INlogger log)
             : base(UnitOfWork, log)
@@ -25,14 +26,22 @@ namespace VirtualTourCore.Core.Repositories
 
         public RegistrationCode GetByGuid(Guid guid)
         {
-            var regCode = GetQueryable().FirstOrDefault(m => m.Guid.ToString() == guid.ToString() && m.AvailableUsages > 0);
+            var regCode = GetQueryable().FirstOrDefault(m => m.Guid.ToString() == guid.ToString() && (m.AvailableUsages > 0 || m.AvailableUsages == AdminRegCode));
             if (regCode == null)
             {
                 _log.Warn("Failed to retrieve a usable Reg Code from GUID: " + guid, new ArgumentException());
             }
             return regCode;
         }
-
+        public new RegistrationCode GetById(int id)
+        {
+            var regCode = GetQueryable().FirstOrDefault(m => m.Id == id && m.AvailableUsages == AdminRegCode);
+            if (regCode == null)
+            {
+                _log.Warn("Failed to retrieve a usable Reg Code from id: " + id, new ArgumentException());
+            }
+            return regCode;
+        }
         public bool Create(int clientId, out RegistrationCode regCode)
         {
             bool created = false;
@@ -57,9 +66,12 @@ namespace VirtualTourCore.Core.Repositories
             if (Guid.TryParse(guid, out _guid))
             {
                 regCode = GetByGuid(Guid.Parse(guid));
-                if (regCode != null && regCode.AvailableUsages > 0 && regCode.CreateDate.Value.AddDays(2) > DateTime.Now)
+                if (regCode != null && (regCode.AvailableUsages > 0 && regCode.CreateDate.Value.AddDays(2) > DateTime.Now) || regCode.AvailableUsages == AdminRegCode) 
                 {
-                    regCode.AvailableUsages--;
+                    if(regCode.AvailableUsages != AdminRegCode)
+                    {
+                        regCode.AvailableUsages--;
+                    }
                     base.Update(regCode);
                     int unit = _UnitOfWork.SaveChanges();
                     if (unit < 1)

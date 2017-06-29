@@ -20,5 +20,6 @@ namespace VirtualTourCore.Core.Models
         public string LastName { get; set; }
         public bool Admin { get; set; }
         public IEnumerable<SecurityUserClient> Clients { get; set; }
+        public RegistrationCode AdminRegCode { get; set; }
     }
 }

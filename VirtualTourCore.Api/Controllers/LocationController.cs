@@ -61,6 +61,15 @@ namespace VirtualTourCore.Api.Controllers
             // TODO Error handling!
             return View("LocationCreateEdit", location);
         }
+
+        public ActionResult Details(int id)
+        {
+            var clientIds = IdentityService.GetClientIdsFromClaim(User);
+            Location location = _lookupService.GetLocationByIdAndClientId(clientIds, id);
+            // error handling
+            return View("LocationDetails", location);
+        }
+
         [HttpPost]
         public ActionResult ModifyLocations(Location location)
         {

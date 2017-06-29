@@ -1,4 +1,5 @@
-﻿using VirtualTourCore.Common.DataAccess;
+﻿using System.Web.Mvc;
+using VirtualTourCore.Common.DataAccess;
 
 namespace VirtualTourCore.Core.Models
 {
@@ -9,6 +10,7 @@ namespace VirtualTourCore.Core.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public string DescriptionJson { get; set; }
+        [AllowHtml]
         public string DescriptionHtml { get; set; }
     }
 }
