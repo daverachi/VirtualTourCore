@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.ComponentModel;
+using System.Web.Mvc;
 using VirtualTourCore.Common.DataAccess;
 
 namespace VirtualTourCore.Core.Models
@@ -7,6 +8,7 @@ namespace VirtualTourCore.Core.Models
     {
         public int ClientId { get; set; }
         public int LocationId { get; set; }
+        [DisplayName("Area Name")]
         public string Name { get; set; }
         public string Description { get; set; }
         public string DescriptionJson { get; set; }

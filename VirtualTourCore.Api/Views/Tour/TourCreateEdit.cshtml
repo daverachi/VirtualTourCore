@@ -1,9 +1,4 @@
 ﻿@model VirtualTourCore.Core.Models.Tour
-
-@{
-    ViewBag.Title = "TourCreateEdit";
-}
-
 @if (Model != null && Model.Id == 0)
 {
     <h2>Create Tour</h2>
@@ -13,33 +8,73 @@ else
     <h2>Edit Tour</h2>
 }
 
-@using (Html.BeginForm("ModifyTours", "Tour")) 
+@using (Html.BeginForm("ModifyTours", "Tour", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return GetDescription()", @id = "tourForm" }))
 {
     @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Tour</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(x => x.ClientId)
-        @Html.HiddenFor(x => x.AreaId)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(x => x.ClientId)
+    @Html.HiddenFor(x => x.Id)
+    @Html.HiddenFor(x => x.AreaId)
+    <div class="row">
+        <div class="form-group col-lg-12">
+            @Html.LabelFor(model => model.Name)
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @placeholder = "The Tour's Name", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
         </div>
     </div>
+        @Html.HiddenFor(model => model.Description)
+        @Html.HiddenFor(model => model.DescriptionHtml)
+        @Html.HiddenFor(model => model.DescriptionJson)
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
+@Html.LabelFor(model => model.Description)
+<div id="tourDescription"></div>
+<div class="row">
+    <div class="form-group col-xs-12">
+        @if (Model != null && Model.Id == 0)
+        {
+            <input type="submit" onclick="$('#tourForm').submit()" value="Create" class="btn btn-default" />
+        }
+        else
+        {
+            <input type="submit" onclick="$('#tourForm').submit()" value="Update" class="btn btn-default" />
+        }
+    </div>
+    <div class="col-xs-12">
+        @Html.ActionLink("Back to List", "Index")
+    </div>
 </div>
+<script>
+    var toolbarOptions = [
+                ['bold', 'italic', 'underline', 'strike'],
+                ['blockquote', 'code-block'],
+                [{ 'header': 1 }, { 'header': 2 }],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'script': 'sub' }, { 'script': 'super' }],
+                [{ 'indent': '-1' }, { 'indent': '+1' }],
+                [{ 'size': ['small', false, 'large', 'huge'] }],
+                ['link', 'image', 'video'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'font': [] }],
+                [{ 'align': [] }]
+    ];
+    var options = {
+        debug: 'info',
+        modules: {
+            toolbar: toolbarOptions
+        },
+        placeholder: 'Tell everyone about the tour',
+        readOnly: false,
+        theme: 'snow'
+    };
+    var quill = new Quill('#tourDescription', options);
+    quill.setContents(JSON.parse($('#DescriptionJson').val()));//set init value
+    function GetDescription() //display current HTML
+    {
+        var html = quill.root.innerHTML;
+        $('#DescriptionJson').val(JSON.stringify(quill.getContents()));
+        $('#DescriptionHtml').val(html);
+        $('#Description').val(quill.getText());
+        return true;
+    }
+</script>

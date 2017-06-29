@@ -1,93 +1,102 @@
 ﻿@model VirtualTourCore.Core.Models.Location
-
-@{
-    ViewBag.Title = "LocationCreateEdit";
+@if (Model != null && Model.Id == 0)
+{
+    <h2>Create New Location</h2>
+}
+else
+{
+    <h2>Edit Location Details</h2>
 }
 
-<h2>LocationCreateEdit</h2>
-
-@using (Html.BeginForm("ModifyLocations", "Location"))
+@using (Html.BeginForm("ModifyLocations", "Location", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return GetDescription()", @id = "locationForm" }))
 {
     @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Location</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(x => x.ClientId)
         @Html.HiddenFor(x => x.Id)
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-            </div>
+
+    <div class="row">
+        <div class="form-group col-lg-12">
+            @Html.LabelFor(model => model.Name)
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @placeholder = "The Location's Name", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
         </div>
-
-        @*<div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-            </div>
+        <div class="form-group col-lg-6">
+            @Html.LabelFor(model => model.StreetAddress)
+            @Html.EditorFor(model => model.StreetAddress, new { htmlAttributes = new { @placeholder = "The Location's Address", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.StreetAddress, "", new { @class = "text-danger" })
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.DescriptionHtml, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DescriptionHtml, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DescriptionHtml, "", new { @class = "text-danger" })
-            </div>
+        <div class="form-group col-lg-3">
+            @Html.LabelFor(model => model.City)
+            @Html.EditorFor(model => model.City, new { htmlAttributes = new { @placeholder = "The Location's City", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.DescriptionJson, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DescriptionJson, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DescriptionJson, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.StreetAddress, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.StreetAddress, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.StreetAddress, "", new { @class = "text-danger" })
-            </div>
+        <div class="form-group col-lg-1">
+            @Html.LabelFor(model => model.State)
+            @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Zipcode, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Zipcode, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Zipcode, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
+        <div class="form-group col-lg-2">
+            @Html.LabelFor(model => model.Zipcode)
+            @Html.EditorFor(model => model.Zipcode, new { htmlAttributes = new { @placeholder = "The Location's Zip Code", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Zipcode, "", new { @class = "text-danger" })
         </div>
     </div>
+    @Html.HiddenFor(model => model.Description)
+    @Html.HiddenFor(model => model.DescriptionHtml)
+    @Html.HiddenFor(model => model.DescriptionJson)
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
+@Html.LabelFor(model => model.Description)
+<div id="locationDescription"></div>
+<div class="row">
+    <div class="form-group col-xs-12">
+        @if (Model != null && Model.Id == 0)
+        {
+            <input type="submit" onclick="$('#locationForm').submit()" value="Create" class="btn btn-default" />
+        }
+        else
+        {
+            <input type="submit" onclick="$('#locationForm').submit()" value="Update" class="btn btn-default" />
+        }
+    </div>
+    <div class="col-xs-12">
+        @Html.ActionLink("Back to List", "Index")
+    </div>
 </div>
+
+        <script>
+    var toolbarOptions = [
+                ['bold', 'italic', 'underline', 'strike'],
+                ['blockquote', 'code-block'],
+                [{ 'header': 1 }, { 'header': 2 }],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'script': 'sub' }, { 'script': 'super' }],
+                [{ 'indent': '-1' }, { 'indent': '+1' }],
+                [{ 'size': ['small', false, 'large', 'huge'] }],
+                ['link', 'image', 'video'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'font': [] }],
+                [{ 'align': [] }]
+    ];
+    var options = {
+        debug: 'info',
+        modules: {
+            toolbar: toolbarOptions
+        },
+        placeholder: 'Tell everyone about the location',
+        readOnly: false,
+        theme: 'snow'
+    };
+    var quill = new Quill('#locationDescription', options);
+    quill.setContents(JSON.parse($('#DescriptionJson').val()));//set init value
+    function GetDescription() //display current HTML
+    {
+        var html = quill.root.innerHTML;
+        $('#DescriptionJson').val(JSON.stringify(quill.getContents()));
+        $('#DescriptionHtml').val(html);
+        $('#Description').val(quill.getText());
+        return true;
+    }
+        </script>

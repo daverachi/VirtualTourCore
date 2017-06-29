@@ -59,7 +59,6 @@ namespace VirtualTourCore.Api.Controllers
             {
                 client.CreateUserId = IdentityService.GetUserIdFromClaim(User);
                 _adminService.CreateClient(client);
-
             }
             else
             {

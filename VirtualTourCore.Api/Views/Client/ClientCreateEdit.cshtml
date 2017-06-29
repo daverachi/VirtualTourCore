@@ -1,8 +1,4 @@
 ﻿@model VirtualTourCore.Core.Models.Client
-
-@{
-    ViewBag.Title = "ClientCreateEdit";
-}
 @if (Model != null && Model.Id == 0)
 {
     <h2>Create New Client</h2>
@@ -73,7 +69,14 @@ else
 <div id="clientDescription"></div>
 <div class="row">
     <div class="form-group col-xs-12">
+        @if (Model != null && Model.Id == 0)
+        {
             <input type="submit" onclick="$('#clientForm').submit()" value="Create" class="btn btn-default" />
+        }
+        else
+        {
+            <input type="submit" onclick="$('#clientForm').submit()" value="Update" class="btn btn-default" />
+        }
     </div>
     <div class="col-xs-12">
         @Html.ActionLink("Back to List", "Index")
