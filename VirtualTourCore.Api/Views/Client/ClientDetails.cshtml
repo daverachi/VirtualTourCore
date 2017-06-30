@@ -1,13 +1,11 @@
 ﻿@model VirtualTourCore.Core.Models.Client
 
 @{
-    ViewBag.Title = "ClientDetails";
+    ViewBag.Title = "Client Details";
 }
-
-<h2>ClientDetails</h2>
-
 <div>
-    <h4>Client</h4>
+    <hr />
+    <h3>@Model.Name Details</h3>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -17,15 +15,6 @@
         <dd>
             @Html.DisplayFor(model => model.Name)
         </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Guid)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Guid)
-        </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.Link)
         </dt>
@@ -40,22 +29,6 @@
 
         <dd>
             @Html.DisplayFor(model => model.Description)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DescriptionHtml)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DescriptionHtml)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DescriptionJson)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DescriptionJson)
         </dd>
 
         <dt>
@@ -114,29 +87,6 @@
             @Html.DisplayFor(model => model.MarketingEmail)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.AssetLogoId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.AssetLogoId)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.AssetProfileId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.AssetProfileId)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CreateUserId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CreateUserId)
-        </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.CreateDate)
@@ -144,14 +94,6 @@
 
         <dd>
             @Html.DisplayFor(model => model.CreateDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.UpdateUserId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UpdateUserId)
         </dd>
 
         <dt>
@@ -166,5 +108,6 @@
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "ClientList")
+    @Html.ActionLink("Delete", "Delete", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
 </p>

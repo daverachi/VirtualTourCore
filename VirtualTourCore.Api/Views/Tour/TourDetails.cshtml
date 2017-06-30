@@ -1,31 +1,13 @@
 ﻿@model VirtualTourCore.Core.Models.Tour
 
 @{
-    ViewBag.Title = "Detail";
+    ViewBag.Title = "Tour Details";
 }
-
-<h2>Detail</h2>
-
 <div>
-    <h4>Tour</h4>
+    <hr />
+    <h3>@Model.Name Details</h3>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.ClientId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ClientId)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.AreaId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.AreaId)
-        </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.Name)
         </dt>
@@ -43,43 +25,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.DescriptionJson)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DescriptionJson)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DescriptionHtml)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DescriptionHtml)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CreateUserId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CreateUserId)
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.CreateDate)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.CreateDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.UpdateUserId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UpdateUserId)
         </dd>
 
         <dt>
@@ -94,5 +44,6 @@
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Delete", "Delete", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "ClientTours", new { id = Model.AreaId, cId = Model.ClientId })
 </p>

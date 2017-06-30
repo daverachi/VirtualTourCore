@@ -41,7 +41,7 @@ else
         }
     </div>
     <div class="col-xs-12">
-        @Html.ActionLink("Back to List", "Index")
+        @Html.ActionLink("Back to List", "ClientTours", new { id = Model.AreaId, cId = Model.ClientId })
     </div>
 </div>
 <script>
