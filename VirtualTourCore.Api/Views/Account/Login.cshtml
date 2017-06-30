@@ -2,12 +2,24 @@
 @{
     ViewBag.Title = "Login";
 }
-
 <h2>Login</h2>
-
+<hr />
 <form method="post" action="/Account/Login">
-    <input type="hidden" name="ReturnURL" value="@System.Web.HttpContext.Current.Request["ReturnURL"]" />
-    <input type="text" name="Username" value="MasterAdmin" />
-    <input type="Password" name="Password" value="V8c38Q7wr5p%=5=5CfY+r+V8GZQu4Dqv" />
-    <input type="submit" name="Login" value="Login" />
+    <div class="row">
+        <div class="col-xs-4"></div>
+        <div class="col-xs-4">
+            <input type="hidden" name="ReturnURL" value="@System.Web.HttpContext.Current.Request["ReturnURL"]" />
+            <div class="form-group col-lg-12">
+                @Html.Label("Username")
+                <input type="text" class="form-control" name="Username" value="MasterAdmin" />
+            </div>
+            <div class="form-group col-lg-12">
+                @Html.Label("Password")
+                <input type="Password" class="form-control" name="Password" value="V8c38Q7wr5p%=5=5CfY+r+V8GZQu4Dqv" />
+            </div>
+            <div class="form-group col-lg-12">
+                <input type="submit" class="btn btn-default" name="Login" value="Login" />
+            </div>
+        </div>
+    </div>
 </form>

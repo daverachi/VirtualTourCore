@@ -1,4 +1,5 @@
 ﻿@model VirtualTourCore.Core.Models.Area
+<hr />
 @if (Model != null && Model.Id == 0)
 {
     <h2>Create Area</h2>
@@ -7,25 +8,24 @@ else
 {
     <h2>Edit Area</h2>
 }
-
+<hr />
 @using (Html.BeginForm("ModifyAreas", "Area", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return GetDescription()", @id = "areaForm" }))
 {
-   @Html.AntiForgeryToken()
-    <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(x => x.ClientId)
-        @Html.HiddenFor(x => x.Id)
-        @Html.HiddenFor(x => x.LocationId)
-        <div class="row">
-            <div class="form-group col-lg-12">
-                @Html.LabelFor(model => model.Name)
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @placeholder = "The Area's Name", @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-            </div>
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(x => x.ClientId)
+    @Html.HiddenFor(x => x.Id)
+    @Html.HiddenFor(x => x.LocationId)
+    <div class="row">
+        <div class="form-group col-lg-12">
+            @Html.LabelFor(model => model.Name)
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @placeholder = "The Area's Name", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
         </div>
-        @Html.HiddenFor(model => model.Description)
-        @Html.HiddenFor(model => model.DescriptionHtml)
-        @Html.HiddenFor(model => model.DescriptionJson)
+    </div>
+    @Html.HiddenFor(model => model.Description)
+    @Html.HiddenFor(model => model.DescriptionHtml)
+    @Html.HiddenFor(model => model.DescriptionJson)
 }
 @Html.LabelFor(model => model.Description)
 <div id="areaDescription"></div>

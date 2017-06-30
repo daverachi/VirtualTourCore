@@ -1,4 +1,5 @@
 ﻿@model VirtualTourCore.Core.Models.Tour
+<hr />
 @if (Model != null && Model.Id == 0)
 {
     <h2>Create Tour</h2>
@@ -7,7 +8,7 @@ else
 {
     <h2>Edit Tour</h2>
 }
-
+<hr />
 @using (Html.BeginForm("ModifyTours", "Tour", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return GetDescription()", @id = "tourForm" }))
 {
     @Html.AntiForgeryToken()
