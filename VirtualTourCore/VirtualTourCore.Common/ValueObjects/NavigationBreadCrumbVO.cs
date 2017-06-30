@@ -7,6 +7,8 @@ namespace VirtualTourCore.Common.ValueObjects
 {
     public class NavigationBreadCrumbVO
     {
+        public bool NoCrumbs { get; set; }
+        public bool IncludeLowestTierLink { get; set; }
         public int ClientId { get; set; }
         public string ClientName { get; set; }
         public int LocationId { get; set; }

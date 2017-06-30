@@ -1,6 +1,8 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    font-family: 'Open Sans', sans-serif !important;
+    font-variant: all-petite-caps;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -10,4 +12,19 @@
 }
 .ql-container{
     margin-bottom:15px;
+}
+.breadCrumbText{
+    font-size: 1.2em;
+    padding: 5px;
+    font-variant: all-petite-caps;
+}
+.breadCrumbIcon{
+    font-size: .8em;
+}
+.panel-heading{
+        font-size: 1.3em;
+        font-variant: all-petite-caps;
+}
+.page-header {
+    border-bottom: none;
 }

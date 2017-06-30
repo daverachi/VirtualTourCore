@@ -1,3 +1,74 @@
 ﻿@model VirtualTourCore.Common.ValueObjects.NavigationBreadCrumbVO
 
+@{
+    var icon = "fa fa-chevron-right";
+}
+@if (!Model.NoCrumbs)
+{
+<div class="row" style="padding-top:10px; padding-bottom:10px;">
+    <div class="col-xs-12">
+        @if (!string.IsNullOrWhiteSpace(Model.ClientName) && Model.ClientId > 0)
+        {
+            @Html.ActionLink("Clients", "Index", "Client", null, new { @class = "breadCrumbText" })
+            <i class='@icon breadCrumbIcon' aria-hidden="true"></i>
+            if (!string.IsNullOrWhiteSpace(Model.LocationName) && Model.LocationId > 0)
+            {
+                @Html.ActionLink(Model.ClientName, "ClientLocations", "Location", new { @id = Model.ClientId }, new { @class = "breadCrumbText" });
+                <i class='@icon breadCrumbIcon' aria-hidden="true"></i>
 
+                if (!string.IsNullOrWhiteSpace(Model.AreaName) && Model.AreaId > 0)
+                {
+                    @Html.ActionLink(Model.LocationName, "ClientAreas", "Area", new { @id = Model.LocationId, @cId = Model.ClientId }, new { @class = "breadCrumbText" });
+                    <i class='@icon breadCrumbIcon' aria-hidden="true"></i>
+                    if (1 == 0)
+                    {
+                        @Html.ActionLink(Model.AreaName, "ClientTours", "Tour", new { @id = Model.AreaId, @cId = Model.ClientId }, new { @class = "breadCrumbText" });
+                        <i class='@icon breadCrumbIcon' aria-hidden="true"></i>
+                    }
+                    else
+                    {
+                        if (Model.IncludeLowestTierLink)
+                        {
+                            @Html.ActionLink(Model.AreaName, "ClientTours", "Tour", new { @id = Model.AreaId, @cId = Model.ClientId }, new { @class = "breadCrumbText" });
+                        }
+                        else
+                        {
+                            <span class="breadCrumbText">@Model.AreaName</span>
+                        }
+                    }
+                }
+                else
+                {
+                    if (Model.IncludeLowestTierLink)
+                    {
+                        @Html.ActionLink(Model.LocationName, "ClientAreas", "Area", new { @id = Model.LocationId, @cId = Model.ClientId }, new { @class = "breadCrumbText" });
+                    }
+                    else
+                    {
+                        <span class="breadCrumbText">@Model.LocationName</span>
+                    }
+                }
+            }
+            else
+            {
+                if (Model.IncludeLowestTierLink)
+                {
+                    @Html.ActionLink(Model.ClientName, "ClientLocations", "Location", new { @id = Model.ClientId }, new { @class = "breadCrumbText" });
+                }
+                else
+                {
+                    <span class="breadCrumbText">@Model.ClientName</span>
+                }
+            }
+        }
+        else if (Model.IncludeLowestTierLink)
+        {
+            @Html.ActionLink("Clients", "Index", "Client", null, new { @class = "breadCrumbText" })
+        }
+        else
+        {
+            <span class="breadCrumbText">Clients</span>
+        }
+    </div>
+</div>
+}

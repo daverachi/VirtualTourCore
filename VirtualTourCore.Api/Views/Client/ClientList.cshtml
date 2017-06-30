@@ -4,50 +4,73 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Clients</h2>
+@if (Model.Count() == 0)
+{
+    <div class="page-header">
+        <h3>It's lonely here... <small>Use the create button below to add some clients.</small></h3>
+    </div>
+}
+else
+{
+        <table class="table">
+            <tr>
+                <th class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Client.Name)
+                </th>
+                <th class="col-sm-3 text-center">
+                    @Html.DisplayNameFor(model => model.Client.Link)
+                </th>
+                <th class="col-sm-2 text-center">
+                    Create Date
+                </th>
+                <th class="col-sm-2 text-center">
+                    Update Date
+                </th>
+                <th class="col-sm-2 text-center">
+                    <span>Options</span>
+                </th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Client.Name)
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.Client.Link)
+                        @if (!string.IsNullOrWhiteSpace(item.Client.Link))
+                        {
+                            <a href="@item.Client.Link" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                        }
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.Client.CreateDate)
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.Client.UpdateDate)
+                    </td>
+                    <td class="text-center">
+                        @if (item.IsModifiable)
+                        {
+                        <a href="@Url.Action("Details", new { id = item.Client.Id })" class="btn btn-default">
+                            <i class="fa fa-info" aria-hidden="true"></i>
+                        </a>
+                        <a href="@Url.Action("ClientLocations", "Location", new { id = item.Client.Id })" class="btn btn-default">
+                            Locations <i class="fa fa-globe" aria-hidden="true"></i>
+                        </a>
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+        }
 
-<p>
-    @if(User.IsInRole("Admin")){
-        @Html.ActionLink("Create New", "Create")
-    }
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Client.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Client.Link)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Client.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Client.Link)
-                @if (!string.IsNullOrWhiteSpace(item.Client.Link))
-                {
-                    <a href="@item.Client.Link" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
-                }
-            </td>
-            <td>
-                @if (item.IsModifiable)
-                {
-                    @Html.ActionLink("Edit ", "Edit", new { id = item.Client.Id })
-                    <span>|</span>
-                    @Html.ActionLink("Manage Locations", "ClientLocations", "Location", new { id = item.Client.Id }, null)
-                    <span>|</span>
-                    @Html.ActionLink("Details", "Details", new { id = item.Client.Id })
-                    <span>|</span>
-                    @Html.ActionLink(" Delete", "Delete", new { id = item.Client.Id })
-
-                }
-            </td>
-        </tr>
-    }
-</table>
+            @if (User.IsInRole("Admin"))
+            {
+                <hr />
+                <div class="row">
+                    <div class="col-xs-12">
+                        @Html.ActionLink("Create New Client", "Create", new { cId = ViewBag.ClientId, id = ViewBag.LocationId }, new { @class = "btn btn-default" })
+                    </div>
+                </div>
+            }
