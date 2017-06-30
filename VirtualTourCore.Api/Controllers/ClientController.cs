@@ -16,6 +16,7 @@ namespace VirtualTourCore.Api.Controllers
         private readonly ILookupService _lookupService;
         private readonly IAdminService _adminService;
         private readonly ISecurityService _securityService;
+        private readonly INavigationService _navigationService;
 
         //private readonly IFileService _fileService;
 
@@ -23,12 +24,14 @@ namespace VirtualTourCore.Api.Controllers
               ILookupService lookupService
             , IAdminService adminService
             , ISecurityService securityService
+            , INavigationService navigationService
             //, IFileService fileService
             )
         {
             _lookupService = lookupService;
             _adminService = adminService;
             _securityService = securityService;
+            _navigationService = navigationService;
             //_fileService = fileService;
         }
         // GET: Client

@@ -3,10 +3,11 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using VirtualTourCore.Common.DataAccess;
+using VirtualTourCore.Core.Interfaces;
 
 namespace VirtualTourCore.Core.Models
 {
-    public partial class Client : EntityBase
+    public partial class Client : EntityBase, INavigableEntity
     {
         public string Name { get; set; }
         public Guid Guid { get; set; }

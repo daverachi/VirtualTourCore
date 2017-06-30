@@ -119,6 +119,7 @@
     <Compile Include="Logging\Nlogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unity\UnityHelper.cs" />
+    <Compile Include="ValueObjects\NavigationBreadCrumbVO.cs" />
     <Compile Include="Utilities\PasswordHasher.cs" />
   </ItemGroup>
   <ItemGroup>

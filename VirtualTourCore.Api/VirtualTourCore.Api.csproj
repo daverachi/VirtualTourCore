@@ -255,6 +255,7 @@
     <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LocationController.cs" />
+    <Compile Include="Controllers\NavigationController.cs" />
     <Compile Include="Controllers\TourController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Filter\VTAuthFilter.cs" />
@@ -344,9 +345,11 @@
     <Content Include="Views\Location\LocationDetails.cshtml" />
     <Content Include="Views\Client\ClientDetails.cshtml" />
     <Content Include="Views\Area\AreaDetails.cshtml" />
+    <Content Include="Views\Shared\_BreadCrumbs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Navigation\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

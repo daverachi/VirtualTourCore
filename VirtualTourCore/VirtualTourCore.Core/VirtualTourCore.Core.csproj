@@ -109,6 +109,8 @@
     <Compile Include="Interfaces\IClientRepository.cs" />
     <Compile Include="Interfaces\ILocationRepository.cs" />
     <Compile Include="Interfaces\ILookupService.cs" />
+    <Compile Include="Interfaces\INavigableEntity.cs" />
+    <Compile Include="Interfaces\INavigationService.cs" />
     <Compile Include="Interfaces\ISecurityUserClientRepository.cs" />
     <Compile Include="Interfaces\ITourRepository.cs" />
     <Compile Include="Interfaces\IVirtualTourCoreContext.cs" />
@@ -149,6 +151,7 @@
     <Compile Include="Services\AdminService.cs" />
     <Compile Include="Services\IdentityService.cs" />
     <Compile Include="Services\LookupService.cs" />
+    <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\SecurityService.cs" />
   </ItemGroup>
   <ItemGroup />

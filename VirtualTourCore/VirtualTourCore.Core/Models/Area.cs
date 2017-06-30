@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel;
 using System.Web.Mvc;
 using VirtualTourCore.Common.DataAccess;
+using VirtualTourCore.Core.Interfaces;
 
 namespace VirtualTourCore.Core.Models
 {
-    public class Area : EntityBase
+    public class Area : EntityBase, INavigableEntity
     {
         public int ClientId { get; set; }
         public int LocationId { get; set; }

@@ -39,21 +39,21 @@ namespace VirtualTourCore.Api.Controllers
             return View(clients);
         }
         [VTAuthFilter("Tour")]
-        public ActionResult ClientTours(int id, int areaId)
+        public ActionResult ClientTours(int cId, int id)
         {
             // get available clients -> if only one redirect to client tours with client id
             // else redirect to clients and have user click the client
-            ViewBag.ClientId = id;
-            ViewBag.AreaId = areaId;
+            ViewBag.ClientId = cId;
+            ViewBag.AreaId = id;
             // update to call including client id for better security.
-            var tours = _lookupService.GetToursByAreaId(areaId);
+            var tours = _lookupService.GetToursByAreaId(id);
             return View(tours);
         }
 
-        public ActionResult Create(int id, int areaId)
+        public ActionResult Create(int cId, int id)
         {
             ModelState.Clear();
-            return View("TourCreateEdit", new Tour { Id = default(int), AreaId = areaId, ClientId = id });
+            return View("TourCreateEdit", new Tour { Id = default(int), AreaId = id, ClientId = cId });
         }
 
         public ActionResult Edit(int id)
@@ -85,7 +85,7 @@ namespace VirtualTourCore.Api.Controllers
                 _adminService.UpdateTour(tour);
             }
             // todo : do something about success or failure
-            return RedirectToAction("ClientTours", new { id = tour.ClientId, areaId = tour.AreaId });
+            return RedirectToAction("ClientTours", new { cId = tour.ClientId, id = tour.AreaId });
         }
 
         //[VTAuthFilter("Client")]
@@ -95,7 +95,7 @@ namespace VirtualTourCore.Api.Controllers
             Tour tour = _lookupService.GetTourByIdAndClientId(clientIds, id);
             _adminService.DeleteTour(tour);
             // TODO Error handling!
-            return RedirectToAction("ClientTours", new { id = tour.ClientId, areaId = tour.AreaId });
+            return RedirectToAction("ClientTours", new { cId = tour.ClientId, id = tour.AreaId });
         }
     }
 }

@@ -61,3 +61,4 @@ F:\Projects\VirtualTourCore\VirtualTourCore\VirtualTourCore.Core\bin\Debug\Micro
 F:\Projects\VirtualTourCore\VirtualTourCore\VirtualTourCore.Core\bin\Debug\Microsoft.Practices.Unity.xml
 F:\Projects\VirtualTourCore\VirtualTourCore\VirtualTourCore.Core\bin\Debug\Microsoft.Practices.ServiceLocation.pdb
 F:\Projects\VirtualTourCore\VirtualTourCore\VirtualTourCore.Core\bin\Debug\Microsoft.Practices.ServiceLocation.xml
+F:\Projects\VirtualTourCore\VirtualTourCore\VirtualTourCore.Core\bin\Debug\AutoMapper.Net4.dll
