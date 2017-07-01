@@ -28,3 +28,9 @@
 .page-header {
     border-bottom: none;
 }
+.input-group-addon {
+  background-color: #ffffff;
+}
+.uploadImgHolder{
+    margin-top: 10px;
+}

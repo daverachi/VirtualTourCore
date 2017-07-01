@@ -71,6 +71,7 @@
     <Build Include="Tables\Location.sql" />
     <Build Include="Tables\Area.sql" />
     <Build Include="Tables\Tour.sql" />
+    <Build Include="Tables\AssetStore.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="VirtualTourCore.Database.refactorlog" />

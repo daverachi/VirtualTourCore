@@ -106,6 +106,7 @@
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\UnitOfWorkBase.cs" />
     <Compile Include="DataAccess\VTCoreEntity.cs" />
+    <Compile Include="Enums\FileExtensions.cs" />
     <Compile Include="Exceptions\Asserter.cs" />
     <Compile Include="Extensions\AutoMapperExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
@@ -119,12 +120,11 @@
     <Compile Include="Logging\Nlogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unity\UnityHelper.cs" />
+    <Compile Include="Utilities\GuidUtils.cs" />
     <Compile Include="ValueObjects\NavigationBreadCrumbVO.cs" />
     <Compile Include="Utilities\PasswordHasher.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Enums\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />

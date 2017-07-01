@@ -17,15 +17,35 @@ namespace VirtualTourCore.Common.Helper
     }
     public class CommonConfigurationHelper
     {
-        //private const string _blobStorageConnectionString = "BlobStorageConnectionString";
-        //public string Azure_BlobStorageConnectionString
-        //{
-        //    get
-        //    {
-        //        string result = System.Configuration.ConfigurationManager.AppSettings[_blobStorageConnectionString];
-        //        return result;
-        //    }
-        //}
+        private const string _blobStorageConnectionString = "BlobStorageConnectionString";
+        public string Azure_BlobStorageConnectionString
+        {
+            get
+            {
+                string result = System.Configuration.ConfigurationManager.AppSettings[_blobStorageConnectionString];
+                return result;
+            }
+        }
+
+        private const string _blobStorageBaseUrl = "BlobStorageBaseUrl";
+        public string Azure_BlobStorageBaseUrl
+        {
+            get
+            {
+                string result = System.Configuration.ConfigurationManager.AppSettings[_blobStorageBaseUrl];
+                return result;
+            }
+        }
+
+        private const string _blobStorageContainer = "BlobStorageContainer";
+        public string Azure_BlobStorageContainer
+        {
+            get
+            {
+                string result = System.Configuration.ConfigurationManager.AppSettings[_blobStorageContainer];
+                return result;
+            }
+        }
 
         private const long _timeout = 60L * 60L * 10000000L; //Format: (# Minutes)*(Seconds Multiplier)*(10 000 000). Length of time in ticks (1 hour) reference: 1 tick = 100 nano seconds 
         public TimeSpan TransactionScope_Timeout

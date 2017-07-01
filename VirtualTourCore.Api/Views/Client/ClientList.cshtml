@@ -17,7 +17,7 @@ else
                 <th class="col-sm-3">
                     @Html.DisplayNameFor(model => model.Client.Name)
                 </th>
-                <th class="col-sm-3 text-center">
+                <th class="col-sm-3">
                     @Html.DisplayNameFor(model => model.Client.Link)
                 </th>
                 <th class="col-sm-2 text-center">
@@ -36,7 +36,7 @@ else
                     <td>
                         @Html.DisplayFor(modelItem => item.Client.Name)
                     </td>
-                    <td class="text-center">
+                    <td>
                         @Html.DisplayFor(modelItem => item.Client.Link)
                         @if (!string.IsNullOrWhiteSpace(item.Client.Link))
                         {
