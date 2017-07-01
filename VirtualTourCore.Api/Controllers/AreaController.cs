@@ -74,15 +74,16 @@ namespace VirtualTourCore.Api.Controllers
         [HttpPost]
         public ActionResult ModifyAreas(Area area)
         {
+            var areaMap = Request.Files["areaMap"];
             if (area.Id == 0)
             {
                 area.CreateUserId = IdentityService.GetUserIdFromClaim(User);
-                _adminService.CreateArea(area);
+                _adminService.CreateArea(area, areaMap);
             }
             else
             {
                 area.UpdateUserId = IdentityService.GetUserIdFromClaim(User);
-                _adminService.UpdateArea(area);
+                _adminService.UpdateArea(area, areaMap);
             }
             // todo : do something about success or failure
             return RedirectToAction("ClientAreas", new { cId = area.ClientId, id = area.LocationId });

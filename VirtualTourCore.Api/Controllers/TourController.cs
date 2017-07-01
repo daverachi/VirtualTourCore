@@ -74,15 +74,16 @@ namespace VirtualTourCore.Api.Controllers
         [HttpPost]
         public ActionResult ModifyTours(Tour tour)
         {
+            var tourThumb = Request.Files["tourThumb"];
             if (tour.Id == 0)
             {
                 tour.CreateUserId = IdentityService.GetUserIdFromClaim(User);
-                _adminService.CreateTour(tour);
+                _adminService.CreateTour(tour, tourThumb);
             }
             else
             {
                 tour.UpdateUserId = IdentityService.GetUserIdFromClaim(User);
-                _adminService.UpdateTour(tour);
+                _adminService.UpdateTour(tour, tourThumb);
             }
             // todo : do something about success or failure
             return RedirectToAction("ClientTours", new { cId = tour.ClientId, id = tour.AreaId });

@@ -54,8 +54,9 @@ namespace VirtualTourCore.Core.Services
         }
         public Location GetLocationByIdAndClientId(IEnumerable<string> clientIds, int id)
         {
-
-            return _locationRepository.GetByIdFilteredByClientIds(id, GetValidClientIds(clientIds));
+            var location = _locationRepository.GetByIdFilteredByClientIds(id, GetValidClientIds(clientIds));
+            location.AssetLocation = PopulateAssetStoreById(location.AssetLocationId);
+            return location;
         }
 
         public IEnumerable<Area> GetAreasByClientId(int id)
@@ -65,7 +66,26 @@ namespace VirtualTourCore.Core.Services
 
         public Area GetAreaByIdAndClientId(IEnumerable<string> clientIds, int id)
         {
-            return _areaRepository.GetByIdAndByClientId(id, GetValidClientIds(clientIds));
+            var area = _areaRepository.GetByIdAndByClientId(id, GetValidClientIds(clientIds));
+            area.AssetArea = PopulateAssetStoreById(area.AssetAreaId);
+            return area;
+        }
+
+        public IEnumerable<Area> GetAreasByLocationId(int id)
+        {
+            return _areaRepository.GetByLocationId(id);
+        }
+
+        public IEnumerable<Tour> GetToursByAreaId(int areaId)
+        {
+            return _tourRepository.GetByAreaId(areaId);
+        }
+
+        public Tour GetTourByIdAndClientId(IEnumerable<string> clientIds, int id)
+        {
+            var tour = _tourRepository.GetByIdAndClientId(id, GetValidClientIds(clientIds));
+            tour.AssetTourThumbnail = PopulateAssetStoreById(tour.AssetTourThumbnailId);
+            return tour;
         }
 
         private AssetStore PopulateAssetStoreById(int? assetStoreId)
@@ -91,21 +111,6 @@ namespace VirtualTourCore.Core.Services
                 }
             }
             return _validClientIds;
-        }
-
-        public IEnumerable<Area> GetAreasByLocationId(int id)
-        {
-            return _areaRepository.GetByLocationId(id);
-        }
-
-        public IEnumerable<Tour> GetToursByAreaId(int areaId)
-        {
-            return _tourRepository.GetByAreaId(areaId);
-        }
-
-        public Tour GetTourByIdAndClientId(IEnumerable<string> clientIds, int id)
-        {
-            return _tourRepository.GetByIdAndClientId(id, GetValidClientIds(clientIds));
         }
     }
 }

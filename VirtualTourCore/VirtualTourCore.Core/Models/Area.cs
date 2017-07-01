@@ -16,6 +16,6 @@ namespace VirtualTourCore.Core.Models
         [AllowHtml]
         public string DescriptionHtml { get; set; }
         public int? AssetAreaId { get; set; }
-        public AssetStore AreaMap { get; set; }
+        public AssetStore AssetArea { get; set; }
     }
 }

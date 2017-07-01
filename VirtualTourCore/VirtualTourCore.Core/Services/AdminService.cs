@@ -114,7 +114,7 @@ namespace VirtualTourCore.Core.Services
                 Timeout = CommonConfiguration.Configuration.TransactionScope_Timeout
             }))
             {
-                var logoUploadSuccess = string.IsNullOrWhiteSpace(logo.FileName);
+                var logoUploadSuccess = logo != null && string.IsNullOrWhiteSpace(logo.FileName);
                 var baseLogoAssetId = existingClient.AssetLogoId;
                 var deletingCurrentLogo = logoUploadSuccess && existingClient.AssetLogoId != null;
                 if (deletingCurrentLogo)
@@ -131,7 +131,7 @@ namespace VirtualTourCore.Core.Services
                     }
                 }
 
-                var profileUploadSuccess = string.IsNullOrWhiteSpace(profile.FileName);
+                var profileUploadSuccess = profile != null && string.IsNullOrWhiteSpace(profile.FileName);
                 var baseProfileAssetId = existingClient.AssetProfileId;
                 var deletingCurrentProfile = profileUploadSuccess && existingClient.AssetProfileId != null;
                 if (deletingCurrentProfile)
@@ -155,14 +155,37 @@ namespace VirtualTourCore.Core.Services
             }
             return resultingId;
         }
-        public int? CreateLocation(Location location)
+        public int? CreateLocation(Location location, HttpPostedFileBase locationImage)
         {
-            var locationId = _locationRepository.Create(location);
-            // need to have identity service add claim for location to users cookie.
-            return locationId;
+            using (TransactionScope transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions()
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = CommonConfiguration.Configuration.TransactionScope_Timeout
+            }))
+            {
+                var locationId = _locationRepository.Create(location);
+                var baseLogoAssetId = location.AssetLocationId;
+                // need to have identity service add claim for location to users cookie.
+                var locationImageUploadSuccess = locationImage != null && string.IsNullOrWhiteSpace(locationImage.FileName);
+                if (!locationImageUploadSuccess)
+                {
+                    location.AssetLocationId = ProcessFileUpload(location.ClientId, location.CreateUserId.Value, location.AssetLocationId, locationImage);
+                    if (baseLogoAssetId != location.AssetLocationId)
+                    {
+                        locationImageUploadSuccess = true;
+                        _locationRepository.UpdateEntity(location);
+                    }
+                }
+                if (locationImageUploadSuccess && location.Id > 0)
+                {
+                    transaction.Complete();
+                }
+            }
+            return location.Id;
         }
-        public int? UpdateLocation(Location location)
+        public int? UpdateLocation(Location location, HttpPostedFileBase locationImage)
         {
+            int? resultingId = null;
             var existingLocation = _locationRepository.GetById(location.Id);
             existingLocation.UpdateDate = DateTime.Now;
             existingLocation.Name = location.Name;
@@ -173,7 +196,35 @@ namespace VirtualTourCore.Core.Services
             existingLocation.Zipcode = location.Zipcode;
             existingLocation.City = location.City;
             existingLocation.State = location.State;
-            return _locationRepository.UpdateEntity(existingLocation);
+            using (TransactionScope transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions()
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = CommonConfiguration.Configuration.TransactionScope_Timeout
+            }))
+            {
+                var locationImageUploadSuccess = locationImage != null && string.IsNullOrWhiteSpace(locationImage.FileName);
+                var baseLogoAssetId = existingLocation.AssetLocationId;
+                var deletingCurrentLogo = locationImageUploadSuccess && existingLocation.AssetLocationId != null;
+                if (deletingCurrentLogo)
+                {
+                    existingLocation.AssetLocationId = null;
+                    locationImageUploadSuccess = true;
+                }
+                else if (!locationImageUploadSuccess)
+                {
+                    existingLocation.AssetLocationId = ProcessFileUpload(existingLocation.ClientId, existingLocation.CreateUserId.Value, existingLocation.AssetLocationId, locationImage);
+                    if (baseLogoAssetId != existingLocation.AssetLocationId)
+                    {
+                        locationImageUploadSuccess = true;
+                    }
+                }
+                resultingId = _locationRepository.UpdateEntity(existingLocation);
+                if (locationImageUploadSuccess && resultingId != null)
+                {
+                    transaction.Complete();
+                }
+            }
+            return resultingId;
         }
 
         public bool DeleteClient(Client client)
@@ -185,52 +236,77 @@ namespace VirtualTourCore.Core.Services
             return _locationRepository.DeleteEntity(location);
         }
 
-        internal static void SendRegistrationEmail(RegistrationCode registrationCode)
+        public void CreateArea(Area area, HttpPostedFileBase areaMap)
         {
-            string smtpAddress = "smtp.mail.yahoo.com";
-            int portNumber = 587;
-            bool enableSSL = true;
-
-            string emailFrom = "VTCorePostalBot@yahoo.com";
-            string password = @"6u\67\8[6+Cz2_9*Y]7DvTnG3EJ9#k@}";
-            string emailTo = "david.ruhlemann@tallan.com";
-            string subject = "Virtual Tour Registration Code";
-            string body = string.Format("Hey, use this code ({0}) to register new users for your account.  This code will expire at {1}", registrationCode.Guid, ((DateTime)registrationCode.CreateDate).AddHours(1));
-
-            using (MailMessage mail = new MailMessage())
+            using (TransactionScope transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions()
             {
-                mail.From = new MailAddress(emailFrom);
-                mail.To.Add(emailTo);
-                mail.Subject = subject;
-                mail.Body = body;
-                mail.IsBodyHtml = true;
-                // Can set to false, if you are sending pure text.
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = CommonConfiguration.Configuration.TransactionScope_Timeout
+            }))
+            {
+                var areaId = _areaRepository.Create(area);
 
-                //mail.Attachments.Add(new Attachment("C:\\SomeFile.txt"));
-                //mail.Attachments.Add(new Attachment("C:\\SomeZip.zip"));
+                var areaMapUploadSuccess = areaMap != null && string.IsNullOrWhiteSpace(areaMap.FileName);
 
-                using (SmtpClient smtp = new SmtpClient(smtpAddress, portNumber))
+                if (areaId != null)
                 {
-                    smtp.Credentials = new System.Net.NetworkCredential(emailFrom, password);
-                    smtp.EnableSsl = enableSSL;
-                    smtp.Send(mail);
+                    var baseLogoAssetId = area.AssetAreaId;
+                    if (!areaMapUploadSuccess)
+                    {
+                        area.AssetAreaId = ProcessFileUpload(area.ClientId, area.CreateUserId.Value, area.AssetAreaId, areaMap);
+                        if (baseLogoAssetId != area.AssetAreaId)
+                        {
+                            areaMapUploadSuccess = true;
+                        }
+                    }
+                }
+                if (area.AssetAreaId != null)
+                {
+                    _areaRepository.UpdateEntity(area);
+                }
+                if(area.Id > 0 && areaMapUploadSuccess)
+                {
+                    transaction.Complete();
                 }
             }
         }
 
-        public void CreateArea(Area area)
+        public void UpdateArea(Area area, HttpPostedFileBase areaMap)
         {
-            _areaRepository.Create(area);
-        }
-
-        public void UpdateArea(Area area)
-        {
+            int? resultingId = null;
             var existingArea = _areaRepository.GetById(area.Id);
             existingArea.Description = area.Description;
             existingArea.DescriptionHtml = area.DescriptionHtml;
             existingArea.DescriptionJson = area.DescriptionJson;
             existingArea.Name = area.Name;
-            _areaRepository.UpdateEntity(existingArea);
+            using (TransactionScope transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions()
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = CommonConfiguration.Configuration.TransactionScope_Timeout
+            }))
+            {
+                var areaMapUploadSuccess = string.IsNullOrWhiteSpace(areaMap.FileName);
+                var baseLogoAssetId = existingArea.AssetAreaId;
+                var deletingCurrentLogo = areaMapUploadSuccess && existingArea.AssetAreaId != null;
+                if (deletingCurrentLogo)
+                {
+                    existingArea.AssetAreaId = null;
+                    areaMapUploadSuccess = true;
+                }
+                else if (!areaMapUploadSuccess)
+                {
+                    existingArea.AssetAreaId = ProcessFileUpload(existingArea.ClientId, existingArea.CreateUserId.Value, existingArea.AssetAreaId, areaMap);
+                    if (baseLogoAssetId != existingArea.AssetAreaId)
+                    {
+                        areaMapUploadSuccess = true;
+                    }
+                }
+                resultingId = _areaRepository.UpdateEntity(existingArea);
+                if (areaMapUploadSuccess && resultingId != null)
+                {
+                    transaction.Complete();
+                }
+            }
         }
 
         public void DeleteArea(Area area)
@@ -238,19 +314,76 @@ namespace VirtualTourCore.Core.Services
             _areaRepository.DeleteEntity(area);
         }
 
-        public void CreateTour(Tour tour)
+        public void CreateTour(Tour tour, HttpPostedFileBase tourThumb)
         {
-            _tourRepository.Create(tour);
+            using (TransactionScope transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions()
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = CommonConfiguration.Configuration.TransactionScope_Timeout
+            }))
+            {
+                var tourId = _tourRepository.Create(tour);
+                var tourThumbUploadSuccess = tourThumb != null && string.IsNullOrWhiteSpace(tourThumb.FileName);
+
+                if (tourId != null)
+                {
+                    var baseLogoAssetId = tour.AssetTourThumbnailId;
+                    if (!tourThumbUploadSuccess)
+                    {
+                        tour.AssetTourThumbnailId = ProcessFileUpload(tour.ClientId, tour.CreateUserId.Value, tour.AssetTourThumbnailId, tourThumb);
+                        if (baseLogoAssetId != tour.AssetTourThumbnailId)
+                        {
+                            tourThumbUploadSuccess = true;
+                        }
+                    }
+                }
+                if (tour.AssetTourThumbnailId != null)
+                {
+                    _tourRepository.UpdateEntity(tour);
+                }
+                if (tour.Id > 0 && tourThumbUploadSuccess)
+                {
+                    transaction.Complete();
+                }
+            }
         }
 
-        public void UpdateTour(Tour tour)
+        public void UpdateTour(Tour tour, HttpPostedFileBase tourThumb)
         {
+            int? resultingId = null;
             var existingTour = _tourRepository.GetById(tour.Id);
             existingTour.Description = tour.Description;
             existingTour.DescriptionHtml = tour.DescriptionHtml;
             existingTour.DescriptionJson = tour.DescriptionJson;
             existingTour.Name = tour.Name;
-            _tourRepository.UpdateEntity(existingTour);
+            using (TransactionScope transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions()
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = CommonConfiguration.Configuration.TransactionScope_Timeout
+            }))
+            {
+                var areaMapUploadSuccess = string.IsNullOrWhiteSpace(tourThumb.FileName);
+                var baseLogoAssetId = existingTour.AssetTourThumbnailId;
+                var deletingCurrentLogo = areaMapUploadSuccess && existingTour.AssetTourThumbnailId != null;
+                if (deletingCurrentLogo)
+                {
+                    existingTour.AssetTourThumbnailId = null;
+                    areaMapUploadSuccess = true;
+                }
+                else if (!areaMapUploadSuccess)
+                {
+                    existingTour.AssetTourThumbnailId = ProcessFileUpload(existingTour.ClientId, existingTour.CreateUserId.Value, existingTour.AssetTourThumbnailId, tourThumb);
+                    if (baseLogoAssetId != existingTour.AssetTourThumbnailId)
+                    {
+                        areaMapUploadSuccess = true;
+                    }
+                }
+                resultingId = _tourRepository.UpdateEntity(existingTour);
+                if (areaMapUploadSuccess && resultingId != null)
+                {
+                    transaction.Complete();
+                }
+            }
         }
 
         public void DeleteTour(Tour tour)
@@ -286,7 +419,38 @@ namespace VirtualTourCore.Core.Services
                 CreateUserId = userId
             };
         }
+        internal static void SendRegistrationEmail(RegistrationCode registrationCode)
+        {
+            string smtpAddress = "smtp.mail.yahoo.com";
+            int portNumber = 587;
+            bool enableSSL = true;
 
+            string emailFrom = "VTCorePostalBot@yahoo.com";
+            string password = @"6u\67\8[6+Cz2_9*Y]7DvTnG3EJ9#k@}";
+            string emailTo = "david.ruhlemann@tallan.com";
+            string subject = "Virtual Tour Registration Code";
+            string body = string.Format("Hey, use this code ({0}) to register new users for your account.  This code will expire at {1}", registrationCode.Guid, ((DateTime)registrationCode.CreateDate).AddHours(1));
+
+            using (MailMessage mail = new MailMessage())
+            {
+                mail.From = new MailAddress(emailFrom);
+                mail.To.Add(emailTo);
+                mail.Subject = subject;
+                mail.Body = body;
+                mail.IsBodyHtml = true;
+                // Can set to false, if you are sending pure text.
+
+                //mail.Attachments.Add(new Attachment("C:\\SomeFile.txt"));
+                //mail.Attachments.Add(new Attachment("C:\\SomeZip.zip"));
+
+                using (SmtpClient smtp = new SmtpClient(smtpAddress, portNumber))
+                {
+                    smtp.Credentials = new System.Net.NetworkCredential(emailFrom, password);
+                    smtp.EnableSsl = enableSSL;
+                    smtp.Send(mail);
+                }
+            }
+        }
 
 
     }

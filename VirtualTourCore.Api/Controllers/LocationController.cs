@@ -73,16 +73,17 @@ namespace VirtualTourCore.Api.Controllers
         [HttpPost]
         public ActionResult ModifyLocations(Location location)
         {
+            var locationImage = Request.Files["locationImage"];
             if (location.Id == 0)
             {
                 location.CreateUserId = IdentityService.GetUserIdFromClaim(User);
-                _adminService.CreateLocation(location);
+                _adminService.CreateLocation(location, locationImage);
 
             }
             else
             {
                 location.UpdateUserId = IdentityService.GetUserIdFromClaim(User);
-                _adminService.UpdateLocation(location);
+                _adminService.UpdateLocation(location, locationImage);
             }
             return RedirectToAction("ClientLocations", new { id = location.ClientId });
         }
