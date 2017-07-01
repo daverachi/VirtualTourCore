@@ -63,32 +63,38 @@ else
     </div>
     <div class="row">
         <div class="form-group col-lg-6">
+            @* Logo File Input Region Start *@
             @Html.Label("Client Logo")
             <div class="input-group">
                 <label class="input-group-btn">
                     <span class="btn btn-default">
-                        Browse&hellip; <input type="file" name="logo" data-target="logoImage" class="imgInp" style="display: none;">
+                        Browse&hellip; <input type="file" name="logo" data-target="logoImage" data-name="logo" class="imgInp" style="display: none;">
                     </span>
                 </label>
-                <input type="text" class="form-control" readonly>
+                <input id="logoFilenameInput" type="text" class="form-control" readonly>
+                <span class="btn btn-default input-group-addon imgClearBtn" id="logoClearBtn" data-name="logo"><i id="logoClear" class="fa fa-trash"></i></span>
                 <span class="btn btn-default input-group-addon" data-toggle="collapse" data-target="#logoImage" 
-                      aria-expanded="false" aria-controls="logoImage" id="logoDisplayBtn"><i id="logoToggle" class="fa fa-toggle-off" aria-hidden="true"></i></span>
+                      aria-expanded="false" aria-controls="logoImage" data-name="logo" id="logoDisplayBtn"><i id="logoToggle" class="fa fa-toggle-off" aria-hidden="true"></i></span>
             </div>
             <img src="" class="uploadImgHolder collapse img-fluid img-thumbnail col-xs-12" data-role="collapsible" id="logoImage" alt="Logo Thumbnail">
+            @* Logo File Input Region End *@
         </div>
         <div class="form-group col-lg-6">
+            @* Profile File Input Region Start *@
             @Html.Label("Profile Image")
             <div class="input-group">
                 <label class="input-group-btn">
                     <span class="btn btn-default">
-                        Browse&hellip; <input type="file" name="profile" data-target="profileImage" class="imgInp" style="display: none;">
+                        Browse&hellip; <input type="file" id="profileInput" name="profile" data-name="profile" data-target="profileImage" class="imgInp" style="display: none;">
                     </span>
                 </label>
-                <input type="text" class="form-control" readonly>
+                <input id="profileFilenameInput" type="text" class="form-control" readonly>
+                <span class="btn btn-default input-group-addon imgClearBtn" id="profileClearBtn" data-name="profile"><i id="profileClear" class="fa fa-trash"></i></span>
                 <span class="btn btn-default input-group-addon" data-toggle="collapse" data-target="#profileImage" 
-                      aria-expanded="false" aria-controls="profileImage" id="profileDisplayBtn"><i id="profileToggle" class="fa fa-toggle-off" aria-hidden="true"></i></span>
+                      aria-expanded="false" aria-controls="profileImage" id="profileDisplayBtn" data-name="profile"><i id="profileToggle" class="fa fa-toggle-off" aria-hidden="true"></i></span>
             </div>
             <img src="" class="uploadImgHolder collapse img-fluid img-thumbnail col-xs-12" id="profileImage" alt="Profile Image">
+            @* Profile File Input Region End *@
         </div>
     </div>
     @Html.HiddenFor(model => model.Description)
@@ -115,76 +121,18 @@ else
     </div>
 
     <script>
-        $(function () {
-
-            // We can attach the `fileselect` event to all file inputs on the page
-            $(document).on('change', ':file', function () {
-                var input = $(this),
-                    numFiles = input.get(0).files ? input.get(0).files.length : 1,
-                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-                input.trigger('fileselect', [numFiles, label]);
-                if($(this).data("target").indexOf("logo") == 0 && $('#logoToggle').hasClass("fa-toggle-off"))
-                {
-                    $('#logoToggle').click();
-                }
-                if ($(this).data("target").indexOf("profile") == 0 && $('#profileToggle').hasClass("fa-toggle-off")) {
-                    $('#profileToggle').click();
-                }
-            });
-
-            // We can watch for our custom `fileselect` event like this
-            $(document).ready(function () {
-                $(".imgInp").change(function () {
-                    readURL(this, $(this).attr("data-target"));
-                });
-                function readURL(input, target) {
-                    if (input.files && input.files[0]) {
-                        var reader = new FileReader();
-                        reader.onload = function (e) {
-                            $('#' + target).attr('src', e.target.result);
-                        }
-                        reader.readAsDataURL(input.files[0]);
-                        //updateThumbnail(input, target);
-                    }
-                }
-
-                setTimeout(function () {
-                    $('#logoImage').on('shown.bs.collapse', function () {
-                        $('#logoToggle').removeClass("fa-toggle-off");
-                        $('#logoToggle').addClass("fa-toggle-on");
-                    });
-                    $('#logoImage').on('hidden.bs.collapse', function () {
-                        $('#logoToggle').removeClass("fa-toggle-on");
-                        $('#logoToggle').addClass("fa-toggle-off");
-                    });
-                }, 1000);
-
-                setTimeout(function () {
-                    $('#profileImage').on('shown.bs.collapse', function () {
-                        $('#profileToggle').removeClass("fa-toggle-off");
-                        $('#profileToggle').addClass("fa-toggle-on");
-                    });
-                    $('#profileImage').on('hidden.bs.collapse', function () {
-                        $('#profileToggle').removeClass("fa-toggle-on");
-                        $('#profileToggle').addClass("fa-toggle-off");
-                    });
-                }, 1000);
-            });
-
-        });
-
         var toolbarOptions = [
-                    ['bold', 'italic', 'underline', 'strike'],
-                    ['blockquote', 'code-block'],
-                    [{ 'header': 1 }, { 'header': 2 }],
-                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                    [{ 'script': 'sub' }, { 'script': 'super' }],
-                    [{ 'indent': '-1' }, { 'indent': '+1' }],
-                    [{ 'size': ['small', false, 'large', 'huge'] }],
-                    ['link', 'image', 'video'],
-                    [{ 'color': [] }, { 'background': [] }],
-                    [{ 'font': [] }],
-                    [{ 'align': [] }]
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote', 'code-block'],
+            [{ 'header': 1 }, { 'header': 2 }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'script': 'sub' }, { 'script': 'super' }],
+            [{ 'indent': '-1' }, { 'indent': '+1' }],
+            [{ 'size': ['small', false, 'large', 'huge'] }],
+            ['link', 'image', 'video'],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'font': [] }],
+            [{ 'align': [] }]
         ];
         var options = {
             debug: 'info',
