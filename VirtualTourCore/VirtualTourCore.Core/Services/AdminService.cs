@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
+using System.Transactions;
+using System.Web;
+using VirtualTourCore.Common.Helper;
+using VirtualTourCore.Common.Utilities;
 using VirtualTourCore.Core.Interfaces;
 using VirtualTourCore.Core.Models;
 
@@ -16,13 +17,17 @@ namespace VirtualTourCore.Core.Services
         private ILocationRepository _locationRepository;
         private IAreaRepository _areaRepository;
         private ITourRepository _tourRepository;
+        private IAssetStoreRepository _assetStoreRepository;
+        private IFileService _fileService;
 
         public AdminService(
             IClientRepository clientRepository,
             IRegistrationCodeRepository registrationCodeRepository,
             ILocationRepository locationRepository,
             IAreaRepository areaRepository,
-            ITourRepository tourRepository
+            ITourRepository tourRepository,
+            IAssetStoreRepository assetStoreRepository,
+            IFileService fileService
             )
         {
             _clientRepository = clientRepository;
@@ -30,20 +35,63 @@ namespace VirtualTourCore.Core.Services
             _locationRepository = locationRepository;
             _areaRepository = areaRepository;
             _tourRepository = tourRepository;
+            _assetStoreRepository = assetStoreRepository;
+            _fileService = fileService;
         }
-        public int? CreateClient(Client client)
+        public int? CreateClient(Client client, HttpPostedFileBase logo, HttpPostedFileBase profile)
         {
             client.Guid = Guid.NewGuid();
-            var clientId = _clientRepository.Create(client);
-            RegistrationCode regCode = new RegistrationCode();
-            if (clientId != null && _registrationCodeRepository.Create(clientId.Value, out regCode))
+            using (TransactionScope transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions()
             {
-                SendRegistrationEmail(regCode);
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = CommonConfiguration.Configuration.TransactionScope_Timeout
+            }))
+            {
+                var clientId = _clientRepository.Create(client);
+
+                var logoUploadSuccess = string.IsNullOrWhiteSpace(logo.FileName);
+                var profileUploadSuccess = string.IsNullOrWhiteSpace(profile.FileName);
+
+                if (clientId != null)
+                {
+                    var baseLogoAssetId = client.AssetLogoId;
+                    if (!logoUploadSuccess)
+                    {
+                        client.AssetLogoId = ProcessFileUpload(clientId.Value, client.CreateUserId.Value, client.AssetLogoId, logo);
+                        if(baseLogoAssetId != client.AssetLogoId)
+                        {
+                            logoUploadSuccess = true;
+                        }
+                    }
+                    var baseProfileAssetId = client.AssetProfileId;
+                    if (!logoUploadSuccess)
+                    {
+                        client.AssetProfileId = ProcessFileUpload(clientId.Value, client.CreateUserId.Value, client.AssetProfileId, profile);
+                        if (baseProfileAssetId != client.AssetProfileId)
+                        {
+                            profileUploadSuccess = true;
+                        }
+                    }                    
+                }
+                if(client.AssetLogoId != null || client.AssetProfileId != null)
+                {
+                    _clientRepository.UpdateEntity(client);
+                }
+                RegistrationCode regCode = new RegistrationCode();
+                if (clientId != null && _registrationCodeRepository.Create(clientId.Value, out regCode))
+                {
+                    SendRegistrationEmail(regCode);
+                }
+                if(clientId != null && logoUploadSuccess && profileUploadSuccess)
+                {
+                    transaction.Complete();
+                }
+                return clientId;
             }
-            return clientId;
         }
-        public int? UpdateClient(Client client)
+        public int? UpdateClient(Client client, HttpPostedFileBase logo, HttpPostedFileBase profile)
         {
+            int? resultingId = null;
             var existingClient = _clientRepository.GetById(client.Id);
             existingClient.UpdateDate = DateTime.Now;
             existingClient.Name = client.Name;
@@ -60,7 +108,39 @@ namespace VirtualTourCore.Core.Services
             existingClient.MarketingEmail = client.MarketingEmail;
             existingClient.City = client.City;
             existingClient.State = client.State;
-            return _clientRepository.UpdateEntity(existingClient);
+            using (TransactionScope transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions()
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = CommonConfiguration.Configuration.TransactionScope_Timeout
+            }))
+            {
+                var logoUploadSuccess = string.IsNullOrWhiteSpace(logo.FileName);
+                var profileUploadSuccess = string.IsNullOrWhiteSpace(profile.FileName);
+                var baseLogoAssetId = existingClient.AssetLogoId;
+                if (!logoUploadSuccess)
+                {
+                    existingClient.AssetLogoId = ProcessFileUpload(existingClient.Id, existingClient.CreateUserId.Value, existingClient.AssetLogoId, logo);
+                    if (baseLogoAssetId != existingClient.AssetLogoId)
+                    {
+                        logoUploadSuccess = true;
+                    }
+                }
+                var baseProfileAssetId = existingClient.AssetProfileId;
+                if (!logoUploadSuccess)
+                {
+                    existingClient.AssetProfileId = ProcessFileUpload(existingClient.Id, existingClient.CreateUserId.Value, existingClient.AssetProfileId, profile);
+                    if (baseProfileAssetId != existingClient.AssetProfileId)
+                    {
+                        profileUploadSuccess = true;
+                    }
+                }
+                resultingId = _clientRepository.UpdateEntity(existingClient);
+                if (logoUploadSuccess && profileUploadSuccess && resultingId != null)
+                {
+                    transaction.Complete();
+                }
+            }
+            return resultingId;
         }
         public int? CreateLocation(Location location)
         {
@@ -164,5 +244,37 @@ namespace VirtualTourCore.Core.Services
         {
             _tourRepository.DeleteEntity(tour);
         }
+
+        private int? ProcessFileUpload(int clientId, int userId, int? existingFilestoreId, HttpPostedFileBase file)
+        {
+            if(file != null && !string.IsNullOrWhiteSpace(file.FileName))
+            {
+                var assetStore = UploadAsset(file, userId, clientId, file.FileName);
+                var assetId = _assetStoreRepository.Create(assetStore);
+                return assetId;
+            }
+            return existingFilestoreId;
+        }
+        protected AssetStore UploadAsset(HttpPostedFileBase file, int userId, int clientID, string fileNickname)
+        {
+            MemoryStream target = new MemoryStream();
+            file.InputStream.CopyTo(target);
+            byte[] data = target.ToArray();
+            string path = string.Format("{0}/images/{1}", clientID, GuidUtils.AppendGuidToFilename(file.FileName));
+            _fileService.UploadFile(data, path);
+            return new AssetStore
+            {
+                ClientId = clientID,
+                Filename = file.FileName,
+                FileType = file.ContentType,
+                Nickname = fileNickname,
+                Path = path,
+                CreateDate = DateTime.Now,
+                CreateUserId = userId
+            };
+        }
+
+
+
     }
 }

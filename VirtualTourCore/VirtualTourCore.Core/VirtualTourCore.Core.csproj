@@ -115,6 +115,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
@@ -131,6 +132,7 @@
   <ItemGroup>
     <Compile Include="Interfaces\IAdminService.cs" />
     <Compile Include="Interfaces\IAreaRepository.cs" />
+    <Compile Include="Interfaces\IAssetStoreRepository.cs" />
     <Compile Include="Interfaces\IClientRepository.cs" />
     <Compile Include="Interfaces\IFileService.cs" />
     <Compile Include="Interfaces\ILocationRepository.cs" />
@@ -144,10 +146,12 @@
     <Compile Include="Interfaces\IRegistrationCodeRepository.cs" />
     <Compile Include="Interfaces\ISecurityUserRepository.cs" />
     <Compile Include="Models\Area.cs" />
+    <Compile Include="Models\AssetStore.cs" />
     <Compile Include="Models\Base\ClientEntity.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\Location.cs" />
     <Compile Include="Models\ModelMaps\AreaMap.cs" />
+    <Compile Include="Models\ModelMaps\AssetStoreMap.cs" />
     <Compile Include="Models\ModelMaps\BaseMap.cs" />
     <Compile Include="Models\ModelMaps\ClientMap.cs" />
     <Compile Include="Models\ModelMaps\LocationMap.cs" />
@@ -163,6 +167,7 @@
     <Compile Include="Models\VirtualTourCoreContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AreaRepository.cs" />
+    <Compile Include="Repositories\AssetStoreRepository.cs" />
     <Compile Include="Repositories\ClientRepository.cs" />
     <Compile Include="Repositories\LocationRepository.cs" />
     <Compile Include="Repositories\RegistrationCodeRepository.cs" />

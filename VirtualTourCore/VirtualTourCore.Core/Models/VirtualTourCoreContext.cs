@@ -25,6 +25,7 @@ namespace VirtualTourCore.Core.Models
         public DbSet<Location> Locations { get; set; }
         public DbSet<Area> Areas { get; set; }
         public DbSet<Tour> Tours { get; set; }
+        public DbSet<AssetStore> AssetStores { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             // Prevent cascading delete
@@ -38,6 +39,7 @@ namespace VirtualTourCore.Core.Models
             modelBuilder.Configurations.Add(new LocationMap());
             modelBuilder.Configurations.Add(new AreaMap());
             modelBuilder.Configurations.Add(new TourMap());
+            modelBuilder.Configurations.Add(new AssetStoreMap());
         }
 
     }

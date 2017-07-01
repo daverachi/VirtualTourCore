@@ -58,15 +58,17 @@ namespace VirtualTourCore.Api.Controllers
         [HttpPost]
         public ActionResult ModifyClients(Client client)
         {
-            if(client.Id == 0)
+            var logo = Request.Files["logo"];
+            var profile = Request.Files["profile"];
+            if (client.Id == 0)
             {
                 client.CreateUserId = IdentityService.GetUserIdFromClaim(User);
-                _adminService.CreateClient(client);
+                _adminService.CreateClient(client, logo, profile);
             }
             else
             {
                 client.UpdateUserId = IdentityService.GetUserIdFromClaim(User);
-                _adminService.UpdateClient(client);
+                _adminService.UpdateClient(client, logo, profile);
             }
             return RedirectToAction("Index");
         }
