@@ -1507,6 +1507,29 @@
 			</Relationship>
 			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="39" />
 		</Element>
+		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_Tour_KrPanoTour]">
+			<Relationship Name="Columns">
+				<Entry>
+					<References Name="[dbo].[Tour].[KrPanoTourId]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="DefiningTable">
+				<Entry>
+					<References Name="[dbo].[Tour]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="ForeignColumns">
+				<Entry>
+					<References Name="[dbo].[AssetStore].[Id]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="ForeignTable">
+				<Entry>
+					<References Name="[dbo].[AssetStore]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="40" />
+		</Element>
 		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_Tour_UpdateUser]">
 			<Relationship Name="Columns">
 				<Entry>
@@ -1528,7 +1551,7 @@
 					<References Name="[dbo].[SecurityUser]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="40" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="41" />
 		</Element>
 		<Element Type="SqlTable" Name="[dbo].[Location]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
@@ -1778,7 +1801,7 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="41" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="42" />
 			<AttachedAnnotation Disambiguator="21" />
 			<AttachedAnnotation Disambiguator="22" />
 			<AttachedAnnotation Disambiguator="23" />
@@ -1858,7 +1881,7 @@
 					<References Name="[dbo].[Location]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="41" />
+			<AttachedAnnotation Disambiguator="42" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_RegistrationCode]">
 			<Relationship Name="ColumnSpecifications">
@@ -1877,7 +1900,7 @@
 					<References Name="[dbo].[RegistrationCode]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="42" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="43" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_SecurityUserClient]">
 			<Relationship Name="ColumnSpecifications">
@@ -1896,7 +1919,7 @@
 					<References Name="[dbo].[SecurityUserClients]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="43" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="44" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_SecurityUserId]">
 			<Relationship Name="ColumnSpecifications">
@@ -1915,7 +1938,7 @@
 					<References Name="[dbo].[SecurityUser]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="44" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="45" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_SystemAdminClientAccess]">
 			<Relationship Name="ColumnSpecifications">
@@ -1934,7 +1957,7 @@
 					<References Name="[dbo].[SystemAdminClientAccess]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="45" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="46" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_Tour]">
 			<Relationship Name="ColumnSpecifications">
@@ -1953,7 +1976,7 @@
 					<References Name="[dbo].[Tour]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="46" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="47" />
 		</Element>
 		<Element Type="SqlTable" Name="[dbo].[RegistrationCode]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
@@ -2089,7 +2112,7 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="42" />
+			<AttachedAnnotation Disambiguator="43" />
 			<AttachedAnnotation Disambiguator="26" />
 			<AttachedAnnotation Disambiguator="27" />
 			<AttachedAnnotation Disambiguator="25" />
@@ -2252,7 +2275,7 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="44" />
+			<AttachedAnnotation Disambiguator="45" />
 			<AttachedAnnotation Disambiguator="28" />
 		</Element>
 		<Element Type="SqlTable" Name="[dbo].[SecurityUserClients]">
@@ -2373,7 +2396,7 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="43" />
+			<AttachedAnnotation Disambiguator="44" />
 			<AttachedAnnotation Disambiguator="31" />
 			<AttachedAnnotation Disambiguator="30" />
 			<AttachedAnnotation Disambiguator="32" />
@@ -2497,7 +2520,7 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="45" />
+			<AttachedAnnotation Disambiguator="46" />
 			<AttachedAnnotation Disambiguator="34" />
 			<AttachedAnnotation Disambiguator="35" />
 			<AttachedAnnotation Disambiguator="33" />
@@ -2635,6 +2658,21 @@
 					</Element>
 				</Entry>
 				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Tour].[KrPanoTourId]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
 					<Element Type="SqlSimpleColumn" Name="[dbo].[Tour].[CreateUserID]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
@@ -2702,12 +2740,13 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="46" />
+			<AttachedAnnotation Disambiguator="47" />
 			<AttachedAnnotation Disambiguator="37" />
+			<AttachedAnnotation Disambiguator="40" />
 			<AttachedAnnotation Disambiguator="38" />
 			<AttachedAnnotation Disambiguator="36" />
 			<AttachedAnnotation Disambiguator="39" />
-			<AttachedAnnotation Disambiguator="40" />
+			<AttachedAnnotation Disambiguator="41" />
 		</Element>
 		<Element Type="SqlUniqueConstraint" Name="[dbo].[UQ_ClientGuid]">
 			<Relationship Name="ColumnSpecifications">

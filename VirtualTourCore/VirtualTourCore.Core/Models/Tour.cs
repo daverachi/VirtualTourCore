@@ -17,5 +17,7 @@ namespace VirtualTourCore.Core.Models
         public string DescriptionHtml { get; set; }
         public int? AssetTourThumbnailId { get; set; }
         public AssetStore AssetTourThumbnail { get; set; }
+        public int? KrPanoTourId { get; set; }
+        public AssetStore KrPanoTour { get; set; }
     }
 }

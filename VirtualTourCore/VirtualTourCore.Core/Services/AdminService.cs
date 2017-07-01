@@ -314,7 +314,7 @@ namespace VirtualTourCore.Core.Services
             _areaRepository.DeleteEntity(area);
         }
 
-        public void CreateTour(Tour tour, HttpPostedFileBase tourThumb)
+        public void CreateTour(Tour tour, HttpPostedFileBase tourThumb, HttpPostedFileBase KrPanoZip)
         {
             using (TransactionScope transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions()
             {
@@ -327,6 +327,7 @@ namespace VirtualTourCore.Core.Services
 
                 if (tourId != null)
                 {
+                    // upload tour thumb
                     var baseLogoAssetId = tour.AssetTourThumbnailId;
                     if (!tourThumbUploadSuccess)
                     {
@@ -335,6 +336,18 @@ namespace VirtualTourCore.Core.Services
                         {
                             tourThumbUploadSuccess = true;
                         }
+                    }
+                    // upload tour krpano
+                    if(KrPanoZip != null)
+                    {
+                        var clientId = tour.ClientId;
+                        var areaId = tour.AreaId;
+                        var locationId = _areaRepository.GetById(areaId).LocationId;
+                        MemoryStream target = new MemoryStream();
+                        KrPanoZip.InputStream.CopyTo(target);
+                        byte[] data = target.ToArray();
+                        string krpanoPath = _fileService.UploadZip(data, tourId.Value, areaId, locationId);
+                        tour.AssetTourThumbnailId = ProcessFileUpload(tour.ClientId, tour.CreateUserId.Value, tour.AssetTourThumbnailId, tourThumb);
                     }
                 }
                 if (tour.AssetTourThumbnailId != null)
@@ -348,7 +361,7 @@ namespace VirtualTourCore.Core.Services
             }
         }
 
-        public void UpdateTour(Tour tour, HttpPostedFileBase tourThumb)
+        public void UpdateTour(Tour tour, HttpPostedFileBase tourThumb, HttpPostedFileBase KrPanoZip)
         {
             int? resultingId = null;
             var existingTour = _tourRepository.GetById(tour.Id);
@@ -401,6 +414,16 @@ namespace VirtualTourCore.Core.Services
             }
             return existingFilestoreId;
         }
+        private int? ProcessFileUpload(int clientId, int userId, int? existingFilestoreId, string path, HttpPostedFileBase file)
+        {
+            if (file != null && !string.IsNullOrWhiteSpace(file.FileName))
+            {
+                var assetStore = UploadAsset(file, userId, clientId, file.FileName);
+                var assetId = _assetStoreRepository.Create(assetStore);
+                return assetId;
+            }
+            return existingFilestoreId;
+        }
         protected AssetStore UploadAsset(HttpPostedFileBase file, int userId, int clientID, string fileNickname)
         {
             MemoryStream target = new MemoryStream();
@@ -408,6 +431,19 @@ namespace VirtualTourCore.Core.Services
             byte[] data = target.ToArray();
             string path = string.Format("{0}/images/{1}", clientID, GuidUtils.AppendGuidToFilename(file.FileName));
             _fileService.UploadFile(data, path);
+            return new AssetStore
+            {
+                ClientId = clientID,
+                Filename = file.FileName,
+                FileType = file.ContentType,
+                Nickname = fileNickname,
+                Path = path,
+                CreateDate = DateTime.Now,
+                CreateUserId = userId
+            };
+        }
+        protected AssetStore CreateAsset(HttpPostedFileBase file, string path, int userId, int clientID, string fileNickname)
+        {
             return new AssetStore
             {
                 ClientId = clientID,

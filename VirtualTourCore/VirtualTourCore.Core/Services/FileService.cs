@@ -56,11 +56,9 @@ namespace VirtualTourCore.Core.Services
             return true;
         }
 
-        public void UploadZip(byte[] zipFile, int tourId, int areaId, int locationId, int locationTechnologyTypeId
-            , out string tourFileStoreRelativePath, out string directoryFileStoreFileRelativePath)
+        public string UploadZip(byte[] zipFile, int tourId, int areaId, int locationId)
         {
-            tourFileStoreRelativePath = null;
-            directoryFileStoreFileRelativePath = null;
+            string tourFileStoreRelativePath = string.Empty;
 
             string mainTourUrl = null;
 
@@ -111,8 +109,8 @@ namespace VirtualTourCore.Core.Services
                         }
                     }
                 }
-                directoryFileStoreFileRelativePath = tourId + "\\" + areaId + "\\" + locationId;
             }
+            return tourFileStoreRelativePath;
         }
 
         #endregion Upload

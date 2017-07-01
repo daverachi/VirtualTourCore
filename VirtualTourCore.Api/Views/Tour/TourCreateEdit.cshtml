@@ -19,9 +19,25 @@ else
     @Html.HiddenFor(x => x.AreaId)
     <div class="row">
         <div class="form-group col-lg-6">
-            @Html.LabelFor(model => model.Name)
-            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @placeholder = "The Tour's Name", @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="col-xs-12">
+                    @Html.LabelFor(model => model.Name)
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @placeholder = "The Tour's Name", @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-xs-12">
+                    @Html.Label("KrPano Tour Upload")
+                    <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-default">
+                                Browse&hellip; <input type="file" id="krpanoInput" name="tour" data-name="krpano" data-target="krpanoInput" class="" style="display: none;">
+                            </span>
+                        </label>
+                        <input id="krpanoFilenameInput" type="text" value="@(Model.KrPanoTour != null ? Model.KrPanoTour.Filename: "")" class="form-control" readonly>
+                        <span class="btn btn-default input-group-addon imgClearBtn" id="krpanoClearBtn" data-name="krpano"><i id="krpanoClear" class="fa fa-trash"></i></span>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="form-group col-lg-6">
             @* Profile File Input Region Start *@
@@ -43,9 +59,9 @@ else
             @* Profile File Input Region End *@
         </div>
     </div>
-        @Html.HiddenFor(model => model.Description)
-        @Html.HiddenFor(model => model.DescriptionHtml)
-        @Html.HiddenFor(model => model.DescriptionJson)
+    @Html.HiddenFor(model => model.Description)
+    @Html.HiddenFor(model => model.DescriptionHtml)
+    @Html.HiddenFor(model => model.DescriptionJson)
 }
 @Html.LabelFor(model => model.Description)
 <div id="tourDescription"></div>
