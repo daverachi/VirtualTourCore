@@ -19,7 +19,7 @@ namespace VirtualTourCore.Common.Utilities
             var extension = parsedFilename.Last();
             var name = parsedFilename.Where(x => x != extension)
                 .Aggregate(new StringBuilder(), (sb, x) => sb.Append(x), sb => sb.ToString());
-            return string.Format("{0}-{1}{2}", name, CreateShortGuid(6), extension);
+            return string.Format("{0}-{1}.{2}", name, CreateShortGuid(6), extension);
         }
     }
 }

@@ -64,7 +64,7 @@ namespace VirtualTourCore.Core.Services
                         }
                     }
                     var baseProfileAssetId = client.AssetProfileId;
-                    if (!logoUploadSuccess)
+                    if (!profileUploadSuccess)
                     {
                         client.AssetProfileId = ProcessFileUpload(clientId.Value, client.CreateUserId.Value, client.AssetProfileId, profile);
                         if (baseProfileAssetId != client.AssetProfileId)
@@ -115,9 +115,14 @@ namespace VirtualTourCore.Core.Services
             }))
             {
                 var logoUploadSuccess = string.IsNullOrWhiteSpace(logo.FileName);
-                var profileUploadSuccess = string.IsNullOrWhiteSpace(profile.FileName);
                 var baseLogoAssetId = existingClient.AssetLogoId;
-                if (!logoUploadSuccess)
+                var deletingCurrentLogo = logoUploadSuccess && existingClient.AssetLogoId != null;
+                if (deletingCurrentLogo)
+                {
+                    existingClient.AssetLogoId = null;
+                    logoUploadSuccess = true;
+                }
+                else if (!logoUploadSuccess)
                 {
                     existingClient.AssetLogoId = ProcessFileUpload(existingClient.Id, existingClient.CreateUserId.Value, existingClient.AssetLogoId, logo);
                     if (baseLogoAssetId != existingClient.AssetLogoId)
@@ -125,8 +130,16 @@ namespace VirtualTourCore.Core.Services
                         logoUploadSuccess = true;
                     }
                 }
+
+                var profileUploadSuccess = string.IsNullOrWhiteSpace(profile.FileName);
                 var baseProfileAssetId = existingClient.AssetProfileId;
-                if (!logoUploadSuccess)
+                var deletingCurrentProfile = profileUploadSuccess && existingClient.AssetProfileId != null;
+                if (deletingCurrentProfile)
+                {
+                    existingClient.AssetProfileId = null;
+                    profileUploadSuccess = true;
+                }
+                else if (!profileUploadSuccess)
                 {
                     existingClient.AssetProfileId = ProcessFileUpload(existingClient.Id, existingClient.CreateUserId.Value, existingClient.AssetProfileId, profile);
                     if (baseProfileAssetId != existingClient.AssetProfileId)

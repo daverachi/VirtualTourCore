@@ -58,6 +58,7 @@ function purgeImageUpload(name) {
     $('#' + name + 'Input').replaceWith($('#' + name + 'Input').val('').clone(true));
     $('#' + name + 'FilenameInput').val("");
     $('#' + name + 'Image').attr('src', '');
+    $('input[data-imageName=' + name + ']').attr('value', '');
     if ($('#' + name + 'Toggle').hasClass("fa-toggle-on")) {
         $('#' + name + 'Toggle').click();
     }

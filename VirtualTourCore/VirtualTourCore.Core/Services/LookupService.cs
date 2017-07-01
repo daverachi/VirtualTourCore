@@ -11,24 +11,34 @@ namespace VirtualTourCore.Core.Services
         private ILocationRepository _locationRepository;
         private IAreaRepository _areaRepository;
         private ITourRepository _tourRepository;
+        private IAssetStoreRepository _assetStoreRepository;
         public LookupService(
             IClientRepository clientRepository,
             ILocationRepository locationRepository,
             IAreaRepository areaRepository,
-            ITourRepository tourRepository)
+            ITourRepository tourRepository,
+            IAssetStoreRepository assetStoreRepository
+            )
         {
             _clientRepository = clientRepository;
             _locationRepository = locationRepository;
             _areaRepository = areaRepository;
             _tourRepository = tourRepository;
+            _assetStoreRepository = assetStoreRepository;
         }
         public Client GetClientByGuid(Guid guid)
         {
-            return _clientRepository.GetByGuid(guid);
+            var client = _clientRepository.GetByGuid(guid);
+            client.AssetLogo = PopulateAssetStoreById(client.AssetLogoId);
+            client.AssetProfile = PopulateAssetStoreById(client.AssetProfileId);
+            return client;
         }
         public Client GetClientById(int id)
         {
-            return _clientRepository.GetById(id);
+            var client = _clientRepository.GetById(id);
+            client.AssetLogo = PopulateAssetStoreById(client.AssetLogoId);
+            client.AssetProfile = PopulateAssetStoreById(client.AssetProfileId);
+            return client;
         }
         public IEnumerable<Client> GetClientByGuids(IEnumerable<Guid> guids)
         {
@@ -58,11 +68,15 @@ namespace VirtualTourCore.Core.Services
             return _areaRepository.GetByIdAndByClientId(id, GetValidClientIds(clientIds));
         }
 
-
-
-
-
-
+        private AssetStore PopulateAssetStoreById(int? assetStoreId)
+        {
+            AssetStore asset = null;
+            if (assetStoreId != null)
+            {
+                asset = _assetStoreRepository.GetById(assetStoreId.Value);
+            }
+            return asset;
+        }
 
         // this should probably just be a helper method somewhere for parsing.
         private IEnumerable<int> GetValidClientIds(IEnumerable<string> clientIds)

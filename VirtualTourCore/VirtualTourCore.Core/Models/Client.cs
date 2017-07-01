@@ -30,6 +30,8 @@ namespace VirtualTourCore.Core.Models
         [DisplayName("Marketing Email Address")]
         public string MarketingEmail { get; set; }
         public int? AssetLogoId { get; set; }
+        public AssetStore AssetLogo { get; set; }
         public int? AssetProfileId { get; set; }
+        public AssetStore AssetProfile { get; set; }
     }
 }

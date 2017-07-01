@@ -15,5 +15,7 @@ namespace VirtualTourCore.Core.Models
         public string DescriptionJson { get; set; }
         [AllowHtml]
         public string DescriptionHtml { get; set; }
+        public int AssetTourThumbnailId { get; set; }
+        public AssetStore AssetTourThumbnail { get; set; }
     }
 }

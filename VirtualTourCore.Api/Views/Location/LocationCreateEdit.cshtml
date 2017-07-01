@@ -24,6 +24,25 @@ else
             @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
         </div>
         <div class="form-group col-lg-6">
+            @* Profile File Input Region Start *@
+            @Html.Label("Location Image")
+            @{ var hasProfile = Model.AssetProfile != null && Model.AssetProfile.FullPath() != null; }
+            <div class="input-group">
+                <label class="input-group-btn">
+                    <span class="btn btn-default">
+                        Browse&hellip; <input type="file" id="profileInput" name="profile" data-name="profile" data-target="profileImage" class="imgInp" style="display: none;">
+                    </span>
+                </label>
+                <input id="profileFilenameInput" type="text" value="@(hasProfile ? Model.AssetProfile.Filename: "")" class="form-control" readonly>
+                <span class="btn btn-default input-group-addon imgClearBtn" id="profileClearBtn" data-name="profile"><i id="profileClear" class="fa fa-trash"></i></span>
+                <span class="btn btn-default input-group-addon" data-toggle="collapse" data-target="#profileImage"
+                      aria-expanded="false" aria-controls="profileImage" id="profileDisplayBtn" data-name="profile"><i id="profileToggle" class="@(hasProfile ? "fa fa-toggle-on" : "fa fa-toggle-off")" aria-hidden="true"></i></span>
+            </div>
+            <img @(hasProfile ? "src=" + Model.AssetProfile.FullPath() + " onload=$('#profileDisplayBtn').click()" : "src=''") class="uploadImgHolder collapse img-fluid img-thumbnail col-xs-12" id="profileImage" alt="Profile Image">
+            @Html.HiddenFor(x => x.AssetProfileId, new { @data_imageName = "profile" })
+            @* Profile File Input Region End *@
+        </div>
+        <div class="form-group col-lg-6">
             @Html.LabelFor(model => model.StreetAddress)
             @Html.EditorFor(model => model.StreetAddress, new { htmlAttributes = new { @placeholder = "The Location's Address", @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.StreetAddress, "", new { @class = "text-danger" })

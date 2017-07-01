@@ -20,5 +20,7 @@ namespace VirtualTourCore.Core.Models
         public string State { get; set; }
         [DisplayName("Zip Code")]
         public string Zipcode { get; set; }
+        public int AssetLocationId { get; set; }
+        public AssetStore LocationImage { get; set; }
     }
 }

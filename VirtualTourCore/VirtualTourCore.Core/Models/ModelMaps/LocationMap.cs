@@ -22,6 +22,7 @@ namespace VirtualTourCore.Core.Models.ModelMaps
             this.Property(t => t.City).HasColumnName("City");
             this.Property(t => t.State).HasColumnName("State");
             this.Property(t => t.Zipcode).HasColumnName("Zipcode");
+            this.Property(t => t.AssetLocationId).HasColumnName("AssetLocationId");
         }
     }
 }

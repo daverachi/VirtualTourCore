@@ -19,6 +19,7 @@ namespace VirtualTourCore.Core.Models.ModelMaps
             this.Property(t => t.Description).HasColumnName("Description");
             this.Property(t => t.DescriptionHtml).HasColumnName("DescriptionHtml");
             this.Property(t => t.DescriptionJson).HasColumnName("DescriptionJson");
+            this.Property(t => t.AssetTourThumbnailId).HasColumnName("AssetTourThumbnailId");
         }
     }
 }
