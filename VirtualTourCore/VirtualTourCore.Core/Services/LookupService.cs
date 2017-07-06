@@ -85,6 +85,7 @@ namespace VirtualTourCore.Core.Services
         {
             var tour = _tourRepository.GetByIdAndClientId(id, GetValidClientIds(clientIds));
             tour.AssetTourThumbnail = PopulateAssetStoreById(tour.AssetTourThumbnailId);
+            tour.KrPanoTour = PopulateAssetStoreById(tour.KrPanoTourId);
             return tour;
         }
 

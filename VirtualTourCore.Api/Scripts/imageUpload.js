@@ -18,6 +18,10 @@
             initializeImagePreviews($(this).attr('data-name'));
         });
 
+        $(".krpanoInp").each(function () {
+            initializeImagePreviews($(this).attr('data-name'));
+        });
+
         $('.imgClearBtn').click(function () {
             purgeImageUpload($(this).attr('data-name'));
         });
@@ -25,7 +29,7 @@
 });
 
 function ToggleImagePreviewAndSetFileName(name, label) {
-    if ($('#' + name + 'Toggle').hasClass("fa-toggle-off")) {
+    if ($('#' + name + 'Toggle') && $('#' + name + 'Toggle').hasClass("fa-toggle-off")) {
         $('#' + name + 'Toggle').click();
     }
     $('#' + name + 'FilenameInput').val(label);

@@ -19,8 +19,8 @@ namespace VirtualTourCore.Core.Interfaces
         void CreateArea(Area area, HttpPostedFileBase areaMap);
         void UpdateArea(Area area, HttpPostedFileBase areaMap);
         void DeleteArea(Area area);
-        void CreateTour(Tour tour, HttpPostedFileBase tourThumb);
-        void UpdateTour(Tour tour, HttpPostedFileBase tourThumb);
+        void CreateTour(Tour tour, HttpPostedFileBase tourThumb, HttpPostedFileBase KrPanoZip);
+        void UpdateTour(Tour tour, HttpPostedFileBase tourThumb, HttpPostedFileBase KrPanoZip);
         void DeleteTour(Tour tour);
     }
 }

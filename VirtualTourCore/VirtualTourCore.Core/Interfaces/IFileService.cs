@@ -9,6 +9,6 @@ namespace VirtualTourCore.Core.Interfaces
     public interface IFileService
     {
         bool UploadFile(byte[] file, string fileName);
-        string UploadZip(byte[] zipFile, int tourId, int areaId, int locationId);
+        string UploadZip(byte[] zipFile, int clientId, int tourId, int areaId, int locationId);
     }
 }

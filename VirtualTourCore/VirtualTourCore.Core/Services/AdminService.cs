@@ -337,17 +337,16 @@ namespace VirtualTourCore.Core.Services
                             tourThumbUploadSuccess = true;
                         }
                     }
-                    // upload tour krpano
-                    if(KrPanoZip != null)
+
+                    var krPanoUploadSuccess = string.IsNullOrWhiteSpace(tourThumb.FileName);
+                    if (!krPanoUploadSuccess)
                     {
-                        var clientId = tour.ClientId;
-                        var areaId = tour.AreaId;
-                        var locationId = _areaRepository.GetById(areaId).LocationId;
-                        MemoryStream target = new MemoryStream();
-                        KrPanoZip.InputStream.CopyTo(target);
-                        byte[] data = target.ToArray();
-                        string krpanoPath = _fileService.UploadZip(data, tourId.Value, areaId, locationId);
-                        tour.AssetTourThumbnailId = ProcessFileUpload(tour.ClientId, tour.CreateUserId.Value, tour.AssetTourThumbnailId, tourThumb);
+                        // swap to krpano upload
+                        tour.KrPanoTourId = UploadZipFolder(tour, tour.CreateUserId, KrPanoZip);
+                        if (tour.KrPanoTourId != null)
+                        {
+                            krPanoUploadSuccess = true;
+                        }
                     }
                 }
                 if (tour.AssetTourThumbnailId != null)
@@ -375,28 +374,73 @@ namespace VirtualTourCore.Core.Services
                 Timeout = CommonConfiguration.Configuration.TransactionScope_Timeout
             }))
             {
-                var areaMapUploadSuccess = string.IsNullOrWhiteSpace(tourThumb.FileName);
+                var tourThumbUploadSuccess = string.IsNullOrWhiteSpace(tourThumb.FileName);
                 var baseLogoAssetId = existingTour.AssetTourThumbnailId;
-                var deletingCurrentLogo = areaMapUploadSuccess && existingTour.AssetTourThumbnailId != null;
-                if (deletingCurrentLogo)
+                var deletingCurrentTourThumb = tourThumbUploadSuccess && existingTour.AssetTourThumbnailId != null && tour.AssetTourThumbnailId == null;
+                if (deletingCurrentTourThumb)
                 {
                     existingTour.AssetTourThumbnailId = null;
-                    areaMapUploadSuccess = true;
+                    tourThumbUploadSuccess = true;
                 }
-                else if (!areaMapUploadSuccess)
+                else if (!tourThumbUploadSuccess)
                 {
                     existingTour.AssetTourThumbnailId = ProcessFileUpload(existingTour.ClientId, existingTour.CreateUserId.Value, existingTour.AssetTourThumbnailId, tourThumb);
                     if (baseLogoAssetId != existingTour.AssetTourThumbnailId)
                     {
-                        areaMapUploadSuccess = true;
+                        tourThumbUploadSuccess = true;
+                    }
+                }
+                var krPanoUploadSuccess = string.IsNullOrWhiteSpace(KrPanoZip.FileName);
+                var baseKrPanoAssetId = existingTour.KrPanoTourId;
+                var deletingCurrentKrPano = krPanoUploadSuccess && existingTour.KrPanoTourId != null && tour.KrPanoTourId == null;
+                if (deletingCurrentKrPano)
+                {
+                    existingTour.KrPanoTourId = null;
+                    krPanoUploadSuccess = true;
+                }
+                else if (!krPanoUploadSuccess)
+                {
+                    // swap to krpano upload
+                    existingTour.KrPanoTourId = UploadZipFolder(existingTour, tour.UpdateUserId, KrPanoZip);
+                    if (baseKrPanoAssetId != existingTour.KrPanoTourId)
+                    {
+                        krPanoUploadSuccess = true;
                     }
                 }
                 resultingId = _tourRepository.UpdateEntity(existingTour);
-                if (areaMapUploadSuccess && resultingId != null)
+                if (tourThumbUploadSuccess && krPanoUploadSuccess && resultingId != null)
                 {
                     transaction.Complete();
                 }
             }
+        }
+
+        private int? UploadZipFolder(Tour existingTour, int? createUserId, HttpPostedFileBase krPanoZip)
+        {
+            int? assetId = null;
+            var clientId = existingTour.ClientId;
+            var locationId = _areaRepository.GetById(existingTour.AreaId)?.Id;
+            var areaId = existingTour.AreaId;
+            var tourId = existingTour.Id;
+            if (locationId != null)
+            {
+                MemoryStream target = new MemoryStream();
+                krPanoZip.InputStream.CopyTo(target);
+                byte[] data = target.ToArray();
+                string path = _fileService.UploadZip(data, clientId, tourId, areaId, locationId.Value);
+                var krPanoAsset = new AssetStore
+                {
+                    ClientId = clientId,
+                    Filename = string.Format("KrPanoTour-{0}-{1}-{2}-{3}",clientId, locationId.Value, areaId, tourId),
+                    FileType = "html",
+                    Nickname = "krPano",
+                    Path = path,
+                    CreateDate = DateTime.Now,
+                    CreateUserId = createUserId.Value
+                };
+                assetId = _assetStoreRepository.Create(krPanoAsset);
+            }
+            return assetId;
         }
 
         public void DeleteTour(Tour tour)

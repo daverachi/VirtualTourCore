@@ -53,6 +53,7 @@ namespace VirtualTourCore.Api.Controllers
         public ActionResult Create(int cId, int id)
         {
             ModelState.Clear();
+            ViewBag.HasKrPano = false;
             return View("TourCreateEdit", new Tour { Id = default(int), AreaId = id, ClientId = cId });
         }
 
@@ -61,6 +62,7 @@ namespace VirtualTourCore.Api.Controllers
             var clientIds = IdentityService.GetClientIdsFromClaim(User);
             Tour tour = _lookupService.GetTourByIdAndClientId(clientIds, id);
             // TODO Error handling!
+            ViewBag.HasKrPano = tour.KrPanoTourId != null && !string.IsNullOrWhiteSpace(tour.KrPanoTour.FullPath());
             return View("TourCreateEdit", tour);
         }
         public ActionResult Details(int id)
@@ -75,15 +77,16 @@ namespace VirtualTourCore.Api.Controllers
         public ActionResult ModifyTours(Tour tour)
         {
             var tourThumb = Request.Files["tourThumb"];
+            var krPanoZip = Request.Files["krPanoZip"];
             if (tour.Id == 0)
             {
                 tour.CreateUserId = IdentityService.GetUserIdFromClaim(User);
-                _adminService.CreateTour(tour, tourThumb);
+                _adminService.CreateTour(tour, tourThumb, krPanoZip);
             }
             else
             {
                 tour.UpdateUserId = IdentityService.GetUserIdFromClaim(User);
-                _adminService.UpdateTour(tour, tourThumb);
+                _adminService.UpdateTour(tour, tourThumb, krPanoZip);
             }
             // todo : do something about success or failure
             return RedirectToAction("ClientTours", new { cId = tour.ClientId, id = tour.AreaId });

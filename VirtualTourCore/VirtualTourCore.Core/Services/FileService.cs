@@ -56,11 +56,11 @@ namespace VirtualTourCore.Core.Services
             return true;
         }
 
-        public string UploadZip(byte[] zipFile, int tourId, int areaId, int locationId)
+        public string UploadZip(byte[] zipFile, int clientId, int tourId, int areaId, int locationId)
         {
             string tourFileStoreRelativePath = string.Empty;
 
-            string mainTourUrl = null;
+            string mainTourUrl = "tour.html";
 
             if (mainTourUrl != null)
             {
@@ -90,8 +90,7 @@ namespace VirtualTourCore.Core.Services
                         foreach (var entry in archive.Entries)
                         {
                             var directoryLocation = entry.FullName.Split('/');
-                            var updatedDirectoryLocation = (tourId + "\\" + areaId + "\\" + locationId);
-
+                            var updatedDirectoryLocation = (string.Format("{0}\\{1}\\{2}\\{3}", clientId, locationId, areaId, tourId));
                             for (int i = startIndex; i < directoryLocation.Count(); i++)
                             {
                                 updatedDirectoryLocation += "\\" + directoryLocation[i];
@@ -99,7 +98,7 @@ namespace VirtualTourCore.Core.Services
                                 if (i == directoryLocation.Count() - 1)
                                 {
                                     contentType = GetMimeContentType(directoryLocation[i]);
-                                    if (directoryLocation[i] == mainTourUrl)
+                                    if (directoryLocation[i].ToLower() == mainTourUrl)
                                     {
                                         tourFileStoreRelativePath = updatedDirectoryLocation;
                                     }
