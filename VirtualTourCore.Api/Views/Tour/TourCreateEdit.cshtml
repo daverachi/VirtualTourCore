@@ -5,11 +5,11 @@
 <hr />
 @if (Model != null && Model.Id == 0)
 {
-    <h2>Create Tour</h2>
+    <div class="adminHeadingText">Create Tour</div>
 }
 else
 {
-    <h2>Edit Tour</h2>
+    <div class="adminHeadingText">Edit Tour</div>
 }
 <hr />
 @using (Html.BeginForm("ModifyTours", "Tour", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return GetDescription()", @id = "tourForm" }))

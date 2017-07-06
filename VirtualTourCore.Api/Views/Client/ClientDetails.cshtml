@@ -1,113 +1,211 @@
 ﻿@model VirtualTourCore.Core.Models.Client
 
 @{
-    ViewBag.Title = "Client Details";
+    ViewBag.Title = string.Format("{0} Details", Model.Name);
 }
 <div>
     <hr />
-    <h3>@Model.Name Details</h3>
+    <div class="row">
+        <div class="col-xs-1">
+            <div class="adminHeadingText">Details</div>
+        </div>
+        <div class="col-xs-1">
+            <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn">
+                <i class="fa fa-2x fa-pencil" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div class="col-xs-9">
+
+        </div>
+        <div class="col-xs-1">
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deletionModal">
+                <i class="fa fa-2x fa-trash" aria-hidden="true"></i>
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="deletionModal" tabindex="-1" role="dialog" aria-labelledby="deletionLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <h4 class="modal-title" id="deletionLabel">Confirm Deletion?</h4>
+                            Clicking confirm will permanently delete this client.  Do you wish to continue?
+                            <div>
+                                <small>This will fail if the client contains locations, you must delete the locations belonging to the client prior to performing this action.</small>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <a href="@Url.Action("Delete", new { id = Model.Id })" class="btn btn-danger">
+                                Confirm Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Link)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Link)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.StreetAddress)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.StreetAddress)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.City)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.City)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.State)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.State)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Zipcode)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Zipcode)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Phone)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Phone)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.SupportEmail)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.SupportEmail)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.MarketingEmail)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.MarketingEmail)
-        </dd>
-
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CreateDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CreateDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.UpdateDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UpdateDate)
-        </dd>
-
-    </dl>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>Name</label>
+                </div>
+                <div class="col-lg-12">
+                    @Model.Name
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>Created</label>
+                </div>
+                <div class="col-lg-12">
+                    @Model.CreateDate
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            @if (Model.UpdateDate != null)
+            {
+                <div class="row">
+                    <div class="col-lg-12">
+                        <label>Updated</label>
+                    </div>
+                    <div class="col-lg-12">
+                        @Model.UpdateDate
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>Street Address</label>
+                </div>
+                <div class="col-lg-12">
+                    @Model.StreetAddress
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>City</label>
+                </div>
+                <div class="col-lg-12">
+                    @Model.City
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>State</label>
+                </div>
+                <div class="col-lg-12">
+                    @Model.State
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>Zip Code</label>
+                </div>
+                <div class="col-lg-12">
+                    @Model.Zipcode
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>Homepage Link</label>
+                </div>
+                <div class="col-lg-12">
+                    @if (!string.IsNullOrWhiteSpace(Model.Link))
+                    {
+                        <a href="@Model.Link" target="_blank">@Model.Link <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>Phone Number</label>
+                </div>
+                <div class="col-lg-12">
+                    @Model.Phone
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>Marketing Email</label>
+                </div>
+                <div class="col-lg-12">
+                    @Model.MarketingEmail
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>Support Email</label>
+                </div>
+                <div class="col-lg-12">
+                    @Model.SupportEmail
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>Description</label>
+                </div>
+                <div class="col-lg-12">
+                    @Html.Raw(Model.DescriptionHtml)
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>Logo</label>
+                </div>
+                <div class="col-lg-12">
+                    @if (Model.AssetLogo != null)
+                    {
+                        <img src="@Model.AssetLogo.FullPath()" class="img-fluid img-thumbnail col-xs-12" id="areaMapImage" alt="@Model.Name Area Map Image">
+                    }
+                </div>
+                <div class="col-lg-12">
+                    <label>Profile Image</label>
+                </div>
+                <div class="col-lg-12">
+                    @if (Model.AssetProfile != null)
+                    {
+                        <img src="@Model.AssetProfile.FullPath()" class="img-fluid img-thumbnail col-xs-12" id="areaMapImage" alt="@Model.Name Area Map Image">
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Delete", "Delete", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

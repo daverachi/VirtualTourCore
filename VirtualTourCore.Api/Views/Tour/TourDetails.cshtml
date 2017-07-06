@@ -5,45 +5,106 @@
 }
 <div>
     <hr />
-    <h3>@Model.Name Details</h3>
+    <div class="row">
+        <div class="col-xs-1">
+            <div class="adminHeadingText">Details</div>
+        </div>
+        <div class="col-xs-1">
+            <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn">
+                <i class="fa fa-2x fa-pencil" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div class="col-xs-9">
+
+        </div>
+        <div class="col-xs-1">
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deletionModal">
+                <i class="fa fa-2x fa-trash" aria-hidden="true"></i>
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="deletionModal" tabindex="-1" role="dialog" aria-labelledby="deletionLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <h4 class="modal-title" id="deletionLabel">Confirm Deletion?</h4>
+                            Clicking confirm will permanently delete this tour.  Do you wish to continue?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <a href="@Url.Action("Delete", new { id = Model.Id })" class="btn btn-danger">
+                                Confirm Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CreateDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CreateDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.UpdateDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UpdateDate)
-        </dd>
-
-    </dl>
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>Name</label>
+                </div>
+                <div class="col-lg-12">
+                    @Model.Name
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>Created</label>
+                </div>
+                <div class="col-lg-12">
+                    @Model.CreateDate
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            @if (Model.UpdateDate != null)
+            {
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>Updated</label>
+                </div>
+                <div class="col-lg-12">
+                    @Model.UpdateDate
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-xs-4">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>Description</label>
+                </div>
+                <div class="col-lg-12">
+                        @Html.Raw(Model.DescriptionHtml)
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-8">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>KrPano</label>
+                </div>
+                <div class="col-lg-12">
+                    @if (Model.KrPanoTour != null)
+                    {
+                        <iframe name="KRpano" id="external" frameborder="0" src=@Url.Content(Model.KrPanoTour.FullPath()) webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Delete", "Delete", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "ClientTours", new { id = Model.AreaId, cId = Model.ClientId })
 </p>
