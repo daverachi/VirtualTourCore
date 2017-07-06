@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Web.Mvc;
 using VirtualTourCore.Common.DataAccess;
 using VirtualTourCore.Core.Interfaces;
@@ -22,5 +23,7 @@ namespace VirtualTourCore.Core.Models
         public string Zipcode { get; set; }
         public int? AssetLocationId { get; set; }
         public AssetStore AssetLocation { get; set; }
+        [NotMapped]
+        public string ValidationMessage { get; set; }
     }
 }

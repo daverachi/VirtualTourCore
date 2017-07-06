@@ -14,13 +14,13 @@ namespace VirtualTourCore.Core.Interfaces
         int? UpdateClient(Client client, HttpPostedFileBase logo, HttpPostedFileBase profile);
         int? CreateLocation(Location location, HttpPostedFileBase locationImage);
         int? UpdateLocation(Location location, HttpPostedFileBase locationImage);
-        bool DeleteClient(Client client);
-        bool DeleteLocation(Location location);
+        string DeleteClient(Client client);
+        string DeleteLocation(Location location);
         void CreateArea(Area area, HttpPostedFileBase areaMap);
         void UpdateArea(Area area, HttpPostedFileBase areaMap);
-        void DeleteArea(Area area);
+        string DeleteArea(Area area);
         void CreateTour(Tour tour, HttpPostedFileBase tourThumb, HttpPostedFileBase KrPanoZip);
         void UpdateTour(Tour tour, HttpPostedFileBase tourThumb, HttpPostedFileBase KrPanoZip);
-        void DeleteTour(Tour tour);
+        string DeleteTour(Tour tour);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net.Mail;
 using System.Transactions;
 using System.Web;
@@ -227,13 +228,33 @@ namespace VirtualTourCore.Core.Services
             return resultingId;
         }
 
-        public bool DeleteClient(Client client)
+        public string DeleteClient(Client client)
         {
-            return _clientRepository.DeleteEntity(client);
+            string errorMessage = "Failed to delete client";
+            var children = _locationRepository.GetByClientId(client.Id);
+            if (children.Count() == 0 && _clientRepository.DeleteEntity(client))
+            {
+                errorMessage = "";
+            }
+            else if (children.Count() > 0)
+            {
+                errorMessage = string.Format("Failed to delete client, locations associated with client must be deleted first.", children.Count());
+            }
+            return errorMessage;
         }
-        public bool DeleteLocation(Location location)
+        public string DeleteLocation(Location location)
         {
-            return _locationRepository.DeleteEntity(location);
+            string errorMessage = "Failed to delete location";
+            var children = _areaRepository.GetByLocationId(location.Id);
+            if (children.Count() == 0 && _locationRepository.DeleteEntity(location))
+            {
+                errorMessage = "";
+            }
+            else if (children.Count() > 0)
+            {
+                errorMessage = string.Format("Failed to delete location, area associated with location must be deleted first.", children.Count());
+            }
+            return errorMessage;
         }
 
         public void CreateArea(Area area, HttpPostedFileBase areaMap)
@@ -309,9 +330,19 @@ namespace VirtualTourCore.Core.Services
             }
         }
 
-        public void DeleteArea(Area area)
+        public string DeleteArea(Area area)
         {
-            _areaRepository.DeleteEntity(area);
+            string errorMessage = "Failed to delete area";
+            var childTours = _tourRepository.GetByAreaId(area.Id);
+            if(childTours.Count() == 0 && _areaRepository.DeleteEntity(area))
+            {
+                errorMessage = "";
+            }
+            else if(childTours.Count() > 0)
+            {
+                errorMessage = string.Format("Failed to delete area, tours associated with area must be deleted first.", childTours.Count());
+            }
+            return errorMessage;
         }
 
         public void CreateTour(Tour tour, HttpPostedFileBase tourThumb, HttpPostedFileBase KrPanoZip)
@@ -443,9 +474,10 @@ namespace VirtualTourCore.Core.Services
             return assetId;
         }
 
-        public void DeleteTour(Tour tour)
+        public string DeleteTour(Tour tour)
         {
             _tourRepository.DeleteEntity(tour);
+            return "";
         }
 
         private int? ProcessFileUpload(int clientId, int userId, int? existingFilestoreId, HttpPostedFileBase file)

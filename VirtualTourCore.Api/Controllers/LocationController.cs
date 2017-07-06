@@ -89,13 +89,13 @@ namespace VirtualTourCore.Api.Controllers
         }
 
         //[VTAuthFilter("Client")]
-        public ActionResult Delete(int id)
+        [HttpPost]
+        public string Delete(int id)
         {
             var clientIds = IdentityService.GetClientIdsFromClaim(User);
-            Location location = _lookupService.GetLocationByIdAndClientId(clientIds, id);
-            _adminService.DeleteLocation(location);
+            Location location = _lookupService.GetLocationByIdAndClientId(clientIds, id); 
             // TODO Error handling!
-            return RedirectToAction("ClientLocations", new { id = location.ClientId });
+            return _adminService.DeleteLocation(location);
         }
     }
 }

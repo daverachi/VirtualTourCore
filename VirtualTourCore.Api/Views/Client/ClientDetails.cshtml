@@ -6,6 +6,7 @@
 <div>
     <hr />
     <div class="row">
+        <div class="col-xs-12 alert alert-danger hidden" role="alert" id="errorMessage"></div>
         <div class="col-xs-1">
             <div class="adminHeadingText">Details</div>
         </div>
@@ -34,10 +35,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <a href="@Url.Action("Delete", new { id = Model.Id })" class="btn btn-danger">
-                                Confirm Delete
-                            </a>
+                            <button id="closeButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button id="deleteButton" type="button" class="btn btn-danger">Confirm Delete</button>
                         </div>
                     </div>
                 </div>
@@ -209,3 +208,35 @@
 <p>
     @Html.ActionLink("Back to List", "Index")
 </p>
+<div id="clientDetails" data-clientid="@Model.Id" class="hidden"></div>
+
+<script>
+    $(document).on('click', '#deleteButton', function(){
+        deleteClient();
+
+    });
+
+    function deleteClient() {
+        var details = $('#clientDetails');
+        var clientId = details.data("clientid");
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Delete")',
+            data: { id: clientId },
+            success: function(response){
+                if (response) {
+                    $('#closeButton').click();
+                    $('#errorMessage').html("<i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> <strong>Error!</strong> " + response);
+                    $('#errorMessage').removeClass("hidden");
+                }else{
+                    window.location.href = "/Index";
+                }
+            },
+            error: function () {
+                $('#closeButton').click();
+                $('#errorMessage').html("<i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> <strong>Error!</strong> Failed to delete current area. please try again later.");
+                $('#errorMessage').removeClass("hidden");
+            }
+        });
+    }
+</script>

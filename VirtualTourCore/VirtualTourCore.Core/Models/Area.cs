@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Web.Mvc;
 using VirtualTourCore.Common.DataAccess;
 using VirtualTourCore.Core.Interfaces;
@@ -17,5 +18,7 @@ namespace VirtualTourCore.Core.Models
         public string DescriptionHtml { get; set; }
         public int? AssetAreaId { get; set; }
         public AssetStore AssetArea { get; set; }
+        [NotMapped]
+        public string ValidationMessage { get; set; }
     }
 }

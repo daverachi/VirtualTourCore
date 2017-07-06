@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Web.Mvc;
 using VirtualTourCore.Common.DataAccess;
 using VirtualTourCore.Core.Interfaces;
@@ -33,5 +34,7 @@ namespace VirtualTourCore.Core.Models
         public AssetStore AssetLogo { get; set; }
         public int? AssetProfileId { get; set; }
         public AssetStore AssetProfile { get; set; }
+        [NotMapped]
+        public string ValidationMessage { get; set; }
     }
 }

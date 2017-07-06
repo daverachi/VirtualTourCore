@@ -6,6 +6,7 @@
 <div>
     <hr />
     <div class="row">
+        <div class="col-xs-12 alert alert-danger hidden" role="alert" id="errorMessage"></div>
         <div class="col-xs-1">
             <div class="adminHeadingText">Details</div>
         </div>
@@ -31,10 +32,8 @@
                             Clicking confirm will permanently delete this tour.  Do you wish to continue?
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <a href="@Url.Action("Delete", new { id = Model.Id })" class="btn btn-danger">
-                                Confirm Delete
-                            </a>
+                            <button id="closeButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button id="deleteButton" type="button" class="btn btn-danger">Confirm Delete</button>
                         </div>
                     </div>
                 </div>
@@ -108,3 +107,37 @@
 <p>
     @Html.ActionLink("Back to List", "ClientTours", new { id = Model.AreaId, cId = Model.ClientId })
 </p>
+
+<div id="tourDetails" data-tourid="@Model.Id" data-areaid="@Model.AreaId" data-clientid="@Model.ClientId" class="hidden"></div>
+
+<script>
+    $(document).on('click', '#deleteButton', function(){
+        deleteTour();
+    });
+
+    function deleteTour() {
+        var details = $('#tourDetails');
+        var tourId = details.data("tourid");
+        var areaId = details.data("areaid");
+        var clientId = details.data("clientid");
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Delete")',
+            data: { id: tourId },
+            success: function(response){
+                if (response) {
+                    $('#closeButton').click();
+                    $('#errorMessage').html("<i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> <strong>Error!</strong> " + response);
+                    $('#errorMessage').removeClass("hidden");
+                }else{
+                    window.location.href = "/Tour/ClientTours/" + areaId + "?cId=" + clientId;
+                }
+            },
+            error: function () {
+                $('#closeButton').click();
+                $('#errorMessage').html("<i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> <strong>Error!</strong> Failed to delete current tour. please try again later.");
+                $('#errorMessage').removeClass("hidden");
+            }
+        });
+    }
+</script>
