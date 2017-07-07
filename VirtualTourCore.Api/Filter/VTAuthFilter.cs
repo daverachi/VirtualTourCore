@@ -5,14 +5,17 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using VirtualTourCore.Api.Identity;
+using VirtualTourCore.Core.Interfaces;
 
 namespace VirtualTourCore.Api.Filter
 {
     public class VTAuthFilter : AuthorizeAttribute
     {
-        public VTAuthFilter(string entityType)
+        private readonly ILookupService _lookupService;
+        public VTAuthFilter(string entityType) 
         {
             this.EntityType = entityType;
+            _lookupService = DependencyResolver.Current.GetService<ILookupService>();
         }
 
         public string EntityType { get; set; }
@@ -46,6 +49,9 @@ namespace VirtualTourCore.Api.Filter
             }
             var rd = httpContext.Request.RequestContext.RouteData;
             var id = rd.Values["id"] as string;
+            var cId = rd.Values["cId"] as string;
+            bool needsClientIdAuth = !string.IsNullOrEmpty(cId);
+            bool validClientAuth = false;
             if (string.IsNullOrEmpty(id))
             {
                 ErrorCode = 1;
@@ -56,12 +62,38 @@ namespace VirtualTourCore.Api.Filter
                 case ("Client"):
                     return (IdentityService.GetClientIdsFromClaim(user)).Contains(id);
                 case ("Location"):
-                // need to implement
+                    bool validLocationAuth = false;
+                    if(needsClientIdAuth)
+                    {
+                        validClientAuth = (IdentityService.GetClientIdsFromClaim(user)).Contains(cId);
+                    }
+                    if(!needsClientIdAuth || needsClientIdAuth && validClientAuth)
+                    {
+                        validLocationAuth = _lookupService.GetLocationByIdAndClientId((IdentityService.GetClientIdsFromClaim(user)), int.Parse(id)) != null; 
+                    }
+                    return validLocationAuth;
                 case ("Area"):
-                // need to implement
+                    bool validAreaAuth = false;
+                    if (needsClientIdAuth)
+                    {
+                        validClientAuth = (IdentityService.GetClientIdsFromClaim(user)).Contains(cId);
+                    }
+                    if (!needsClientIdAuth || needsClientIdAuth && validClientAuth)
+                    {
+                        validAreaAuth = _lookupService.GetAreaByIdAndClientId((IdentityService.GetClientIdsFromClaim(user)), int.Parse(id)) != null;
+                    }
+                    return validAreaAuth;
                 case ("Tour"):
-                    // need to implement
-                    return true;
+                    bool validTourAuth = false;
+                    if (needsClientIdAuth)
+                    {
+                        validClientAuth = (IdentityService.GetClientIdsFromClaim(user)).Contains(cId);
+                    }
+                    if (!needsClientIdAuth || needsClientIdAuth && validClientAuth)
+                    {
+                        validTourAuth = _lookupService.GetTourByIdAndClientId((IdentityService.GetClientIdsFromClaim(user)), int.Parse(id)) != null;
+                    }
+                    return validTourAuth;
             }
             return false;
         }

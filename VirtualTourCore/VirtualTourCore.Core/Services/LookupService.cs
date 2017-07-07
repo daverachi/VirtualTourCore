@@ -29,15 +29,21 @@ namespace VirtualTourCore.Core.Services
         public Client GetClientByGuid(Guid guid)
         {
             var client = _clientRepository.GetByGuid(guid);
-            client.AssetLogo = PopulateAssetStoreById(client.AssetLogoId);
-            client.AssetProfile = PopulateAssetStoreById(client.AssetProfileId);
+            if (client != null)
+            {
+                client.AssetLogo = PopulateAssetStoreById(client.AssetLogoId);
+                client.AssetProfile = PopulateAssetStoreById(client.AssetProfileId);
+            }
             return client;
         }
         public Client GetClientById(int id)
         {
             var client = _clientRepository.GetById(id);
-            client.AssetLogo = PopulateAssetStoreById(client.AssetLogoId);
-            client.AssetProfile = PopulateAssetStoreById(client.AssetProfileId);
+            if(client != null)
+            {
+                client.AssetLogo = PopulateAssetStoreById(client.AssetLogoId);
+                client.AssetProfile = PopulateAssetStoreById(client.AssetProfileId);
+            }
             return client;
         }
         public IEnumerable<Client> GetClientByGuids(IEnumerable<Guid> guids)
@@ -55,7 +61,10 @@ namespace VirtualTourCore.Core.Services
         public Location GetLocationByIdAndClientId(IEnumerable<string> clientIds, int id)
         {
             var location = _locationRepository.GetByIdFilteredByClientIds(id, GetValidClientIds(clientIds));
-            location.AssetLocation = PopulateAssetStoreById(location.AssetLocationId);
+            if(location != null)
+            {
+                location.AssetLocation = PopulateAssetStoreById(location.AssetLocationId);
+            }
             return location;
         }
 
@@ -67,7 +76,10 @@ namespace VirtualTourCore.Core.Services
         public Area GetAreaByIdAndClientId(IEnumerable<string> clientIds, int id)
         {
             var area = _areaRepository.GetByIdAndByClientId(id, GetValidClientIds(clientIds));
-            area.AssetArea = PopulateAssetStoreById(area.AssetAreaId);
+            if(area != null)
+            {
+                area.AssetArea = PopulateAssetStoreById(area.AssetAreaId);
+            }
             return area;
         }
 
@@ -84,8 +96,11 @@ namespace VirtualTourCore.Core.Services
         public Tour GetTourByIdAndClientId(IEnumerable<string> clientIds, int id)
         {
             var tour = _tourRepository.GetByIdAndClientId(id, GetValidClientIds(clientIds));
-            tour.AssetTourThumbnail = PopulateAssetStoreById(tour.AssetTourThumbnailId);
-            tour.KrPanoTour = PopulateAssetStoreById(tour.KrPanoTourId);
+            if(tour != null)
+            {
+                tour.AssetTourThumbnail = PopulateAssetStoreById(tour.AssetTourThumbnailId);
+                tour.KrPanoTour = PopulateAssetStoreById(tour.KrPanoTourId);
+            }
             return tour;
         }
 

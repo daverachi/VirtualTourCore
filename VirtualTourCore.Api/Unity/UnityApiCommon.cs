@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Web;
 using VirtualTourCore.Api.Areas.HelpPage.Controllers;
+using VirtualTourCore.Api.Filter;
 using VirtualTourCore.Common.DataAccess;
 using VirtualTourCore.Common.DataAccess.Interfaces;
 using VirtualTourCore.Common.Unity;
