@@ -20,5 +20,8 @@ namespace VirtualTourCore.Core.Interfaces
         IEnumerable<Area> GetAreasByLocationId(int id);
         IEnumerable<Tour> GetToursByAreaId(int areaId);
         Tour GetTourByIdAndClientId(IEnumerable<string> clientIds, int id);
+        bool ValidRegistrationCode(string code);
+        bool ValidEmail(string code);
+        bool ValidUsername(string code);
     }
 }

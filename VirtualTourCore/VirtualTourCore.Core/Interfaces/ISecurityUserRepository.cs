@@ -12,6 +12,7 @@ namespace VirtualTourCore.Core.Interfaces
         IEnumerable<SecurityUser> Get();
         SecurityUser GetById(int id);
         SecurityUser GetByUsername(string username);
+        SecurityUser GetByEmail(string email);
         int? Create(SecurityUser user);
         SecurityUser Update(SecurityUser user);
         SecurityUser GetByLogin(string username, string password);

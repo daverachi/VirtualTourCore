@@ -112,6 +112,11 @@ namespace VirtualTourCore.Core.Repositories
             }
             return securityUser;
         }
+
+        public SecurityUser GetByEmail(string email)
+        {
+            return GetQueryable().FirstOrDefault(x => x.Email.ToLower() == email.ToLower());
+        }
     }
 }
 

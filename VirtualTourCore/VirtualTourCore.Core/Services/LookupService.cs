@@ -12,12 +12,16 @@ namespace VirtualTourCore.Core.Services
         private IAreaRepository _areaRepository;
         private ITourRepository _tourRepository;
         private IAssetStoreRepository _assetStoreRepository;
+        private IRegistrationCodeRepository _registrationCodeRepository;
+        private ISecurityUserRepository _securityUserRepository;
         public LookupService(
             IClientRepository clientRepository,
             ILocationRepository locationRepository,
             IAreaRepository areaRepository,
             ITourRepository tourRepository,
-            IAssetStoreRepository assetStoreRepository
+            IAssetStoreRepository assetStoreRepository,
+            IRegistrationCodeRepository registrationCodeRepository,
+            ISecurityUserRepository securityUserRepository
             )
         {
             _clientRepository = clientRepository;
@@ -25,6 +29,8 @@ namespace VirtualTourCore.Core.Services
             _areaRepository = areaRepository;
             _tourRepository = tourRepository;
             _assetStoreRepository = assetStoreRepository;
+            _registrationCodeRepository = registrationCodeRepository;
+            _securityUserRepository = securityUserRepository;
         }
         public Client GetClientByGuid(Guid guid)
         {
@@ -127,6 +133,25 @@ namespace VirtualTourCore.Core.Services
                 }
             }
             return _validClientIds;
+        }
+
+        public bool ValidRegistrationCode(string code)
+        {
+            bool valid = false;
+            Guid guid = Guid.NewGuid();
+            if(Guid.TryParse(code, out guid))
+            {
+                valid = _registrationCodeRepository.GetByGuid(guid) != null ? true : false;
+            }
+            return valid;
+        }
+        public bool ValidEmail(string email)
+        {
+            return _securityUserRepository.GetByEmail(email) == null ? true : false;
+        }
+        public bool ValidUsername(string username)
+        {
+            return _securityUserRepository.GetByUsername(username) == null ? true : false;
         }
     }
 }

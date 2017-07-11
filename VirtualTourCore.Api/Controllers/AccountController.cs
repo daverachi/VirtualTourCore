@@ -20,9 +20,11 @@ namespace VirtualTourCore.Api.Controllers
     {
         // GET: Account
         private ISecurityService _securityService;
-        public AccountController(ISecurityService securityService)
+        private ILookupService _lookupService;
+        public AccountController(ISecurityService securityService, ILookupService lookupService)
         {
             _securityService = securityService;
+            _lookupService = lookupService;
         }
 
         [Authorize]
@@ -73,7 +75,7 @@ namespace VirtualTourCore.Api.Controllers
             }
             else
             {
-                return RedirectToAction("Login"); // should be forbidden or unauth, some shit liek that
+                return RedirectToAction("Login"); // should be forbidden or unauth
             }
 
         }
@@ -99,6 +101,22 @@ namespace VirtualTourCore.Api.Controllers
             return !string.IsNullOrEmpty(ReturnUrl) ? Redirect(ReturnUrl) : Redirect("/Home/Index");
         }
 
+        [HttpPost]
+        public string ValidateRegistrationCode([System.Web.Http.FromBody]string code)
+        {
+            return _lookupService.ValidRegistrationCode(code) ? "" : "Registration Code is not valid!";
+        }
+
+        [HttpPost]
+        public string ValidateUsername([System.Web.Http.FromBody]string username)
+        {
+            return _lookupService.ValidUsername(username) ? "" : "Username is not available, please choose another!";
+        }
+        [HttpPost]
+        public string ValidateUserEmail([System.Web.Http.FromBody]string email)
+        {
+            return _lookupService.ValidEmail(email) ? "" : "There is already an account associated with that email address, please choose another!";
+        }
         public ActionResult NotAuthorized()
         {
             return View();
