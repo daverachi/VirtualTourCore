@@ -91,7 +91,7 @@ namespace VirtualTourCore.Api.Controllers
         [HttpPost]
         public string IssueRegistration(int id, [System.Web.Http.FromBody]string email)
         {
-            return "";
+            return _adminService.IssueInvitation(id, email);
         }
 
         [VTAuthFilter("Client")]

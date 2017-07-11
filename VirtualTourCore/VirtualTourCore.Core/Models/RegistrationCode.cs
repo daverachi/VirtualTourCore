@@ -13,11 +13,10 @@ namespace VirtualTourCore.Core.Models
         public RegistrationCode(int? clientId = null)
         {
             Guid = Guid.NewGuid();
-            AvailableUsages = 2;
+            AvailableUsages = 1;
             ClientId = clientId;
         }
         public RegistrationCode() { }
-        public int Id { get; set; }
         public Guid Guid { get; set; }
         public int AvailableUsages { get; set; }
         public int? ClientId { get; set; }

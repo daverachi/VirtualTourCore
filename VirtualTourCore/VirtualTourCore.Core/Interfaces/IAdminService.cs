@@ -23,5 +23,6 @@ namespace VirtualTourCore.Core.Interfaces
         void UpdateTour(Tour tour, HttpPostedFileBase tourThumb, HttpPostedFileBase KrPanoZip);
         string DeleteTour(Tour tour);
         void UpdateTourLocations(List<Tour> tours, int userId);
+        string IssueInvitation(int id, string email);
     }
 }

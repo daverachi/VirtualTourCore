@@ -533,7 +533,7 @@ namespace VirtualTourCore.Core.Services
                 CreateUserId = userId
             };
         }
-        internal static void SendRegistrationEmail(RegistrationCode registrationCode)
+        internal static void SendRegistrationEmail(RegistrationCode registrationCode, string emailAddress)
         {
             string smtpAddress = "smtp.mail.yahoo.com";
             int portNumber = 587;
@@ -541,9 +541,13 @@ namespace VirtualTourCore.Core.Services
 
             string emailFrom = "VTCorePostalBot@yahoo.com";
             string password = @"6u\67\8[6+Cz2_9*Y]7DvTnG3EJ9#k@}";
-            string emailTo = "david.ruhlemann@tallan.com";
+            string emailTo = emailAddress;
             string subject = "Virtual Tour Registration Code";
-            string body = string.Format("Hey, use this code ({0}) to register new users for your account.  This code will expire at {1}", registrationCode.Guid, ((DateTime)registrationCode.CreateDate).AddHours(1));
+            string body = File.ReadAllText(System.Web.Hosting.HostingEnvironment.MapPath("~/Views/Shared/EmailInvitation.htm"));
+            //string body = string.Format("Hey, use this code ({0}) to register new users for your account.  This code will expire at {1}", registrationCode.Guid, ((DateTime)registrationCode.CreateDate).AddHours(1));
+            body = body.Replace("#RegistrationCodeValue#", registrationCode.Guid.ToString());
+            body = body.Replace("#ExpiryDateTimeValue#", ((DateTime)registrationCode.CreateDate).AddHours(1).ToString());
+
 
             using (MailMessage mail = new MailMessage())
             {
@@ -580,6 +584,19 @@ namespace VirtualTourCore.Core.Services
                     _tourRepository.UpdateEntity(existingTour);
                 }
             }
+        }
+
+        public string IssueInvitation(int id, string email)
+        {
+            RegistrationCode regCode = null;
+            string result = "Failed to complete.  Contact Support if issue continues.";
+            if(_registrationCodeRepository.Create(id, out regCode))
+            {
+                SendRegistrationEmail(regCode, email);
+                result = "";
+            }
+            return result;
+
         }
     }
 }
