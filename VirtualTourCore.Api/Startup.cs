@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Owin;
-using Owin;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using Microsoft.Owin;
+//using Owin;
 
-[assembly: OwinStartup(typeof(VirtualTourCore.Api.Startup))]
+////[assembly: OwinStartup(typeof(VirtualTourCore.Api.Startup))]
 
-namespace VirtualTourCore.Api
-{
-    public partial class Startup
-    {
-        public void Configuration(IAppBuilder app)
-        {
-            ConfigureAuth(app);
-        }
-    }
-}
+//namespace VirtualTourCore.Api
+//{
+//    public partial class Startup
+//    {
+//        public void Configuration(IAppBuilder app)
+//        {
+//            //ConfigureAuth(app);
+//        }
+//    }
+//}

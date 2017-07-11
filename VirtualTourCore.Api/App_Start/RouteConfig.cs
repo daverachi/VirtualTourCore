@@ -16,7 +16,8 @@ namespace VirtualTourCore.Api
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}/{cId}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional, cId= UrlParameter.Optional }
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional, cId= UrlParameter.Optional },
+                namespaces: new[] { "VirtualTourCore.Api.Controllers" }
             );
         }
     }

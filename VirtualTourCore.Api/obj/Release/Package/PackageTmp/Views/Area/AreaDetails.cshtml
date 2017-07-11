@@ -1,0 +1,147 @@
+﻿@model VirtualTourCore.Core.Models.Area
+
+@{
+    ViewBag.Title = "Area Details";
+}
+
+<div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 alert alert-danger hidden" role="alert" id="errorMessage"></div>
+        <div class="col-xs-1">
+            <div class="adminHeadingText">Details</div>
+        </div>
+        <div class="col-xs-1">
+            <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn">
+                <i class="fa fa-2x fa-pencil" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div class="col-xs-9">
+
+        </div>
+        <div class="col-xs-1">
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deletionModal">
+                <i class="fa fa-2x fa-trash" aria-hidden="true"></i>
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="deletionModal" tabindex="-1" role="dialog" aria-labelledby="deletionLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <h4 class="modal-title" id="deletionLabel">Confirm Deletion?</h4>
+                            Clicking confirm will permanently delete this area.  Do you wish to continue?
+                            <div>
+                                <small>This will fail if the area contains tours, you must delete the tours within the area first.</small>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="closeButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button id="deleteButton" type="button" class="btn btn-danger">Confirm Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>Name</label>
+                </div>
+                <div class="col-lg-12">
+                    @Model.Name
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>Created</label>
+                </div>
+                <div class="col-lg-12">
+                    @Model.CreateDate
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            @if (Model.UpdateDate != null)
+            {
+                <div class="row">
+                    <div class="col-lg-12">
+                        <label>Updated</label>
+                    </div>
+                    <div class="col-lg-12">
+                        @Model.UpdateDate
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-4">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>Description</label>
+                </div>
+                <div class="col-lg-12">
+                    @Html.Raw(Model.DescriptionHtml)
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-8">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label>Area Map</label>
+                </div>
+                <div class="col-lg-12">
+                    @if (Model.AssetArea != null)
+                    {
+                        <img src="@Model.AssetArea.FullPath()" class="img-fluid img-thumbnail" id="areaMapImage" alt="@Model.Name Area Map Image">
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Back to List", "ClientAreas", new { id = Model.LocationId, cId = Model.ClientId })
+</p>
+<div id="areaDetails" data-areaid="@Model.Id" data-clientid="@Model.ClientId" data-locationid="@Model.LocationId" class="hidden"></div>
+
+<script>
+    $(document).on('click', '#deleteButton', function(){
+        deleteArea();
+    
+    });
+
+    function deleteArea() {
+        var details = $('#areaDetails');
+        var locationId = details.data("locationid");
+        var areaId = details.data("areaid");
+        var clientId = details.data("clientid");
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Delete")',
+            data: { id: areaId },
+            success: function(response){
+                if (response) {
+                    $('#closeButton').click();
+                    $('#errorMessage').html("<i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> <strong>Error!</strong> " + response);
+                    $('#errorMessage').removeClass("hidden");
+                }else{
+                    window.location.href = "/Area/ClientAreas/" + locationId + "?cId=" + clientId;
+                }
+            },
+            error: function () {
+                $('#closeButton').click();
+                $('#errorMessage').html("<i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> <strong>Error!</strong> Failed to delete current area. please try again later.");
+                $('#errorMessage').removeClass("hidden");
+            }
+        });
+    }
+</script>

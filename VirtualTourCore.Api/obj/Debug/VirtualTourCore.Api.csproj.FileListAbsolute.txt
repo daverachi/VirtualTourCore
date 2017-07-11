@@ -1,3 +1,4 @@
+F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\AutoMapper.Net4.dll
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\roslyn\csc.exe
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
@@ -64,7 +65,9 @@ F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\Microsoft.Data.Edm.dll
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\Microsoft.Azure.KeyVault.Core.dll
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\System.Spatial.dll
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\VirtualTourCore.Common.pdb
+F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\VirtualTourCore.Common.dll.config
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\VirtualTourCore.Core.pdb
+F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\VirtualTourCore.Core.dll.config
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\Microsoft.Practices.ServiceLocation.pdb
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\Microsoft.Practices.ServiceLocation.xml
@@ -150,5 +153,3 @@ F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\zh-Hant\System.Spatial.resou
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\obj\Debug\VirtualTourCore.Api.csprojResolveAssemblyReference.cache
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\obj\Debug\VirtualTourCore.Api.dll
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\obj\Debug\VirtualTourCore.Api.pdb
-F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\VirtualTourCore.Common.dll.config
-F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\VirtualTourCore.Core.dll.config

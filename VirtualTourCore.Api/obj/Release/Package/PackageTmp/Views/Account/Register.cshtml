@@ -1,0 +1,186 @@
+﻿@model VirtualTourCore.Api.Models.RegisterBindingModel
+@{
+    ViewBag.Title = "Register";
+}
+    <h2>Register <small>You must have a registration code to register</small></h2>
+<hr/>
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { onsubmit = "return ValidateForm()" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="ReturnURL" value="@System.Web.HttpContext.Current.Request["ReturnURL"]" />
+<div class="row">
+    <div class="col-xs-3"></div>
+    <div class="col-xs-6">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group" id="regCodeInputGroup">
+            @Html.LabelFor(model => model.RegistrationCode)
+            @if (!string.IsNullOrWhiteSpace(Model.RegistrationCode))
+                {
+                @Html.HiddenFor(model => model.RegistrationCode)
+                <input type="text" class="form-control" value="@Model.RegistrationCode" readonly />
+            }
+            else
+            {
+                @Html.EditorFor(model => model.RegistrationCode, new { htmlAttributes = new { @class = "form-control", @id="RegCodeInput", @value = ""} })
+            }
+            @Html.ValidationMessageFor(model => model.RegistrationCode, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group" id="userEmailInputGroup">
+            @Html.LabelFor(model => model.Email)
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @id = "UserEmailInput", @value = "" } })
+            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.FirstName)
+            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", @value = "" } })
+            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastName)
+            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", @value = "" } })
+            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group" id="userNameInputGroup">
+            @Html.LabelFor(model => model.Username)
+            @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", @id = "UserNameInput", @value = "" } })
+            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group" id="passwordInputGroup">
+            @Html.LabelFor(model => model.Password)
+            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @id = "passwordInput", @value = "" } })
+            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group" id="passwordConfInputGroup">
+            @Html.LabelFor(model => model.ConfirmPassword)
+            @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", @id = "passwordConfInput", @value="" } })
+            @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Create Account" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+        
+}
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+<script>
+    $('#RegCodeInput').on('focusout', function () {
+        if ($(this).val()) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("ValidateRegistrationCode")',
+            data: { code: $(this).val() },
+            success: function(response){
+                if (response) {
+                    $.growl.error({ message: response });
+                    $('#regCodeInputGroup').addClass('has-error');
+                } else {
+                    $('#regCodeInputGroup').removeClass('has-error');
+                }
+            },
+            error: function () {
+                $.growl.error({ message: "Error Looking up Registration Code Validity." });
+            }
+        });
+        }
+    });
+
+    $('#UserNameInput').on('focusout', function () {
+        if ($(this).val()) {
+            $.ajax({
+            type: "POST",
+            url: '@Url.Action("ValidateUsername")',
+            data: { username: $(this).val() },
+            success: function(response){
+                if (response) {
+                    $.growl.error({ message: response });
+                    $('#userNameInputGroup').addClass('has-error');
+                } else {
+                    $('#userNameInputGroup').removeClass('has-error');
+                }
+            },
+            error: function () {
+                $.growl.error({ message: "Error Looking up username availability" });
+            }
+        });
+        }
+    });
+
+     $('#UserEmailInput').on('focusout', function () {
+        if ($(this).val()) {
+            $.ajax({
+            type: "POST",
+            url: '@Url.Action("ValidateUserEmail")',
+            data: { email: $(this).val() },
+            success: function(response){
+                if (response) {
+                    $.growl.error({ message: response });
+                    $('#userEmailInputGroup').addClass('has-error');
+                } else {
+                    $('#userEmailInputGroup').removeClass('has-error');
+                }
+            },
+            error: function () {
+                $.growl.error({ message: "Error Looking up user email association" });
+            }
+        });
+        }
+    });
+
+     $('#passwordConfInput').on('focusout', function () {
+         if (ValidatePasswordRegex($(this).val()))
+         {
+             ValidatePasswordMatch();
+         }
+         else {
+             $('#passwordConfInputGroup').addClass('has-error');
+             $.growl.error({ message: "Password must be at least six letters and have 1 number and 1 uppercase character." });
+         }
+     });
+
+     $('#passwordInput').on('focusout', function () {
+         if ($(this).val()) {
+             var validRegex = ValidatePasswordRegex($(this).val());
+             if (validRegex)
+             {
+                 $('#passwordInputGroup').removeClass('has-error');
+                 if ($('#passwordConfInput').val()) {
+                     ValidatePasswordMatch();
+                 }
+             }
+             else {
+                 $('#passwordInputGroup').addClass('has-error');
+                 $.growl.error({ message: "Password must be at least six letters and have 1 number and 1 uppercase character." });
+             }
+         }
+     });
+
+     function ValidatePasswordRegex(str) {
+         // at least one number, one lowercase and one uppercase letter
+         // at least six characters
+         var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+         return re.test(str);
+     }
+     function ValidatePasswordMatch() {
+         if ($('#passwordConfInput').val() !== $('#passwordInput').val()) {
+             $('#passwordConfInputGroup').addClass('has-error');
+             $('#passwordInputGroup').addClass('has-error');
+             $.growl.error({ message: "Password fields do not match" });
+         }
+         else {
+             $('#passwordConfInputGroup').removeClass('has-error');
+             $('#passwordInputGroup').removeClass('has-error');
+         }
+     }
+
+     function ValidateForm() {
+         if ($('.has-error').length > 0) {
+             $.growl.error({ message: "There are invalid fields which need to be fixed before submission is possible" });
+             return false;
+         }
+         return true;
+     }
+
+</script>

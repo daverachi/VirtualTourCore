@@ -1,0 +1,62 @@
+﻿@model IEnumerable<VirtualTourCore.Core.Models.Location>
+@{
+    ViewBag.Title = "Locations";
+}
+@if (Model.Count() == 0)
+{
+    <div class="page-header">
+        <h3>It's lonely here... <small>Use the create button below to add some locations.</small></h3>
+    </div>
+}
+else
+{
+    @*<div class="panel panel-default">
+        <div class="panel-heading">Locations</div>*@
+        <table class="table">
+            <tr>
+                <th class="col-sm-6">
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th class="col-sm-2 text-center">
+                    Create Date
+                </th>
+                <th class="col-sm-2 text-center">
+                    Update Date
+                </th>
+                <th class="col-sm-2 text-center">
+                    <span>Options</span>
+                </th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.CreateDate)
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.UpdateDate)
+                    </td>
+                    <td class="text-center">
+                        <a href="@Url.Action("Details", new { id = item.Id })" class="btn btn-default">
+                            <i class="fa fa-info" aria-hidden="true"></i>
+                        </a>
+                        <a href="@Url.Action("ClientAreas", "Area", new { cId= item.ClientId, id = item.Id })" class="btn btn-default">
+                            Areas <i class="fa fa-globe" aria-hidden="true"></i>
+                        </a> 
+                    </td>
+                </tr>
+            }
+        </table>
+        @*</div>*@
+
+}
+
+<hr />
+<div class="row">
+    <div class="col-xs-12">
+        @Html.ActionLink("Create New Location", "Create", new { id = ViewBag.ClientId }, new { @class = "btn btn-default" })
+    </div>
+</div>

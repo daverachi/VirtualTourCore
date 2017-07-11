@@ -1,0 +1,176 @@
+﻿@model VirtualTourCore.Api.Models.AreaMapLocationVM
+@{
+    ViewBag.Title = "Tour Map";
+}
+<style>
+    #hotspotBin {
+        height: 10px;
+    }
+
+    .hotspot {
+        background-color: #fff;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        border-radius: 50%;
+        height: 25px;
+        position: absolute;
+        width: 25px;
+        cursor: default;
+        z-index: 1;
+border: 2px solid;
+    }
+
+        .hotspot p {
+            text-align: center;
+        }
+</style>
+<div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 alert alert-danger hidden" role="alert" id="errorMessage"></div>
+        <div class="col-xs-12">
+            <div class="adminHeadingText">Tour Map <small>This tool allows you to position your tours on the map</small></div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-4">
+            <table class="table">
+                <tr>
+                    <th class="col-sm-1"></th>
+                    <th class="col-sm-8">
+                        Tour Name
+                    </th>
+                    <th class="col-sm-1 text-center">
+                        X
+                    </th>
+                    <th class="col-sm-1 text-center">
+                        Y
+                    </th>
+                    <th class="col-sm-1 text-center">
+                        <i class="fa fa-eraser" aria-hidden="true"></i>
+                    </th>
+                </tr>
+                @{ 
+                    var count = 1;
+                    foreach (var item in Model.Tours)
+                    {
+                        <tr>
+                            <td>@count</td>
+                            <td>@item.Name</td>
+                            <td>@(string.Format("{0:F2}%", item.MapX*100))</td>
+                            <td>@(string.Format("{0:F2}%", item.MapY*100))</td>
+                            <td><input type="checkbox" checked /></td>
+                        </tr>
+                        count++;
+                    }
+                }
+            </table>
+        </div>
+        <div class="col-sm-8">
+            <div class="thumbnail">
+                <img class="img-responsive tocenter areaMap" src="@Model.ParentArea.AssetArea.FullPath()" />
+                @{
+                    if (Model.Tours != null)
+                    {
+                        var x = 0;
+                        for (var i = 0; i < Model.Tours.Count(); i++)
+                        {
+                            var tour = Model.Tours.ElementAt(i);
+                            if (tour.MapY == null)
+                            {
+                                <div class="hotspot" id="@tour.Id" style="bottom: 10px; left: @(4 + 4 * x)%; cursor: -moz-grab">
+                                    <p>@(i + 1)</p>
+                                </div>
+                                x++;
+                            }
+                            else
+                            {
+                                <div class="hotspot" id="@tour.Id" style="top: @(string.Format("{0:F5}%", tour.MapY * 100)); left: @(string.Format("{0:F5}%", tour.MapX * 100));">
+                                    <p>@(i + 1)</p>
+                            </div>
+                            }
+                        }
+                    }
+                }
+                <div class="caption">
+                    <h4>Locations that do not have a position on the map:</h4>
+                    <div id="hotspotBin"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <input id="saveBtn" type="button" class="btn btn-default" value="Update Map Positions"/>
+        </div>
+    </div>
+</div>
+<div class="hidden">
+    @using (Html.BeginForm("ModifyTourPositions", "Tour", method: FormMethod.Post))
+    {
+        {
+            if (Model != null && Model.Tours != null)
+            {
+                for (var i = 0; i < Model.Tours.Count(); i++)
+                {
+                    var tour = Model.Tours.ElementAt(i);
+                    <input type="text" id="" name="tours[@i].Id" value="@tour.Id" />
+                    <input type="text" id="" name="tours[@i].ClientId" value="@tour.ClientId" />
+                    <input type="text" id="" name="tours[@i].AreaId" value="@tour.AreaId" />
+                    <input type="text" class="xlog" id="@tour.Id" name="tours[@i].MapX" value="@tour.MapX" />
+                    <input type="text" class="ylog" id="@tour.Id" name="tours[@i].MapY" value="@tour.MapY" />
+                }
+            }
+            <input type="submit" id="updateBtn" />
+        }
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        resetForms();
+        var x = 0;
+        var y = 0;
+        var xperc;
+        var yperc;
+        $(function () {
+            $(".hotspot").draggable({ containment: ".areaMap", scroll: false });
+        });
+
+        $('#saveBtn').click(function () {
+            //$('input[type=checkbox]').each(function () {
+            //    if (this.checked) {
+            //        $("#" + (this.id).substring(7, this.id.length) + ".xlog").val(null);
+            //        $("#" + (this.id).substring(7, this.id.length) + ".ylog").val(null);
+            //    }
+            //});
+            $('#updateBtn').trigger('click');
+        });
+
+        $(function () {
+            $(".hotspot").mouseup(function (event) {
+                var width = $(".areaMap").width();
+                var height = $(".areaMap").height();
+                var hotspotOffset = $(this).position();
+                var hotspotWidth = $(this).outerWidth();
+                var hotspotHeight = $(this).outerHeight();
+                var id = this.id;
+                xperc = ((hotspotOffset.left - (hotspotWidth * (hotspotOffset.left / width))) / width);
+
+                //test = (hotspotOffset.top - (hotspotHeight * (hotspotOffset.top / height)));
+
+
+                yperc = (hotspotOffset.top - hotspotHeight) / height;
+                $("#" + id + ".xlog").val(xperc);
+                $("#" + id + ".ylog").val(yperc);
+            });
+        });
+
+        function resetForms() {
+            for (i = 0; i < document.forms.length; i++) {
+                document.forms[i].reset();
+            }
+            $('input[type=checkbox]').each(function () {
+                this.checked = false;
+            });
+        }
+    });
+</script>
