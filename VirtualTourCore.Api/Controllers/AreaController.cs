@@ -10,6 +10,7 @@ using VirtualTourCore.Core.Models;
 
 namespace VirtualTourCore.Api.Controllers
 {
+    [Authorize]
     public class AreaController : Controller
     {
         private readonly ILookupService _lookupService;
@@ -50,12 +51,14 @@ namespace VirtualTourCore.Api.Controllers
             return View(areas);
         }
 
+        [VTAuthFilter("Location")]
         public ActionResult Create(int cId, int id)
         {
             ModelState.Clear();
             return View("AreaCreateEdit", new Area { Id = default(int), LocationId = id, ClientId = cId });
         }
 
+        [VTAuthFilter("Area")]
         public ActionResult Edit(int id)
         {
             var clientIds = IdentityService.GetClientIdsFromClaim(User);
@@ -63,6 +66,8 @@ namespace VirtualTourCore.Api.Controllers
             // TODO Error handling!
             return View("AreaCreateEdit", area);
         }
+
+        [VTAuthFilter("Area")]
         public ActionResult Details(int id)
         {
             var clientIds = IdentityService.GetClientIdsFromClaim(User);
@@ -89,7 +94,6 @@ namespace VirtualTourCore.Api.Controllers
             return RedirectToAction("ClientAreas", new { cId = area.ClientId, id = area.LocationId });
         }
 
-        //[VTAuthFilter("Client")]
         [HttpPost]
         public string Delete(int id)
         {

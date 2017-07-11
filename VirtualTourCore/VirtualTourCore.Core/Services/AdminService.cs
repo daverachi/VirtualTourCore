@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
@@ -564,6 +565,20 @@ namespace VirtualTourCore.Core.Services
             }
         }
 
-
+        public void UpdateTourLocations(List<Tour> tours, int userId)
+        {
+            foreach(var tour in tours)
+            {
+                var existingTour = _tourRepository.GetById(tour.Id);
+                if(existingTour != null)
+                {
+                    existingTour.MapX = tour.MapX;
+                    existingTour.MapY = tour.MapY;
+                    existingTour.UpdateUserId = userId;
+                    existingTour.UpdateDate = DateTime.Now;
+                    _tourRepository.UpdateEntity(existingTour);
+                }
+            }
+        }
     }
 }

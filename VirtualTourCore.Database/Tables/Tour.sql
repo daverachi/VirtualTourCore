@@ -9,6 +9,8 @@
     DescriptionJson VARCHAR (MAX) NULL,
 	AssetTourThumbnailId INT NULL,
 	KrPanoTourId    INT NULL,
+	MapX			FLOAT NULL,
+	MapY			FLOAT NULL,
 	CreateUserID    INT NOT NULL,
     CreateDate      DATETIME      NOT NULL,
     UpdateUserID    INT			NULL,

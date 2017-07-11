@@ -9,6 +9,8 @@ namespace VirtualTourCore.Core.Models
     {
         public int ClientId { get; set; }
         public int AreaId { get; set; }
+        public double? MapX { get; set; }
+        public double? MapY { get; set; }
         [DisplayName("Tour Name")]
         public string Name { get; set; }
         public string Description { get; set; }

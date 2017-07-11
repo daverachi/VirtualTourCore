@@ -11,7 +11,6 @@
     @Scripts.Render("~/bundles/jquery")
     <link href="//cdn.quilljs.com/1.2.6/quill.snow.css" rel="stylesheet">
     <link href="//cdn.quilljs.com/1.2.6/quill.bubble.css" rel="stylesheet">
-
     <!-- Core build with no theme, formatting, non-essential modules -->
     <link href="//cdn.quilljs.com/1.2.6/quill.core.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -34,7 +33,8 @@
                     @*<li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>*@
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li>@Html.ActionLink("Clients", "Index", "Client", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("Content", "Index", "Client", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("Users", "Index", "Client", new { area = "" }, null)</li>
                     }
                 </ul>
                 <ul class="nav navbar-nav">

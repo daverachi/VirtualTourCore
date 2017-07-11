@@ -137,6 +137,7 @@ namespace VirtualTourCore.Api.Controllers
                     breadCrumb.IncludeLowestTierLink = true;
                     break;
                 case "create":
+                case "maptours":
                     breadCrumb = _navigationService.GetBreadCrumbs(_lookupService.GetAreaByIdAndClientId(userClientAccess, id.Value));
                     breadCrumb.IncludeLowestTierLink = true;
                     break;

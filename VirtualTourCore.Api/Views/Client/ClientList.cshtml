@@ -50,15 +50,12 @@ else
                         @Html.DisplayFor(modelItem => item.Client.UpdateDate)
                     </td>
                     <td class="text-center">
-                        @if (item.IsModifiable)
-                        {
                         <a href="@Url.Action("Details", new { id = item.Client.Id })" class="btn btn-default">
                             <i class="fa fa-info" aria-hidden="true"></i>
                         </a>
                         <a href="@Url.Action("ClientLocations", "Location", new { id = item.Client.Id })" class="btn btn-default">
                             Locations <i class="fa fa-globe" aria-hidden="true"></i>
                         </a>
-                        }
                     </td>
                 </tr>
             }

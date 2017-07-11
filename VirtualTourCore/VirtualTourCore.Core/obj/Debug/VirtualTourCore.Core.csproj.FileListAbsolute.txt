@@ -110,3 +110,4 @@ F:\Projects\VirtualTourCore\VirtualTourCore\VirtualTourCore.Core\bin\Debug\zh-Ha
 F:\Projects\VirtualTourCore\VirtualTourCore\VirtualTourCore.Core\obj\Debug\VirtualTourCore.Core.csprojResolveAssemblyReference.cache
 F:\Projects\VirtualTourCore\VirtualTourCore\VirtualTourCore.Core\obj\Debug\VirtualTourCore.Core.dll
 F:\Projects\VirtualTourCore\VirtualTourCore\VirtualTourCore.Core\obj\Debug\VirtualTourCore.Core.pdb
+F:\Projects\VirtualTourCore\VirtualTourCore\VirtualTourCore.Core\bin\Debug\VirtualTourCore.Common.dll.config

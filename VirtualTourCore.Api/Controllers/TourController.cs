@@ -5,11 +5,13 @@ using System.Web;
 using System.Web.Mvc;
 using VirtualTourCore.Api.Filter;
 using VirtualTourCore.Api.Identity;
+using VirtualTourCore.Api.Models;
 using VirtualTourCore.Core.Interfaces;
 using VirtualTourCore.Core.Models;
 
 namespace VirtualTourCore.Api.Controllers
 {
+    [Authorize]
     public class TourController : Controller
     {
         private readonly ILookupService _lookupService;
@@ -38,7 +40,7 @@ namespace VirtualTourCore.Api.Controllers
             var clients = _lookupService.GetClients();
             return View(clients);
         }
-        [VTAuthFilter("Tour")]
+        [VTAuthFilter("Area")]
         public ActionResult ClientTours(int cId, int id)
         {
             // get available clients -> if only one redirect to client tours with client id
@@ -50,6 +52,7 @@ namespace VirtualTourCore.Api.Controllers
             return View(tours);
         }
 
+        [VTAuthFilter("Area")]
         public ActionResult Create(int cId, int id)
         {
             ModelState.Clear();
@@ -57,6 +60,7 @@ namespace VirtualTourCore.Api.Controllers
             return View("TourCreateEdit", new Tour { Id = default(int), AreaId = id, ClientId = cId });
         }
 
+        [VTAuthFilter("Tour")]
         public ActionResult Edit(int id)
         {
             var clientIds = IdentityService.GetClientIdsFromClaim(User);
@@ -65,6 +69,8 @@ namespace VirtualTourCore.Api.Controllers
             ViewBag.HasKrPano = tour.KrPanoTourId != null && !string.IsNullOrWhiteSpace(tour.KrPanoTour.FullPath());
             return View("TourCreateEdit", tour);
         }
+
+        [VTAuthFilter("Tour")]
         public ActionResult Details(int id)
         {
             var clientIds = IdentityService.GetClientIdsFromClaim(User);
@@ -92,13 +98,32 @@ namespace VirtualTourCore.Api.Controllers
             return RedirectToAction("ClientTours", new { cId = tour.ClientId, id = tour.AreaId });
         }
 
-        //[VTAuthFilter("Client")]
         [HttpPost]
+        [VTAuthFilter("Tour")]
         public string Delete(int id)
         {
             var clientIds = IdentityService.GetClientIdsFromClaim(User);
             Tour tour = _lookupService.GetTourByIdAndClientId(clientIds, id);
             return _adminService.DeleteTour(tour);
+        }
+
+        public ActionResult MapTours(int cId, int id)
+        {
+            var parentArea = _lookupService.GetAreaByIdAndClientId(new List<string> { cId.ToString() }, id);
+            var tours = _lookupService.GetToursByAreaId(id);
+            var mapVM = new AreaMapLocationVM();
+            if (parentArea != null && tours.Count() > 0)
+            {
+                mapVM.ParentArea = parentArea;
+                mapVM.Tours = tours;
+            }
+            return View("MapTours", mapVM);
+        }
+
+        public ActionResult ModifyTourPositions(List<Tour> tours)
+        {
+            _adminService.UpdateTourLocations(tours, IdentityService.GetUserIdFromClaim(User));
+            return RedirectToAction("MapTours", new { cId = tours[0].ClientId, id = tours[0].AreaId });
         }
     }
 }

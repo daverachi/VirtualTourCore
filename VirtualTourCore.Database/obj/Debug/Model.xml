@@ -2673,6 +2673,38 @@
 					</Element>
 				</Entry>
 				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Tour].[MapX]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Precision" Value="53" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[float]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Tour].[MapY]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Precision" Value="53" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[float]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
 					<Element Type="SqlSimpleColumn" Name="[dbo].[Tour].[CreateUserID]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">

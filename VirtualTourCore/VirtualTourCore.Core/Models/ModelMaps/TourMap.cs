@@ -9,6 +9,8 @@
             this.ToTable("Tour");
             this.Property(t => t.ClientId).HasColumnName("ClientId");
             this.Property(t => t.AreaId).HasColumnName("AreaId");
+            this.Property(t => t.MapX).HasColumnName("MapX");
+            this.Property(t => t.MapY).HasColumnName("MapY");
             this.Property(t => t.Name).HasColumnName("Name");
             this.Property(t => t.Description).HasColumnName("Description");
             this.Property(t => t.DescriptionHtml).HasColumnName("DescriptionHtml");

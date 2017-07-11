@@ -48,3 +48,19 @@
 .modal-dialog{
     padding-top:15%;
 }
+.adminHeadingText small{
+    font-size: .5em;
+}
+.pinPointAdmin {
+    height: 30px;
+    width: 20px;
+    display: inline-block;
+
+}
+.pinPointDraggable {
+    cursor: grab;
+    z-index: 1000000;
+} 
+.locationBin {
+    height: 50px;
+}
