@@ -1,9 +1,10 @@
 ﻿-- todo make this idempotent merge script
 
+
 INSERT INTO [dbo].[RegistrationCode]
            (Guid, AvailableUsages)
      VALUES
-           (NEWID(), 1)
+           (NEWID(), -999)
 GO
 INSERT INTO [dbo].[SecurityUser]
            ([Username]
@@ -21,6 +22,6 @@ INSERT INTO [dbo].[SecurityUser]
 		   ,'8609934956'
 		   ,'David'
 		   ,'Ruhlemann'
-		   ,(select Id from RegistrationCode where GUID = '99681bc1-99f2-4e99-a57b-60964e7c66b0')
+		   ,(select Id from RegistrationCode where AvailableUsages = -999)
 		   ,1)
 GO

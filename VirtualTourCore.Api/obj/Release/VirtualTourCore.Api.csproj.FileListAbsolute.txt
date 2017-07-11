@@ -151,3 +151,4 @@ F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\zh-Hans\System.Spatial.resou
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\zh-Hant\System.Spatial.resources.dll
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\obj\Release\VirtualTourCore.Api.dll
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\obj\Release\VirtualTourCore.Api.pdb
+F:\Projects\VirtualTourCore\VirtualTourCore.Api\obj\Release\VirtualTourCore.Api.csprojResolveAssemblyReference.cache
