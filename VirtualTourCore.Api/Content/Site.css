@@ -64,3 +64,19 @@
 .locationBin {
     height: 50px;
 }
+.optionsButtonGroup > .btn{
+    margin:2px;
+}
+
+
+
+
+
+
+
+
+
+/*Quill Items*/
+.ql-align-center{
+    text-align:center;
+}

@@ -63,7 +63,11 @@ namespace VirtualTourCore.Api.Controllers
             if (client.Id == 0)
             {
                 client.CreateUserId = IdentityService.GetUserIdFromClaim(User);
-                _adminService.CreateClient(client, logo, profile);
+                var clientId = _adminService.CreateClient(client, logo, profile);
+                if(clientId != null)
+                {
+                    IdentityService.AddClientClaim(User, clientId.Value);
+                }
             }
             else
             {
@@ -80,6 +84,14 @@ namespace VirtualTourCore.Api.Controllers
             var clientIds = IdentityService.GetClientIdsFromClaim(User);
             Client client = _lookupService.GetClientById(id);
             return _adminService.DeleteClient(client);
+        }
+
+
+        [VTAuthFilter("Client")]
+        [HttpPost]
+        public string IssueRegistration(int id, [System.Web.Http.FromBody]string email)
+        {
+            return "";
         }
 
         [VTAuthFilter("Client")]

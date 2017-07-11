@@ -11,13 +11,53 @@
             <div class="adminHeadingText">Details</div>
         </div>
         <div class="col-xs-1">
-            <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn">
+            <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn" data-toggle="tooltip" title="Edit @Model.Name Details">
                 <i class="fa fa-2x fa-pencil" aria-hidden="true"></i>
             </a>
         </div>
-        <div class="col-xs-9">
-
+        <div class="col-xs-1">
+            <a href="@Url.Action("ClientLocations", "Location", new { id = Model.Id })" class="btn" data-toggle="tooltip" title="View @Model.Name Locations">
+                <i class="fa fa-2x fa-globe" aria-hidden="true"></i>
+            </a>
         </div>
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="col-xs-1">
+                <span data-toggle="tooltip" title="Send @Model.Name User Invitations">
+                    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#inviteUsers">
+                        <i class="fa fa-2x fa-envelope-o" aria-hidden="true"></i>
+                    </button>
+                </span>
+            </div>
+            <div class="modal fade" id="inviteUsers" tabindex="-1" role="dialog" aria-labelledby="inviteUsersLabel" aria-hidden="true">
+                <div class="modal-dialog text-left" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <h4 class="modal-title" id="inviteUsersLabel">Send User Registration Email For: @Model.Name</h4>
+                            <div>
+                                <small>An email will be sent to the address with a single use registration code and instructions to register for the site.</small>
+                            </div>
+                            <div style="margin-top:10px;">
+                                <label>New User Email</label>
+                                <input type="email" id="registerEmailInput" class="form-control" />
+                                <input type="text" id="registerEmailClientId" class="form-control hidden" value="@Model.Id" disabled />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="closeButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button id="inviteButton" type="button" class="btn btn-success">Send Invitation</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-7">
+            </div>
+        }
+        else
+        {
+            <div class="col-xs-8">
+            </div>
+        }
         <div class="col-xs-1">
             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deletionModal">
                 <i class="fa fa-2x fa-trash" aria-hidden="true"></i>
@@ -234,7 +274,37 @@
             },
             error: function () {
                 $('#closeButton').click();
-                $('#errorMessage').html("<i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> <strong>Error!</strong> Failed to delete current area. please try again later.");
+                $('#errorMessage').html("<i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> <strong>Error!</strong> An unexpected error has occurred. Please try again later.");
+                $('#errorMessage').removeClass("hidden");
+            }
+        });
+    }
+
+    $(document).on('click', '#inviteButton', function () {
+        inviteUser();
+    });
+
+    function inviteUser() {
+        var email = $('#registerEmailInput').val();
+        var clientId = $('#registerEmailClientId').val();
+        $('#errorMessage').addClass("hidden");
+        $.ajax({
+            type: "POST",
+            url: '../IssueRegistration/' + clientId,
+            data: { email: email },
+            success: function (response) {
+                if (response) {
+                    $('#closeButton').click();
+                    $('#errorMessage').html("<i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> <strong>Error!</strong> " + response);
+                    $('#errorMessage').removeClass("hidden");
+                } else {
+                    $('#closeButton').click();
+                    $.growl.notice({ message: "Successfully issued invitation!" });
+                }
+            },
+            error: function () {
+                $('#closeButton').click();
+                $('#errorMessage').html("<i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> <strong>Error!</strong> An unexpected error has occurred. Please try again later.");
                 $('#errorMessage').removeClass("hidden");
             }
         });

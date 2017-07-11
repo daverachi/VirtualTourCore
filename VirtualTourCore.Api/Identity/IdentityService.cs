@@ -94,6 +94,15 @@ namespace VirtualTourCore.Api.Identity
             return userCodeClaim.Value;
         }
 
+        public static void AddClientClaim(IPrincipal user, int clientId)
+        {
+            var claimsIdentity = (ClaimsIdentity)user.Identity;
+            var userClientClaims = claimsIdentity.Claims.FirstOrDefault(x => x.Type == "Clients");
+            claimsIdentity.RemoveClaim(userClientClaims);
+            var newClientClaims = string.Format("{0} {1}", userClientClaims.Value, clientId);
+            claimsIdentity.AddClaim(new Claim("Clients", newClientClaims));
+        }
+
         internal static IEnumerable<ClientVO> SetClientAccess(this IEnumerable<Client> clients, IPrincipal user)
         {
             List<ClientVO> clientVOs = new List<ClientVO>();

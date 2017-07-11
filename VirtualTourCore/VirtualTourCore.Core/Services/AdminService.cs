@@ -21,6 +21,7 @@ namespace VirtualTourCore.Core.Services
         private ITourRepository _tourRepository;
         private IAssetStoreRepository _assetStoreRepository;
         private IFileService _fileService;
+        private ISecurityUserClientRepository _securityUserClientRepository;
 
         public AdminService(
             IClientRepository clientRepository,
@@ -29,7 +30,8 @@ namespace VirtualTourCore.Core.Services
             IAreaRepository areaRepository,
             ITourRepository tourRepository,
             IAssetStoreRepository assetStoreRepository,
-            IFileService fileService
+            IFileService fileService,
+            ISecurityUserClientRepository securityUserClientRepository
             )
         {
             _clientRepository = clientRepository;
@@ -39,6 +41,7 @@ namespace VirtualTourCore.Core.Services
             _tourRepository = tourRepository;
             _assetStoreRepository = assetStoreRepository;
             _fileService = fileService;
+            _securityUserClientRepository = securityUserClientRepository;
         }
         public int? CreateClient(Client client, HttpPostedFileBase logo, HttpPostedFileBase profile)
         {
@@ -73,18 +76,16 @@ namespace VirtualTourCore.Core.Services
                         {
                             profileUploadSuccess = true;
                         }
-                    }                    
+                    }
                 }
                 if(client.AssetLogoId != null || client.AssetProfileId != null)
                 {
                     _clientRepository.UpdateEntity(client);
                 }
                 RegistrationCode regCode = new RegistrationCode();
-                if (clientId != null && _registrationCodeRepository.Create(clientId.Value, out regCode))
-                {
-                    SendRegistrationEmail(regCode);
-                }
-                if(clientId != null && logoUploadSuccess && profileUploadSuccess)
+                if(clientId != null && logoUploadSuccess && profileUploadSuccess 
+                    && _registrationCodeRepository.Create(clientId.Value, out regCode) 
+                    && _securityUserClientRepository.Create(client.CreateUserId.Value, client.Id))
                 {
                     transaction.Complete();
                 }

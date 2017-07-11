@@ -42,5 +42,14 @@ namespace VirtualTourCore.Core.Repositories
             }
             return created;
         }
+
+        public bool Create(int userId, int clientId)
+        {
+            return Create(new SecurityUserClient {
+                CreateUserId = userId,
+                SecurityUserId = userId,
+                ClientId = clientId,
+            });
+        }
     }
 }

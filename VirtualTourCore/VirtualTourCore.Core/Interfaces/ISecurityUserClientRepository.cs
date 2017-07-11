@@ -11,5 +11,6 @@ namespace VirtualTourCore.Core.Interfaces
     {
         IEnumerable<SecurityUserClient> GetByUserId(int id);
         bool Create(SecurityUserClient userClient);
+        bool Create(int userId, int clientId);
     }
 }
