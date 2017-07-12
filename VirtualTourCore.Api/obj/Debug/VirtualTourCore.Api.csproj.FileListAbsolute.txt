@@ -1,4 +1,3 @@
-F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\AutoMapper.Net4.dll
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\roslyn\csc.exe
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using VirtualTourCore.Core.Interfaces;
 using VirtualTourCore.Core.Models;
 
@@ -62,7 +63,15 @@ namespace VirtualTourCore.Core.Services
         }
         public IEnumerable<Location> GetLocationsByClientId(int id)
         {
-            return _locationRepository.GetByClientId(id);
+            var locations = _locationRepository.GetByClientId(id);
+            if (locations != null)
+            {
+                foreach(var location in locations.Where(x=>x.AssetLocationId != null).ToList())
+                {
+                    location.AssetLocation = PopulateAssetStoreById(location.AssetLocationId);
+                }
+            }
+            return locations;
         }
         public Location GetLocationByIdAndClientId(IEnumerable<string> clientIds, int id)
         {

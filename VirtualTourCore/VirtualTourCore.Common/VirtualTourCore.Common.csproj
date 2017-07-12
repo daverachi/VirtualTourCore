@@ -121,8 +121,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unity\UnityHelper.cs" />
     <Compile Include="Utilities\GuidUtils.cs" />
+    <Compile Include="ValueObjects\AreaDTO.cs" />
+    <Compile Include="ValueObjects\ClientDTO.cs" />
+    <Compile Include="ValueObjects\LocationDTO.cs" />
     <Compile Include="ValueObjects\NavigationBreadCrumbVO.cs" />
     <Compile Include="Utilities\PasswordHasher.cs" />
+    <Compile Include="ValueObjects\TourDTO.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

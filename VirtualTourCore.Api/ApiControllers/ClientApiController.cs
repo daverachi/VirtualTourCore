@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using VirtualTourCore.Api.Models;
 using VirtualTourCore.Common.Logging;
 using VirtualTourCore.Core.Interfaces;
-using VirtualTourCore.Core.Models;
+using VirtualTourCore.Core.Mapping;
 
 namespace VirtualTourCore.Api.ApiControllers
 {
@@ -21,19 +19,25 @@ namespace VirtualTourCore.Api.ApiControllers
             _log = log;
             _lookupService = lookupService;
         }
-        public Response<Client> GetClientByGuid(Guid guid)
+        public HttpResponseMessage GetClientByGuid(Guid guid)
         {
-            Response<Client> response = new Response<Client>();
-            response.Content = _lookupService.GetClientByGuid(guid);
-            if(response.Content == null)
+            var result = Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Client code does not have an active account");
+            var clientEntity = _lookupService.GetClientByGuid(guid);
+            if(clientEntity == null)
             {
                 _log.Error(string.Format("Failed to lookup Client by GUID: {0}", guid));
             }
             else
             {
-                response.StatusCode = HttpStatusCode.OK;
+                var client = ClientMapper.ToDataTransferObject(clientEntity);
+                var locations = _lookupService.GetLocationsByClientId(clientEntity.Id);
+                if(locations != null && locations.Count() > 0)
+                {
+                    client.Locations = locations.Select(x => LocationMapper.ToDataTransferObject(x)).ToList();
+                }
+                result = Request.CreateResponse(HttpStatusCode.OK, client);
             }
-            return response;
+            return result;
         }
     }
 }
