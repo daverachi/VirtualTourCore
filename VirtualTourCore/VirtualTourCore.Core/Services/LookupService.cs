@@ -100,12 +100,22 @@ namespace VirtualTourCore.Core.Services
 
         public IEnumerable<Area> GetAreasByLocationId(int id)
         {
-            return _areaRepository.GetByLocationId(id);
+            var areas = _areaRepository.GetByLocationId(id).ToList();
+            foreach (var area in areas.Where(x => x.AssetAreaId != null))
+            {
+                area.AssetArea = PopulateAssetStoreById(area.AssetAreaId);
+            }
+            return areas;
         }
 
         public IEnumerable<Tour> GetToursByAreaId(int areaId)
         {
-            return _tourRepository.GetByAreaId(areaId);
+            var tours = _tourRepository.GetByAreaId(areaId).ToList();
+            foreach(var tour in tours.Where(x=>x.AssetTourThumbnailId != null))
+            {
+                tour.AssetTourThumbnail = PopulateAssetStoreById(tour.AssetTourThumbnailId);
+            }
+            return tours;
         }
 
         public Tour GetTourByIdAndClientId(IEnumerable<string> clientIds, int id)
