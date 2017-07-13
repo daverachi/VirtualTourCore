@@ -214,7 +214,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiControllers\AreaApiController.cs" />
     <Compile Include="ApiControllers\ClientApiController.cs" />
+    <Compile Include="ApiControllers\LocationApiController.cs" />
+    <Compile Include="ApiControllers\TourApiController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -404,6 +407,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\LocationApi\" />
     <Folder Include="Views\Navigation\" />
   </ItemGroup>
   <ItemGroup>

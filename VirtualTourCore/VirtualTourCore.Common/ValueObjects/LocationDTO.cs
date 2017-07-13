@@ -1,7 +1,13 @@
-﻿namespace VirtualTourCore.Common.ValueObjects
+﻿using System.Collections.Generic;
+
+namespace VirtualTourCore.Common.ValueObjects
 {
     public class LocationDTO
     {
+        public LocationDTO()
+        {
+            Areas = new List<AreaDTO>();
+        }
         public int Id { get; set; }
         public string Name { get; set; }
         public string DescriptionHtml { get; set; }
@@ -10,5 +16,7 @@
         public string State { get; set; }
         public string Zipcode { get; set; }
         public string ImagePath { get; set; }
+        public List<AreaDTO> Areas { get; set; }
+
     }
 }
