@@ -3,3 +3,7 @@ F:\Projects\VirtualTourCore\VirtualTourCore.Database\bin\Debug\VirtualTourCore.D
 F:\Projects\VirtualTourCore\VirtualTourCore.Database\bin\Debug\VirtualTourCore.Database.pdb
 F:\Projects\VirtualTourCore\VirtualTourCore.Database\obj\Debug\VirtualTourCore.Database.dll
 F:\Projects\VirtualTourCore\VirtualTourCore.Database\obj\Debug\VirtualTourCore.Database.pdb
+F:\Projects\VirtualTourCore\VirtualTourCore.Database\obj\Debug\Model.xml
+F:\Projects\VirtualTourCore\VirtualTourCore.Database\obj\Debug\refactor.xml
+F:\Projects\VirtualTourCore\VirtualTourCore.Database\obj\Debug\postdeploy.sql
+F:\Projects\VirtualTourCore\VirtualTourCore.Database\obj\Debug\predeploy.sql

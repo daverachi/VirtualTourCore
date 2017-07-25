@@ -40,6 +40,7 @@ namespace VirtualTourCore.Api.ApiControllers
                 }
                 result = Request.CreateResponse(HttpStatusCode.OK, area);
             }
+            result.Headers.Add("Access-Control-Allow-Origin", "*");
             return result;
         }
     }

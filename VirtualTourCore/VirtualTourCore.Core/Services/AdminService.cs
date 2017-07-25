@@ -43,6 +43,9 @@ namespace VirtualTourCore.Core.Services
             _fileService = fileService;
             _securityUserClientRepository = securityUserClientRepository;
         }
+
+        #region Client CRUD
+
         public int? CreateClient(Client client, HttpPostedFileBase logo, HttpPostedFileBase profile)
         {
             client.Guid = Guid.NewGuid();
@@ -54,37 +57,14 @@ namespace VirtualTourCore.Core.Services
             {
                 var clientId = _clientRepository.Create(client);
 
-                var logoUploadSuccess = string.IsNullOrWhiteSpace(logo.FileName);
-                var profileUploadSuccess = string.IsNullOrWhiteSpace(profile.FileName);
-
-                if (clientId != null)
-                {
-                    var baseLogoAssetId = client.AssetLogoId;
-                    if (!logoUploadSuccess)
-                    {
-                        client.AssetLogoId = ProcessFileUpload(clientId.Value, client.CreateUserId.Value, client.AssetLogoId, logo);
-                        if(baseLogoAssetId != client.AssetLogoId)
-                        {
-                            logoUploadSuccess = true;
-                        }
-                    }
-                    var baseProfileAssetId = client.AssetProfileId;
-                    if (!profileUploadSuccess)
-                    {
-                        client.AssetProfileId = ProcessFileUpload(clientId.Value, client.CreateUserId.Value, client.AssetProfileId, profile);
-                        if (baseProfileAssetId != client.AssetProfileId)
-                        {
-                            profileUploadSuccess = true;
-                        }
-                    }
-                }
-                if(client.AssetLogoId != null || client.AssetProfileId != null)
+                client.AssetLogoId = ProcessIncomingImage(client.Id, client.CreateUserId.Value, client.AssetLogoId, null, logo);
+                client.AssetProfileId = ProcessIncomingImage(client.Id, client.CreateUserId.Value, client.AssetProfileId, null, profile);
+                if (client.AssetLogoId != null || client.AssetProfileId != null)
                 {
                     _clientRepository.UpdateEntity(client);
                 }
                 RegistrationCode regCode = new RegistrationCode();
-                if(clientId != null && logoUploadSuccess && profileUploadSuccess 
-                    && _registrationCodeRepository.Create(clientId.Value, out regCode) 
+                if(clientId != null && _registrationCodeRepository.Create(clientId.Value, out regCode) 
                     && _securityUserClientRepository.Create(client.CreateUserId.Value, client.Id))
                 {
                     transaction.Complete();
@@ -102,8 +82,6 @@ namespace VirtualTourCore.Core.Services
             existingClient.DescriptionHtml = client.DescriptionHtml;
             existingClient.DescriptionJson = client.DescriptionJson;
             existingClient.Link = client.Link;
-            //existingClient.AssetProfileID = client.AssetProfileID;
-            //existingClient.AssetLogoID = client.AssetLogoID;
             existingClient.StreetAddress = client.StreetAddress;
             existingClient.Zipcode = client.Zipcode;
             existingClient.Phone = client.Phone;
@@ -117,47 +95,34 @@ namespace VirtualTourCore.Core.Services
                 Timeout = CommonConfiguration.Configuration.TransactionScope_Timeout
             }))
             {
-                var logoUploadSuccess = logo != null && string.IsNullOrWhiteSpace(logo.FileName);
-                var baseLogoAssetId = existingClient.AssetLogoId;
-                var deletingCurrentLogo = logoUploadSuccess && existingClient.AssetLogoId != null;
-                if (deletingCurrentLogo)
-                {
-                    existingClient.AssetLogoId = null;
-                    logoUploadSuccess = true;
-                }
-                else if (!logoUploadSuccess)
-                {
-                    existingClient.AssetLogoId = ProcessFileUpload(existingClient.Id, existingClient.CreateUserId.Value, existingClient.AssetLogoId, logo);
-                    if (baseLogoAssetId != existingClient.AssetLogoId)
-                    {
-                        logoUploadSuccess = true;
-                    }
-                }
-
-                var profileUploadSuccess = profile != null && string.IsNullOrWhiteSpace(profile.FileName);
-                var baseProfileAssetId = existingClient.AssetProfileId;
-                var deletingCurrentProfile = profileUploadSuccess && existingClient.AssetProfileId != null;
-                if (deletingCurrentProfile)
-                {
-                    existingClient.AssetProfileId = null;
-                    profileUploadSuccess = true;
-                }
-                else if (!profileUploadSuccess)
-                {
-                    existingClient.AssetProfileId = ProcessFileUpload(existingClient.Id, existingClient.CreateUserId.Value, existingClient.AssetProfileId, profile);
-                    if (baseProfileAssetId != existingClient.AssetProfileId)
-                    {
-                        profileUploadSuccess = true;
-                    }
-                }
+                existingClient.AssetLogoId = ProcessIncomingImage(existingClient.Id, existingClient.CreateUserId.Value, client.AssetLogoId, existingClient.AssetLogoId, logo);
+                existingClient.AssetProfileId = ProcessIncomingImage(existingClient.Id, existingClient.CreateUserId.Value, client.AssetProfileId, existingClient.AssetProfileId, profile);
                 resultingId = _clientRepository.UpdateEntity(existingClient);
-                if (logoUploadSuccess && profileUploadSuccess && resultingId != null)
+                if (resultingId != null)
                 {
                     transaction.Complete();
                 }
             }
             return resultingId;
         }
+        public string DeleteClient(Client client)
+        {
+            string errorMessage = "Failed to delete client";
+            var children = _locationRepository.GetByClientId(client.Id);
+            if (children.Count() == 0 && _clientRepository.DeleteEntity(client))
+            {
+                errorMessage = "";
+            }
+            else if (children.Count() > 0)
+            {
+                errorMessage = string.Format("Failed to delete client, locations associated with client must be deleted first.", children.Count());
+            }
+            return errorMessage;
+        }
+
+        #endregion
+
+        #region Location CRUD
         public int? CreateLocation(Location location, HttpPostedFileBase locationImage)
         {
             using (TransactionScope transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions()
@@ -167,19 +132,8 @@ namespace VirtualTourCore.Core.Services
             }))
             {
                 var locationId = _locationRepository.Create(location);
-                var baseLogoAssetId = location.AssetLocationId;
-                // need to have identity service add claim for location to users cookie.
-                var locationImageUploadSuccess = locationImage != null && string.IsNullOrWhiteSpace(locationImage.FileName);
-                if (!locationImageUploadSuccess)
-                {
-                    location.AssetLocationId = ProcessFileUpload(location.ClientId, location.CreateUserId.Value, location.AssetLocationId, locationImage);
-                    if (baseLogoAssetId != location.AssetLocationId)
-                    {
-                        locationImageUploadSuccess = true;
-                        _locationRepository.UpdateEntity(location);
-                    }
-                }
-                if (locationImageUploadSuccess && location.Id > 0)
+                location.AssetLocationId = ProcessIncomingImage(location.ClientId, location.CreateUserId.Value, location.AssetLocationId, null, locationImage);
+                if (location.AssetLocationId != null && _locationRepository.UpdateEntity(location) > 0 && location.Id > 0)
                 {
                     transaction.Complete();
                 }
@@ -205,24 +159,10 @@ namespace VirtualTourCore.Core.Services
                 Timeout = CommonConfiguration.Configuration.TransactionScope_Timeout
             }))
             {
-                var locationImageUploadSuccess = locationImage != null && string.IsNullOrWhiteSpace(locationImage.FileName);
-                var baseLogoAssetId = existingLocation.AssetLocationId;
-                var deletingCurrentLogo = locationImageUploadSuccess && existingLocation.AssetLocationId != null;
-                if (deletingCurrentLogo)
-                {
-                    existingLocation.AssetLocationId = null;
-                    locationImageUploadSuccess = true;
-                }
-                else if (!locationImageUploadSuccess)
-                {
-                    existingLocation.AssetLocationId = ProcessFileUpload(existingLocation.ClientId, existingLocation.CreateUserId.Value, existingLocation.AssetLocationId, locationImage);
-                    if (baseLogoAssetId != existingLocation.AssetLocationId)
-                    {
-                        locationImageUploadSuccess = true;
-                    }
-                }
+                existingLocation.AssetLocationId = ProcessIncomingImage(existingLocation.ClientId, 
+                    existingLocation.CreateUserId.Value, location.AssetLocationId, existingLocation.AssetLocationId, locationImage);
                 resultingId = _locationRepository.UpdateEntity(existingLocation);
-                if (locationImageUploadSuccess && resultingId != null)
+                if (resultingId != null)
                 {
                     transaction.Complete();
                 }
@@ -230,20 +170,6 @@ namespace VirtualTourCore.Core.Services
             return resultingId;
         }
 
-        public string DeleteClient(Client client)
-        {
-            string errorMessage = "Failed to delete client";
-            var children = _locationRepository.GetByClientId(client.Id);
-            if (children.Count() == 0 && _clientRepository.DeleteEntity(client))
-            {
-                errorMessage = "";
-            }
-            else if (children.Count() > 0)
-            {
-                errorMessage = string.Format("Failed to delete client, locations associated with client must be deleted first.", children.Count());
-            }
-            return errorMessage;
-        }
         public string DeleteLocation(Location location)
         {
             string errorMessage = "Failed to delete location";
@@ -259,6 +185,9 @@ namespace VirtualTourCore.Core.Services
             return errorMessage;
         }
 
+        #endregion
+
+        #region Area CRUD
         public void CreateArea(Area area, HttpPostedFileBase areaMap)
         {
             using (TransactionScope transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions()
@@ -267,27 +196,9 @@ namespace VirtualTourCore.Core.Services
                 Timeout = CommonConfiguration.Configuration.TransactionScope_Timeout
             }))
             {
-                var areaId = _areaRepository.Create(area);
-
-                var areaMapUploadSuccess = areaMap != null && string.IsNullOrWhiteSpace(areaMap.FileName);
-
-                if (areaId != null)
-                {
-                    var baseLogoAssetId = area.AssetAreaId;
-                    if (!areaMapUploadSuccess)
-                    {
-                        area.AssetAreaId = ProcessFileUpload(area.ClientId, area.CreateUserId.Value, area.AssetAreaId, areaMap);
-                        if (baseLogoAssetId != area.AssetAreaId)
-                        {
-                            areaMapUploadSuccess = true;
-                        }
-                    }
-                }
-                if (area.AssetAreaId != null)
-                {
-                    _areaRepository.UpdateEntity(area);
-                }
-                if(area.Id > 0 && areaMapUploadSuccess)
+                _areaRepository.Create(area);
+                area.AssetAreaId = ProcessIncomingImage(area.ClientId, area.CreateUserId.Value, area.AssetAreaId, null, areaMap);
+                if (area.AssetAreaId != null && _areaRepository.UpdateEntity(area) > 0 && area.Id > 0)
                 {
                     transaction.Complete();
                 }
@@ -308,24 +219,10 @@ namespace VirtualTourCore.Core.Services
                 Timeout = CommonConfiguration.Configuration.TransactionScope_Timeout
             }))
             {
-                var areaMapUploadSuccess = string.IsNullOrWhiteSpace(areaMap.FileName);
-                var baseLogoAssetId = existingArea.AssetAreaId;
-                var deletingCurrentLogo = areaMapUploadSuccess && existingArea.AssetAreaId != null;
-                if (deletingCurrentLogo)
-                {
-                    existingArea.AssetAreaId = null;
-                    areaMapUploadSuccess = true;
-                }
-                else if (!areaMapUploadSuccess)
-                {
-                    existingArea.AssetAreaId = ProcessFileUpload(existingArea.ClientId, existingArea.CreateUserId.Value, existingArea.AssetAreaId, areaMap);
-                    if (baseLogoAssetId != existingArea.AssetAreaId)
-                    {
-                        areaMapUploadSuccess = true;
-                    }
-                }
+                existingArea.AssetAreaId = ProcessIncomingImage(existingArea.ClientId, 
+                    existingArea.CreateUserId.Value, area.AssetAreaId, existingArea.AssetAreaId, areaMap);
                 resultingId = _areaRepository.UpdateEntity(existingArea);
-                if (areaMapUploadSuccess && resultingId != null)
+                if (resultingId != null)
                 {
                     transaction.Complete();
                 }
@@ -347,6 +244,9 @@ namespace VirtualTourCore.Core.Services
             return errorMessage;
         }
 
+        #endregion
+
+        #region Tour CRUD
         public void CreateTour(Tour tour, HttpPostedFileBase tourThumb, HttpPostedFileBase KrPanoZip)
         {
             using (TransactionScope transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions()
@@ -356,37 +256,10 @@ namespace VirtualTourCore.Core.Services
             }))
             {
                 var tourId = _tourRepository.Create(tour);
-                var tourThumbUploadSuccess = tourThumb != null && string.IsNullOrWhiteSpace(tourThumb.FileName);
-
-                if (tourId != null)
-                {
-                    // upload tour thumb
-                    var baseLogoAssetId = tour.AssetTourThumbnailId;
-                    if (!tourThumbUploadSuccess)
-                    {
-                        tour.AssetTourThumbnailId = ProcessFileUpload(tour.ClientId, tour.CreateUserId.Value, tour.AssetTourThumbnailId, tourThumb);
-                        if (baseLogoAssetId != tour.AssetTourThumbnailId)
-                        {
-                            tourThumbUploadSuccess = true;
-                        }
-                    }
-
-                    var krPanoUploadSuccess = string.IsNullOrWhiteSpace(tourThumb.FileName);
-                    if (!krPanoUploadSuccess)
-                    {
-                        // swap to krpano upload
-                        tour.KrPanoTourId = UploadZipFolder(tour, tour.CreateUserId, KrPanoZip);
-                        if (tour.KrPanoTourId != null)
-                        {
-                            krPanoUploadSuccess = true;
-                        }
-                    }
-                }
-                if (tour.AssetTourThumbnailId != null)
-                {
-                    _tourRepository.UpdateEntity(tour);
-                }
-                if (tour.Id > 0 && tourThumbUploadSuccess)
+                tour.AssetTourThumbnailId = ProcessIncomingImage(tour.ClientId, tour.CreateUserId.Value,
+                        tour.AssetTourThumbnailId, null, tourThumb);
+                tour.KrPanoTourId = ProcessIncomingKrPano(tour, tour.KrPanoTourId, null, KrPanoZip);
+                if (tour.AssetTourThumbnailId != null && _tourRepository.UpdateEntity(tour) > 0 && tour.Id > 0)
                 {
                     transaction.Complete();
                 }
@@ -407,47 +280,41 @@ namespace VirtualTourCore.Core.Services
                 Timeout = CommonConfiguration.Configuration.TransactionScope_Timeout
             }))
             {
-                var tourThumbUploadSuccess = string.IsNullOrWhiteSpace(tourThumb.FileName);
-                var baseLogoAssetId = existingTour.AssetTourThumbnailId;
-                var deletingCurrentTourThumb = tourThumbUploadSuccess && existingTour.AssetTourThumbnailId != null && tour.AssetTourThumbnailId == null;
-                if (deletingCurrentTourThumb)
-                {
-                    existingTour.AssetTourThumbnailId = null;
-                    tourThumbUploadSuccess = true;
-                }
-                else if (!tourThumbUploadSuccess)
-                {
-                    existingTour.AssetTourThumbnailId = ProcessFileUpload(existingTour.ClientId, existingTour.CreateUserId.Value, existingTour.AssetTourThumbnailId, tourThumb);
-                    if (baseLogoAssetId != existingTour.AssetTourThumbnailId)
-                    {
-                        tourThumbUploadSuccess = true;
-                    }
-                }
-                var krPanoUploadSuccess = string.IsNullOrWhiteSpace(KrPanoZip.FileName);
-                var baseKrPanoAssetId = existingTour.KrPanoTourId;
-                var deletingCurrentKrPano = krPanoUploadSuccess && existingTour.KrPanoTourId != null && tour.KrPanoTourId == null;
-                if (deletingCurrentKrPano)
-                {
-                    existingTour.KrPanoTourId = null;
-                    krPanoUploadSuccess = true;
-                }
-                else if (!krPanoUploadSuccess)
-                {
-                    // swap to krpano upload
-                    existingTour.KrPanoTourId = UploadZipFolder(existingTour, tour.UpdateUserId, KrPanoZip);
-                    if (baseKrPanoAssetId != existingTour.KrPanoTourId)
-                    {
-                        krPanoUploadSuccess = true;
-                    }
-                }
+                existingTour.AssetTourThumbnailId = ProcessIncomingImage(existingTour.ClientId, existingTour.CreateUserId.Value, 
+                    tour.AssetTourThumbnailId, existingTour.AssetTourThumbnailId, tourThumb);
+                existingTour.KrPanoTourId = ProcessIncomingKrPano(existingTour, tour.KrPanoTourId, existingTour.KrPanoTourId, KrPanoZip);
                 resultingId = _tourRepository.UpdateEntity(existingTour);
-                if (tourThumbUploadSuccess && krPanoUploadSuccess && resultingId != null)
+                if (resultingId != null)
                 {
                     transaction.Complete();
                 }
             }
         }
+        public void UpdateTourLocations(List<Tour> tours, int userId)
+        {
+            foreach (var tour in tours)
+            {
+                var existingTour = _tourRepository.GetById(tour.Id);
+                if (existingTour != null)
+                {
+                    existingTour.MapX = tour.MapX;
+                    existingTour.MapY = tour.MapY;
+                    existingTour.UpdateUserId = userId;
+                    existingTour.UpdateDate = DateTime.Now;
+                    _tourRepository.UpdateEntity(existingTour);
+                }
+            }
+        }
 
+        public string DeleteTour(Tour tour)
+        {
+            _tourRepository.DeleteEntity(tour);
+            return "";
+        }
+
+        #endregion
+
+        #region File Management
         private int? UploadZipFolder(Tour existingTour, int? createUserId, HttpPostedFileBase krPanoZip)
         {
             int? assetId = null;
@@ -476,10 +343,40 @@ namespace VirtualTourCore.Core.Services
             return assetId;
         }
 
-        public string DeleteTour(Tour tour)
+        private int? ProcessIncomingKrPano(Tour tour, int? formId, int? existingFilestoreId, HttpPostedFileBase file)
         {
-            _tourRepository.DeleteEntity(tour);
-            return "";
+            bool hadFile = existingFilestoreId != null;
+            bool uploadedFile = (file != null && file.ContentLength != 0);
+            bool noChangeToFile = formId == existingFilestoreId && !uploadedFile;
+            bool deletingFile = hadFile && !noChangeToFile;
+
+            if (uploadedFile)
+            {
+                existingFilestoreId = UploadZipFolder(tour, tour.CreateUserId, file);
+            }
+            else if (deletingFile)
+            {
+                existingFilestoreId = null;
+            }
+            return existingFilestoreId;
+        }
+
+        private int? ProcessIncomingImage(int clientId, int userId, int? formId, int? existingFilestoreId, HttpPostedFileBase file)
+        {
+            bool hadFile = existingFilestoreId != null;
+            bool uploadedFile = (file != null && file.ContentLength != 0);
+            bool noChangeToFile = formId == existingFilestoreId && !uploadedFile;
+            bool deletingFile = hadFile && !noChangeToFile;
+
+            if (uploadedFile)
+            {
+                existingFilestoreId = ProcessFileUpload(clientId, userId, existingFilestoreId, file);
+            }
+            else if (deletingFile)
+            {
+                existingFilestoreId = null;
+            }
+            return existingFilestoreId;
         }
 
         private int? ProcessFileUpload(int clientId, int userId, int? existingFilestoreId, HttpPostedFileBase file)
@@ -492,16 +389,7 @@ namespace VirtualTourCore.Core.Services
             }
             return existingFilestoreId;
         }
-        private int? ProcessFileUpload(int clientId, int userId, int? existingFilestoreId, string path, HttpPostedFileBase file)
-        {
-            if (file != null && !string.IsNullOrWhiteSpace(file.FileName))
-            {
-                var assetStore = UploadAsset(file, userId, clientId, file.FileName);
-                var assetId = _assetStoreRepository.Create(assetStore);
-                return assetId;
-            }
-            return existingFilestoreId;
-        }
+
         protected AssetStore UploadAsset(HttpPostedFileBase file, int userId, int clientID, string fileNickname)
         {
             MemoryStream target = new MemoryStream();
@@ -533,6 +421,10 @@ namespace VirtualTourCore.Core.Services
                 CreateUserId = userId
             };
         }
+
+        #endregion
+
+        #region Registration Management
         internal static void SendRegistrationEmail(RegistrationCode registrationCode, string emailAddress)
         {
             string smtpAddress = "smtp.mail.yahoo.com";
@@ -570,22 +462,6 @@ namespace VirtualTourCore.Core.Services
             }
         }
 
-        public void UpdateTourLocations(List<Tour> tours, int userId)
-        {
-            foreach(var tour in tours)
-            {
-                var existingTour = _tourRepository.GetById(tour.Id);
-                if(existingTour != null)
-                {
-                    existingTour.MapX = tour.MapX;
-                    existingTour.MapY = tour.MapY;
-                    existingTour.UpdateUserId = userId;
-                    existingTour.UpdateDate = DateTime.Now;
-                    _tourRepository.UpdateEntity(existingTour);
-                }
-            }
-        }
-
         public string IssueInvitation(int id, string email)
         {
             RegistrationCode regCode = null;
@@ -598,5 +474,6 @@ namespace VirtualTourCore.Core.Services
             return result;
 
         }
+        #endregion
     }
 }

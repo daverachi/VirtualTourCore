@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿using System.Linq;
+using System.Web.Http;
 
 namespace VirtualTourCore.Api
 {
@@ -14,6 +15,9 @@ namespace VirtualTourCore.Api
                 routeTemplate: "api/{guid}/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+            config.EnableCors();
+            var appXmlType = config.Formatters.XmlFormatter.SupportedMediaTypes.FirstOrDefault(t => t.MediaType == "application/xml");
+            config.Formatters.XmlFormatter.SupportedMediaTypes.Remove(appXmlType);
         }
     }
 }
