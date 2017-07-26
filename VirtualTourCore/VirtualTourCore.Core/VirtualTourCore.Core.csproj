@@ -134,7 +134,9 @@
     <Compile Include="Interfaces\IAreaRepository.cs" />
     <Compile Include="Interfaces\IAssetStoreRepository.cs" />
     <Compile Include="Interfaces\IClientRepository.cs" />
+    <Compile Include="Interfaces\ICustomizationRepository.cs" />
     <Compile Include="Interfaces\IFileService.cs" />
+    <Compile Include="Interfaces\IItemStatusRepository.cs" />
     <Compile Include="Interfaces\ILocationRepository.cs" />
     <Compile Include="Interfaces\ILookupService.cs" />
     <Compile Include="Interfaces\INavigableEntity.cs" />
@@ -177,6 +179,8 @@
     <Compile Include="Repositories\AreaRepository.cs" />
     <Compile Include="Repositories\AssetStoreRepository.cs" />
     <Compile Include="Repositories\ClientRepository.cs" />
+    <Compile Include="Repositories\CustomizationRepository.cs" />
+    <Compile Include="Repositories\ItemStatusRepository.cs" />
     <Compile Include="Repositories\LocationRepository.cs" />
     <Compile Include="Repositories\RegistrationCodeRepository.cs" />
     <Compile Include="Repositories\SecurityUserClientRepository.cs" />

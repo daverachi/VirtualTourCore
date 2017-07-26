@@ -16,6 +16,8 @@
             this.Property(t => t.DescriptionHtml).HasColumnName("DescriptionHtml");
             this.Property(t => t.DescriptionJson).HasColumnName("DescriptionJson");
             this.Property(t => t.AssetTourThumbnailId).HasColumnName("AssetTourThumbnailId");
+            this.Property(t => t.CustomizationId).HasColumnName("CustomizationId");
+            this.Property(t => t.ItemStatusId).HasColumnName("ItemStatusId");
         }
     }
 }

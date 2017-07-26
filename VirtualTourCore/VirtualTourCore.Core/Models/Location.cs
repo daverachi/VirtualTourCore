@@ -23,6 +23,10 @@ namespace VirtualTourCore.Core.Models
         public string Zipcode { get; set; }
         public int? AssetLocationId { get; set; }
         public AssetStore AssetLocation { get; set; }
+        public int? CustomizationId { get; set; }
+        public Customization Customization { get; set; }
+        public int? ItemStatusId { get; set; }
+        public ItemStatus ItemStatus { get; set; }
         [NotMapped]
         public string ValidationMessage { get; set; }
     }

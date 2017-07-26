@@ -21,5 +21,9 @@ namespace VirtualTourCore.Core.Models
         public AssetStore AssetTourThumbnail { get; set; }
         public int? KrPanoTourId { get; set; }
         public AssetStore KrPanoTour { get; set; }
+        public int? CustomizationId { get; set; }
+        public Customization Customization { get; set; }
+        public int? ItemStatusId { get; set; }
+        public ItemStatus ItemStatus { get; set; }
     }
 }

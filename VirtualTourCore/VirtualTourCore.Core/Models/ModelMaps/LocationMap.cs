@@ -17,6 +17,8 @@
             this.Property(t => t.State).HasColumnName("State");
             this.Property(t => t.Zipcode).HasColumnName("Zipcode");
             this.Property(t => t.AssetLocationId).HasColumnName("AssetLocationId");
+            this.Property(t => t.CustomizationId).HasColumnName("CustomizationId");
+            this.Property(t => t.ItemStatusId).HasColumnName("ItemStatusId");
         }
     }
 }

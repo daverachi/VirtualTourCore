@@ -18,6 +18,10 @@ namespace VirtualTourCore.Core.Models
         public string DescriptionHtml { get; set; }
         public int? AssetAreaId { get; set; }
         public AssetStore AssetArea { get; set; }
+        public int? CustomizationId { get; set; }
+        public Customization Customization { get; set; }
+        public int? ItemStatusId { get; set; }
+        public ItemStatus ItemStatus { get; set; }
         [NotMapped]
         public string ValidationMessage { get; set; }
     }

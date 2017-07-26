@@ -21,10 +21,10 @@
             this.Property(t => t.SupportEmail).HasColumnName("SupportEmail");
             this.Property(t => t.MarketingEmail).HasColumnName("MarketingEmail");
             this.Property(t => t.StreetAddress).HasColumnName("StreetAddress");
-            //this.Property(t => t.ItemStatusID).HasColumnName("ItemStatusID");
-            //this.Property(t => t.LayoutConfigurationID).HasColumnName("LayoutConfigurationID");
             this.Property(t => t.AssetLogoId).HasColumnName("AssetLogoId");
             this.Property(t => t.AssetProfileId).HasColumnName("AssetProfileId");
+            this.Property(t => t.CustomizationId).HasColumnName("CustomizationId");
+            this.Property(t => t.ItemStatusId).HasColumnName("ItemStatusId");
         }
     }
 }

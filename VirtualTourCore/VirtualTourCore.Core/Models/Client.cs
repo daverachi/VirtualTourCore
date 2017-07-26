@@ -34,6 +34,10 @@ namespace VirtualTourCore.Core.Models
         public AssetStore AssetLogo { get; set; }
         public int? AssetProfileId { get; set; }
         public AssetStore AssetProfile { get; set; }
+        public int? CustomizationId { get; set; }
+        public Customization Customization { get; set; }
+        public int? ItemStatusId { get; set; }
+        public ItemStatus ItemStatus { get; set; }
         [NotMapped]
         public string ValidationMessage { get; set; }
     }
