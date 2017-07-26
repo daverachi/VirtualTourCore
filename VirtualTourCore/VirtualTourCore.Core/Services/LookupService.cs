@@ -52,6 +52,7 @@ namespace VirtualTourCore.Core.Services
                 client.AssetProfile = PopulateAssetStoreById(client.AssetProfileId);
                 client.Customization = PopulateCustomizationById(client.CustomizationId);
                 client.ItemStatus = PopulateItemStatusById(client.ItemStatusId);
+                client.ItemStatuses = GetItemStatuses();
             }
             return client;
         }
@@ -64,6 +65,7 @@ namespace VirtualTourCore.Core.Services
                 client.AssetProfile = PopulateAssetStoreById(client.AssetProfileId);
                 client.Customization = PopulateCustomizationById(client.CustomizationId);
                 client.ItemStatus = PopulateItemStatusById(client.ItemStatusId);
+                client.ItemStatuses = GetItemStatuses();
             }
             return client;
         }
@@ -98,6 +100,7 @@ namespace VirtualTourCore.Core.Services
                 location.AssetLocation = PopulateAssetStoreById(location.AssetLocationId);
                 location.Customization = PopulateCustomizationById(location.CustomizationId);
                 location.ItemStatus = PopulateItemStatusById(location.ItemStatusId);
+                location.ItemStatuses = GetItemStatuses();
             }
             return location;
         }
@@ -117,6 +120,7 @@ namespace VirtualTourCore.Core.Services
                 area.AssetArea = PopulateAssetStoreById(area.AssetAreaId);
                 area.Customization = PopulateCustomizationById(area.CustomizationId);
                 area.ItemStatus = PopulateItemStatusById(area.ItemStatusId);
+                area.ItemStatuses = GetItemStatuses();
             }
             return area;
         }
@@ -153,6 +157,7 @@ namespace VirtualTourCore.Core.Services
                 tour.KrPanoTour = PopulateAssetStoreById(tour.KrPanoTourId);
                 tour.Customization = PopulateCustomizationById(tour.CustomizationId);
                 tour.ItemStatus = PopulateItemStatusById(tour.ItemStatusId);
+                tour.ItemStatuses = GetItemStatuses();
             }
             return tour;
         }
