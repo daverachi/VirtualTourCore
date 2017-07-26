@@ -89,6 +89,7 @@ namespace VirtualTourCore.Core.Services
             existingClient.MarketingEmail = client.MarketingEmail;
             existingClient.City = client.City;
             existingClient.State = client.State;
+            existingClient.ItemStatusId = client.ItemStatusId;
             using (TransactionScope transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions()
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,

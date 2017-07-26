@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 using VirtualTourCore.Core.Interfaces;
 using VirtualTourCore.Core.Models;
 
@@ -52,7 +53,7 @@ namespace VirtualTourCore.Core.Services
                 client.AssetProfile = PopulateAssetStoreById(client.AssetProfileId);
                 client.Customization = PopulateCustomizationById(client.CustomizationId);
                 client.ItemStatus = PopulateItemStatusById(client.ItemStatusId);
-                client.ItemStatuses = GetItemStatuses();
+                client.ItemStatuses = BuildSelectList(client.ItemStatusId);
             }
             return client;
         }
@@ -65,7 +66,7 @@ namespace VirtualTourCore.Core.Services
                 client.AssetProfile = PopulateAssetStoreById(client.AssetProfileId);
                 client.Customization = PopulateCustomizationById(client.CustomizationId);
                 client.ItemStatus = PopulateItemStatusById(client.ItemStatusId);
-                client.ItemStatuses = GetItemStatuses();
+                client.ItemStatuses = BuildSelectList(client.ItemStatusId);
             }
             return client;
         }
@@ -100,7 +101,7 @@ namespace VirtualTourCore.Core.Services
                 location.AssetLocation = PopulateAssetStoreById(location.AssetLocationId);
                 location.Customization = PopulateCustomizationById(location.CustomizationId);
                 location.ItemStatus = PopulateItemStatusById(location.ItemStatusId);
-                location.ItemStatuses = GetItemStatuses();
+                location.ItemStatuses = BuildSelectList(location.ItemStatusId);
             }
             return location;
         }
@@ -120,7 +121,7 @@ namespace VirtualTourCore.Core.Services
                 area.AssetArea = PopulateAssetStoreById(area.AssetAreaId);
                 area.Customization = PopulateCustomizationById(area.CustomizationId);
                 area.ItemStatus = PopulateItemStatusById(area.ItemStatusId);
-                area.ItemStatuses = GetItemStatuses();
+                area.ItemStatuses = BuildSelectList(area.ItemStatusId);
             }
             return area;
         }
@@ -157,7 +158,7 @@ namespace VirtualTourCore.Core.Services
                 tour.KrPanoTour = PopulateAssetStoreById(tour.KrPanoTourId);
                 tour.Customization = PopulateCustomizationById(tour.CustomizationId);
                 tour.ItemStatus = PopulateItemStatusById(tour.ItemStatusId);
-                tour.ItemStatuses = GetItemStatuses();
+                tour.ItemStatuses = BuildSelectList(tour.ItemStatusId);
             }
             return tour;
         }
@@ -165,9 +166,19 @@ namespace VirtualTourCore.Core.Services
         #endregion
 
         #region ItemStatus
-        public IEnumerable<ItemStatus> GetItemStatuses()
+        public IEnumerable<SelectListItem> BuildSelectList(int? currentId)
         {
-            return _itemStatusRepository.Get();
+            List<SelectListItem> itemStatusSelectList = new List<SelectListItem>();
+            var itemStatuses = _itemStatusRepository.Get();
+            foreach(var status in itemStatuses)
+            {
+                itemStatusSelectList.Add(new SelectListItem {
+                    Text = status.Name,
+                    Value = status.Id.ToString(),
+                    Selected = status.Id == currentId
+                });
+            }
+            return itemStatusSelectList;
         }
 
         #endregion

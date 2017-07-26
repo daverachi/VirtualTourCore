@@ -8,6 +8,10 @@ namespace VirtualTourCore.Core.Models
 {
     public class Tour : EntityBase, INavigableEntity
     {
+        public Tour()
+        {
+            ItemStatuses = new List<SelectListItem>();
+        }
         public int ClientId { get; set; }
         public int AreaId { get; set; }
         public double? MapX { get; set; }
@@ -26,6 +30,6 @@ namespace VirtualTourCore.Core.Models
         public Customization Customization { get; set; }
         public int? ItemStatusId { get; set; }
         public ItemStatus ItemStatus { get; set; }
-        public IEnumerable<ItemStatus> ItemStatuses { get; set; }
+        public IEnumerable<SelectListItem> ItemStatuses { get; set; }
     }
 }

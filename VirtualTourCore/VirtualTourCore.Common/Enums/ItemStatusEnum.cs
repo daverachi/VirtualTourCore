@@ -1,6 +1,6 @@
 ﻿namespace VirtualTourCore.Common.Enums
 {
-    public enum ItemStatus
+    public enum ItemStatusEnum
     {
         Public = 1,
         Private,

@@ -5,6 +5,7 @@ using System.Net.Mail;
 using System.Web.Mvc;
 using VirtualTourCore.Api.Filter;
 using VirtualTourCore.Api.Identity;
+using VirtualTourCore.Common.Enums;
 using VirtualTourCore.Core.Interfaces;
 using VirtualTourCore.Core.Models;
 
@@ -44,7 +45,9 @@ namespace VirtualTourCore.Api.Controllers
         [Authorize(Roles="Admin")]
         public ActionResult Create()
         {
-            return View("ClientCreateEdit", new Client());
+            return View("ClientCreateEdit", new Client {
+                ItemStatuses = _lookupService.BuildSelectList((int)ItemStatusEnum.Private) 
+            });
         }
 
         [VTAuthFilter("Client")]
@@ -73,6 +76,7 @@ namespace VirtualTourCore.Api.Controllers
             {
                 client.UpdateUserId = IdentityService.GetUserIdFromClaim(User);
                 _adminService.UpdateClient(client, logo, profile);
+                return RedirectToAction("Details", new { id = client.Id });
             }
             return RedirectToAction("Index");
         }

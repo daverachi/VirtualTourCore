@@ -15,15 +15,19 @@ else
     @Html.HiddenFor(x => x.Id)
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="row">
-        <div class="form-group col-lg-6">
+        <div class="form-group col-lg-5">
             @Html.LabelFor(model => model.Name)
             @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @placeholder = "Your Name", @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
         </div>
-        <div class="form-group col-lg-6">
+        <div class="form-group col-lg-5">
             @Html.LabelFor(model => model.Link)
             @Html.EditorFor(model => model.Link, new { htmlAttributes = new { @placeholder = "Your Website Link", @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.Link, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-lg-2">
+            @Html.Label("Status")
+            @Html.DropDownListFor(model => model.ItemStatusId, Model.ItemStatuses, new { @class = "form-control" })
         </div>
         <div class="form-group col-lg-6">
             @Html.LabelFor(model => model.StreetAddress)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using VirtualTourCore.Core.Models;
 
 namespace VirtualTourCore.Core.Interfaces
@@ -23,5 +24,6 @@ namespace VirtualTourCore.Core.Interfaces
         bool ValidRegistrationCode(string code);
         bool ValidEmail(string code);
         bool ValidUsername(string code);
+        IEnumerable<SelectListItem> BuildSelectList(int? currentId);
     }
 }

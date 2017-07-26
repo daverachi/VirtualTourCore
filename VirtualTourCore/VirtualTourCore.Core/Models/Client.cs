@@ -11,6 +11,10 @@ namespace VirtualTourCore.Core.Models
 {
     public partial class Client : EntityBase, INavigableEntity
     {
+        public Client()
+        {
+            ItemStatuses = new List<SelectListItem>();
+        }
         public string Name { get; set; }
         public Guid Guid { get; set; }
         [DisplayName("Homepage Link")]
@@ -39,7 +43,7 @@ namespace VirtualTourCore.Core.Models
         public Customization Customization { get; set; }
         public int? ItemStatusId { get; set; }
         public ItemStatus ItemStatus { get; set; }
-        public IEnumerable<ItemStatus> ItemStatuses { get; set; }
+        public IEnumerable<SelectListItem> ItemStatuses { get; set; }
         [NotMapped]
         public string ValidationMessage { get; set; }
     }

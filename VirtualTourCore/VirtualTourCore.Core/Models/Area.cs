@@ -9,6 +9,10 @@ namespace VirtualTourCore.Core.Models
 {
     public class Area : EntityBase, INavigableEntity
     {
+        public Area()
+        {
+            ItemStatuses = new List<SelectListItem>();
+        }
         public int ClientId { get; set; }
         public int LocationId { get; set; }
         [DisplayName("Area Name")]
@@ -23,7 +27,7 @@ namespace VirtualTourCore.Core.Models
         public Customization Customization { get; set; }
         public int? ItemStatusId { get; set; }
         public ItemStatus ItemStatus { get; set; }
-        public IEnumerable<ItemStatus> ItemStatuses { get; set; }
+        public IEnumerable<SelectListItem> ItemStatuses { get; set; }
         [NotMapped]
         public string ValidationMessage { get; set; }
     }
