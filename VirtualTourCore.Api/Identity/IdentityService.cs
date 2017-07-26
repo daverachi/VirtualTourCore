@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Services;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Security.Principal;
 using VirtualTourCore.Api.Models;
 using VirtualTourCore.Core.Models;
@@ -121,7 +123,7 @@ namespace VirtualTourCore.Api.Identity
             }
             return clientVOs;
         }
-        
+
         //const string MachineKeyPurpose = "MyApp:Username:{0}";
         //const string Anonymous = "<anonymous>";
 

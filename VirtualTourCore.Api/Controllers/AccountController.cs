@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Services;
 using System.Linq;
@@ -10,6 +11,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using VirtualTourCore.Api.Identity;
 using VirtualTourCore.Api.Models;
+using VirtualTourCore.Common.ValueObjects;
 using VirtualTourCore.Core.Interfaces;
 using VirtualTourCore.Core.Models;
 using VirtualTourCore.Core.Security.Principal;
@@ -21,10 +23,12 @@ namespace VirtualTourCore.Api.Controllers
         // GET: Account
         private ISecurityService _securityService;
         private ILookupService _lookupService;
-        public AccountController(ISecurityService securityService, ILookupService lookupService)
+        private IAdminService _adminService;
+        public AccountController(ISecurityService securityService, ILookupService lookupService, IAdminService adminService)
         {
             _securityService = securityService;
             _lookupService = lookupService;
+            _adminService = adminService;
         }
 
         [Authorize]
@@ -41,10 +45,15 @@ namespace VirtualTourCore.Api.Controllers
         {
             return View();
         }
-        public ActionResult Register()
+        public ActionResult Register(string q)
         {
             var regModel = new RegisterBindingModel();
-            if (User.IsInRole("Admin"))
+            if (!string.IsNullOrWhiteSpace(q))
+            {
+                var jsonRegModel = _adminService.DecryptStringAES(q);
+                regModel = JsonConvert.DeserializeObject<RegisterBindingModel>(jsonRegModel);
+            }
+            else if (User.IsInRole("Admin"))
             {
                 regModel.RegistrationCode = IdentityService.GetUserCodeFromClaim(User);
             }

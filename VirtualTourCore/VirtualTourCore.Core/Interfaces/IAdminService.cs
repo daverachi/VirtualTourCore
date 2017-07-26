@@ -24,5 +24,6 @@ namespace VirtualTourCore.Core.Interfaces
         string DeleteTour(Tour tour);
         void UpdateTourLocations(List<Tour> tours, int userId);
         string IssueInvitation(int id, string email);
+        string DecryptStringAES(string cipherText);
     }
 }

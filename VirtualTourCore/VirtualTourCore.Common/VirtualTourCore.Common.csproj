@@ -127,6 +127,7 @@
     <Compile Include="ValueObjects\LocationDTO.cs" />
     <Compile Include="ValueObjects\NavigationBreadCrumbVO.cs" />
     <Compile Include="Utilities\PasswordHasher.cs" />
+    <Compile Include="ValueObjects\RegisterDTO.cs" />
     <Compile Include="ValueObjects\TourDTO.cs" />
   </ItemGroup>
   <ItemGroup />

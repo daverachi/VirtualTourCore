@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
+using System.Security.Cryptography;
 using System.Transactions;
 using System.Web;
 using VirtualTourCore.Common.Helper;
 using VirtualTourCore.Common.Utilities;
+using VirtualTourCore.Common.ValueObjects;
 using VirtualTourCore.Core.Interfaces;
 using VirtualTourCore.Core.Models;
 
@@ -455,7 +457,7 @@ namespace VirtualTourCore.Core.Services
         #endregion
 
         #region Registration Management
-        internal static void SendRegistrationEmail(RegistrationCode registrationCode, string emailAddress)
+        internal void SendRegistrationEmail(RegistrationCode registrationCode, string emailAddress, Client client)
         {
             string smtpAddress = "smtp.mail.yahoo.com";
             int portNumber = 587;
@@ -465,10 +467,18 @@ namespace VirtualTourCore.Core.Services
             string password = @"6u\67\8[6+Cz2_9*Y]7DvTnG3EJ9#k@}";
             string emailTo = emailAddress;
             string subject = "Virtual Tour Registration Code";
+            RegisterDTO newReg = new RegisterDTO {
+                Email = emailAddress,
+                RegistrationCode = registrationCode.Guid.ToString(),
+                Username = emailAddress.Split('@')[0]
+            };
+            string jsonReg = Newtonsoft.Json.JsonConvert.SerializeObject(newReg);
             string body = File.ReadAllText(System.Web.Hosting.HostingEnvironment.MapPath("~/Views/Shared/EmailInvitation.htm"));
-            //string body = string.Format("Hey, use this code ({0}) to register new users for your account.  This code will expire at {1}", registrationCode.Guid, ((DateTime)registrationCode.CreateDate).AddHours(1));
+            string regLinkQS = string.Format("?q={0}", HttpUtility.UrlEncode(EncryptStringAES(jsonReg)));
+
             body = body.Replace("#RegistrationCodeValue#", registrationCode.Guid.ToString());
-            body = body.Replace("#ExpiryDateTimeValue#", ((DateTime)registrationCode.CreateDate).AddHours(1).ToString());
+            body = body.Replace("#RegistrationURI#", string.Format("{0}{1}", CommonConfiguration.Configuration.AdminPortalRegistrationURI, regLinkQS));
+            body = body.Replace("#ClientName#", client.Name);
 
 
             using (MailMessage mail = new MailMessage())
@@ -498,11 +508,143 @@ namespace VirtualTourCore.Core.Services
             string result = "Failed to complete.  Contact Support if issue continues.";
             if(_registrationCodeRepository.Create(id, out regCode))
             {
-                SendRegistrationEmail(regCode, email);
+                var client = _clientRepository.GetById(id);
+                SendRegistrationEmail(regCode, email, client);
                 result = "";
             }
             return result;
 
+        }
+        //While an app specific salt is not the best practice for
+        //password based encryption, it's probably safe enough as long as
+        //it is truly uncommon. Also too much work to alter this answer otherwise.
+        private byte[] _salt = new byte[] { 50, 111, 8, 53, 86, 35, 9, 7 };
+        private string _secret = "BhxZfq@R3NS8_Un%_6@UhW*$8CP4kgX-MHL%J*=R*hZx?ZPRyx@Xb9N8!KtR!!AU";
+
+        /// <summary>
+        /// Encrypt the given string using AES.  The string can be decrypted using 
+        /// DecryptStringAES().  The sharedSecret parameters must match.
+        /// </summary>
+        /// <param name="plainText">The text to encrypt.</param>
+        /// <param name="sharedSecret">A password used to generate a key for encryption.</param>
+        public string EncryptStringAES(string plainText)
+        {
+            if (string.IsNullOrEmpty(plainText))
+                throw new ArgumentNullException("plainText");
+            string outStr = null;                       // Encrypted string to return
+            RijndaelManaged aesAlg = null;              // RijndaelManaged object used to encrypt the data.
+
+            try
+            {
+                // generate the key from the shared secret and the salt
+                Rfc2898DeriveBytes key = new Rfc2898DeriveBytes(_secret, _salt);
+
+                // Create a RijndaelManaged object
+                aesAlg = new RijndaelManaged();
+                aesAlg.Key = key.GetBytes(aesAlg.KeySize / 8);
+
+                // Create a decryptor to perform the stream transform.
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                // Create the streams used for encryption.
+                using (MemoryStream msEncrypt = new MemoryStream())
+                {
+                    // prepend the IV
+                    msEncrypt.Write(BitConverter.GetBytes(aesAlg.IV.Length), 0, sizeof(int));
+                    msEncrypt.Write(aesAlg.IV, 0, aesAlg.IV.Length);
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        {
+                            //Write all data to the stream.
+                            swEncrypt.Write(plainText);
+                        }
+                    }
+                    outStr = Convert.ToBase64String(msEncrypt.ToArray());
+                }
+            }
+            finally
+            {
+                // Clear the RijndaelManaged object.
+                if (aesAlg != null)
+                    aesAlg.Clear();
+            }
+
+            // Return the encrypted bytes from the memory stream.
+            return outStr;
+        }
+
+        /// <summary>
+        /// Decrypt the given string.  Assumes the string was encrypted using 
+        /// EncryptStringAES(), using an identical sharedSecret.
+        /// </summary>
+        /// <param name="cipherText">The text to decrypt.</param>
+        /// <param name="sharedSecret">A password used to generate a key for decryption.</param>
+        public string DecryptStringAES(string cipherText)
+        {
+            if (string.IsNullOrEmpty(cipherText))
+                throw new ArgumentNullException("cipherText");
+
+            // Declare the RijndaelManaged object
+            // used to decrypt the data.
+            RijndaelManaged aesAlg = null;
+
+            // Declare the string used to hold
+            // the decrypted text.
+            string plaintext = null;
+
+            try
+            {
+                // generate the key from the shared secret and the salt
+                Rfc2898DeriveBytes key = new Rfc2898DeriveBytes(_secret, _salt);
+
+                // Create the streams used for decryption.                
+                byte[] bytes = Convert.FromBase64String(cipherText);
+                using (MemoryStream msDecrypt = new MemoryStream(bytes))
+                {
+                    // Create a RijndaelManaged object
+                    // with the specified key and IV.
+                    aesAlg = new RijndaelManaged();
+                    aesAlg.Key = key.GetBytes(aesAlg.KeySize / 8);
+                    // Get the initialization vector from the encrypted stream
+                    aesAlg.IV = ReadByteArray(msDecrypt);
+                    // Create a decrytor to perform the stream transform.
+                    ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+
+                            // Read the decrypted bytes from the decrypting stream
+                            // and place them in a string.
+                            plaintext = srDecrypt.ReadToEnd();
+                    }
+                }
+            }
+            finally
+            {
+                // Clear the RijndaelManaged object.
+                if (aesAlg != null)
+                    aesAlg.Clear();
+            }
+
+            return plaintext;
+        }
+
+        private byte[] ReadByteArray(Stream s)
+        {
+            byte[] rawLength = new byte[sizeof(int)];
+            if (s.Read(rawLength, 0, rawLength.Length) != rawLength.Length)
+            {
+                throw new SystemException("Stream did not contain properly formatted byte array");
+            }
+
+            byte[] buffer = new byte[BitConverter.ToInt32(rawLength, 0)];
+            if (s.Read(buffer, 0, buffer.Length) != buffer.Length)
+            {
+                throw new SystemException("Did not read byte array properly");
+            }
+
+            return buffer;
         }
         #endregion
     }
