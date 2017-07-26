@@ -7,7 +7,6 @@ namespace VirtualTourCore.Core.Interfaces
 {
     public interface IClientRepository : IBaseRepository<Client>
     {
-        IEnumerable<Client> Get();
         IEnumerable<Client> GetByGuids(IEnumerable<Guid> guids);
         Client GetByGuid(Guid guid);
     }

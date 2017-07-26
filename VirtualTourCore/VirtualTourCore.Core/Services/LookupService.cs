@@ -8,6 +8,7 @@ namespace VirtualTourCore.Core.Services
 {
     public class LookupService : ILookupService
     {
+        #region Private Members
         private IClientRepository _clientRepository;
         private ILocationRepository _locationRepository;
         private IAreaRepository _areaRepository;
@@ -15,6 +16,9 @@ namespace VirtualTourCore.Core.Services
         private IAssetStoreRepository _assetStoreRepository;
         private IRegistrationCodeRepository _registrationCodeRepository;
         private ISecurityUserRepository _securityUserRepository;
+        private IItemStatusRepository _itemStatusRepository;
+        private ICustomizationRepository _customizationRepository;
+        #endregion
         public LookupService(
             IClientRepository clientRepository,
             ILocationRepository locationRepository,
@@ -22,7 +26,9 @@ namespace VirtualTourCore.Core.Services
             ITourRepository tourRepository,
             IAssetStoreRepository assetStoreRepository,
             IRegistrationCodeRepository registrationCodeRepository,
-            ISecurityUserRepository securityUserRepository
+            ISecurityUserRepository securityUserRepository,
+            IItemStatusRepository itemStatusRepository,
+            ICustomizationRepository customizationRepository
             )
         {
             _clientRepository = clientRepository;
@@ -32,7 +38,11 @@ namespace VirtualTourCore.Core.Services
             _assetStoreRepository = assetStoreRepository;
             _registrationCodeRepository = registrationCodeRepository;
             _securityUserRepository = securityUserRepository;
+            _itemStatusRepository = itemStatusRepository;
+            _customizationRepository = customizationRepository;
         }
+
+        #region Client
         public Client GetClientByGuid(Guid guid)
         {
             var client = _clientRepository.GetByGuid(guid);
@@ -40,6 +50,8 @@ namespace VirtualTourCore.Core.Services
             {
                 client.AssetLogo = PopulateAssetStoreById(client.AssetLogoId);
                 client.AssetProfile = PopulateAssetStoreById(client.AssetProfileId);
+                client.Customization = PopulateCustomizationById(client.CustomizationId);
+                client.ItemStatus = PopulateItemStatusById(client.ItemStatusId);
             }
             return client;
         }
@@ -50,6 +62,8 @@ namespace VirtualTourCore.Core.Services
             {
                 client.AssetLogo = PopulateAssetStoreById(client.AssetLogoId);
                 client.AssetProfile = PopulateAssetStoreById(client.AssetProfileId);
+                client.Customization = PopulateCustomizationById(client.CustomizationId);
+                client.ItemStatus = PopulateItemStatusById(client.ItemStatusId);
             }
             return client;
         }
@@ -61,6 +75,9 @@ namespace VirtualTourCore.Core.Services
         {
             return _clientRepository.Get();
         }
+        #endregion
+
+        #region Location
         public IEnumerable<Location> GetLocationsByClientId(int id)
         {
             var locations = _locationRepository.GetByClientId(id);
@@ -79,10 +96,14 @@ namespace VirtualTourCore.Core.Services
             if(location != null)
             {
                 location.AssetLocation = PopulateAssetStoreById(location.AssetLocationId);
+                location.Customization = PopulateCustomizationById(location.CustomizationId);
+                location.ItemStatus = PopulateItemStatusById(location.ItemStatusId);
             }
             return location;
         }
+        #endregion
 
+        #region Area
         public IEnumerable<Area> GetAreasByClientId(int id)
         {
             return _areaRepository.GetByClientId(id);
@@ -94,6 +115,8 @@ namespace VirtualTourCore.Core.Services
             if(area != null)
             {
                 area.AssetArea = PopulateAssetStoreById(area.AssetAreaId);
+                area.Customization = PopulateCustomizationById(area.CustomizationId);
+                area.ItemStatus = PopulateItemStatusById(area.ItemStatusId);
             }
             return area;
         }
@@ -108,6 +131,9 @@ namespace VirtualTourCore.Core.Services
             return areas;
         }
 
+        #endregion
+
+        #region Tour
         public IEnumerable<Tour> GetToursByAreaId(int areaId)
         {
             var tours = _tourRepository.GetByAreaId(areaId).ToList();
@@ -125,10 +151,71 @@ namespace VirtualTourCore.Core.Services
             {
                 tour.AssetTourThumbnail = PopulateAssetStoreById(tour.AssetTourThumbnailId);
                 tour.KrPanoTour = PopulateAssetStoreById(tour.KrPanoTourId);
+                tour.Customization = PopulateCustomizationById(tour.CustomizationId);
+                tour.ItemStatus = PopulateItemStatusById(tour.ItemStatusId);
             }
             return tour;
         }
 
+        #endregion
+
+        #region ItemStatus
+        public IEnumerable<ItemStatus> GetItemStatuses()
+        {
+            return _itemStatusRepository.Get();
+        }
+
+        #endregion
+
+        #region Customization
+        public Customization GetCustomizationById(int? id)
+        {
+            return PopulateCustomizationById(id);
+        }
+        #endregion
+
+        #region Validity Helpers
+        public bool ValidRegistrationCode(string code)
+        {
+            bool valid = false;
+            Guid guid = Guid.NewGuid();
+            if(Guid.TryParse(code, out guid))
+            {
+                valid = _registrationCodeRepository.GetByGuid(guid) != null ? true : false;
+            }
+            return valid;
+        }
+        public bool ValidEmail(string email)
+        {
+            return _securityUserRepository.GetByEmail(email) == null ? true : false;
+        }
+        public bool ValidUsername(string username)
+        {
+            return _securityUserRepository.GetByUsername(username) == null ? true : false;
+        }
+
+        #endregion
+
+        #region Private Helper Methods
+        private ItemStatus PopulateItemStatusById(int? itemStatusId)
+        {
+            ItemStatus itemStatus = null;
+            if (itemStatusId != null && itemStatusId > 0)
+            {
+                itemStatus = _itemStatusRepository.GetById(itemStatusId.Value);
+            }
+            return itemStatus;
+        }
+
+        private Customization PopulateCustomizationById(int? customizationId)
+        {
+            Customization customization = null;
+            if (customizationId != null && customizationId > 0)
+            {
+                customization = _customizationRepository.GetById(customizationId.Value);
+            }
+            return customization;
+        }
         private AssetStore PopulateAssetStoreById(int? assetStoreId)
         {
             AssetStore asset = null;
@@ -153,24 +240,6 @@ namespace VirtualTourCore.Core.Services
             }
             return _validClientIds;
         }
-
-        public bool ValidRegistrationCode(string code)
-        {
-            bool valid = false;
-            Guid guid = Guid.NewGuid();
-            if(Guid.TryParse(code, out guid))
-            {
-                valid = _registrationCodeRepository.GetByGuid(guid) != null ? true : false;
-            }
-            return valid;
-        }
-        public bool ValidEmail(string email)
-        {
-            return _securityUserRepository.GetByEmail(email) == null ? true : false;
-        }
-        public bool ValidUsername(string username)
-        {
-            return _securityUserRepository.GetByUsername(username) == null ? true : false;
-        }
+        #endregion
     }
 }

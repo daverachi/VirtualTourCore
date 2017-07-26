@@ -153,7 +153,6 @@
     <Compile Include="Mapping\TourMapper.cs" />
     <Compile Include="Models\Area.cs" />
     <Compile Include="Models\AssetStore.cs" />
-    <Compile Include="Models\Base\ClientEntity.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\Customization.cs" />
     <Compile Include="Models\ItemStatus.cs" />
@@ -198,7 +197,9 @@
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\SecurityService.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Models\Base\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VirtualTourCore.Common\VirtualTourCore.Common.csproj">
       <Project>{A8B1A192-AAA8-4E93-9D11-4692A44A07C7}</Project>
