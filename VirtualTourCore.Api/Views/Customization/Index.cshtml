@@ -1,0 +1,35 @@
+﻿@model VirtualTourCore.Core.Models.Customization
+
+
+@using (Html.BeginForm("ModifyClients", "Client", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return GetDescription()", @id = "clientForm" }))
+{
+    <hr />
+    <div class="row">
+        <div class="col-xs-8">
+            <div class="adminHeadingText">Customize @Model.EntityName Look and Feel</div>
+            <small>CSS Cascades and Javascript will only be applied to the defined tier</small>
+        </div>
+        <div class="col-xs-2">
+            <button type="submit" class="btn btn-success col-xs-12">Apply Updates</button>
+        </div>
+        <div class="col-xs-2">
+            <a href="" class="btn btn-danger col-xs-12">Cancel</a>
+        </div>
+    </div>
+    <hr />
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.Id)
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="row">
+        <div class="form-group col-lg-12">
+            @Html.Label("Custom CSS")
+            @Html.TextAreaFor(model => model.CustomCSS, 20, 6, new { @placeholder = "Add your custom styling here.", @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.CustomCSS, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-lg-12">
+            @Html.Label("Custom Javascript")
+            @Html.TextAreaFor(model => model.CustomJS, 20, 6, new { @placeholder = "Add your custom Javascript here", @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.CustomJS, "", new { @class = "text-danger" })
+        </div>
+    </div>
+}

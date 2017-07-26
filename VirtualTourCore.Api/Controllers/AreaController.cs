@@ -91,7 +91,7 @@ namespace VirtualTourCore.Api.Controllers
                 _adminService.UpdateArea(area, areaMap);
             }
             // todo : do something about success or failure
-            return RedirectToAction("ClientAreas", new { cId = area.ClientId, id = area.LocationId });
+            return RedirectToAction("Details", new { id = area.Id });
         }
 
         [HttpPost]

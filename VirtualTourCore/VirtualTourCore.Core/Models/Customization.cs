@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using VirtualTourCore.Common.DataAccess;
 
 namespace VirtualTourCore.Core.Models
@@ -11,5 +7,7 @@ namespace VirtualTourCore.Core.Models
     {
         public string CustomCSS { get; set; }
         public string CustomJS { get; set; }
+        [NotMapped]
+        public string EntityName { get; set; }
     }
 }

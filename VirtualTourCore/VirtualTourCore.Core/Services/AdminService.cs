@@ -22,6 +22,7 @@ namespace VirtualTourCore.Core.Services
         private IAssetStoreRepository _assetStoreRepository;
         private IFileService _fileService;
         private ISecurityUserClientRepository _securityUserClientRepository;
+        private ICustomizationRepository _customizationRepository;
 
         public AdminService(
             IClientRepository clientRepository,
@@ -31,7 +32,8 @@ namespace VirtualTourCore.Core.Services
             ITourRepository tourRepository,
             IAssetStoreRepository assetStoreRepository,
             IFileService fileService,
-            ISecurityUserClientRepository securityUserClientRepository
+            ISecurityUserClientRepository securityUserClientRepository,
+            ICustomizationRepository customizationRepository
             )
         {
             _clientRepository = clientRepository;
@@ -42,6 +44,7 @@ namespace VirtualTourCore.Core.Services
             _assetStoreRepository = assetStoreRepository;
             _fileService = fileService;
             _securityUserClientRepository = securityUserClientRepository;
+            _customizationRepository = customizationRepository;
         }
 
         #region Client CRUD
@@ -56,7 +59,7 @@ namespace VirtualTourCore.Core.Services
             }))
             {
                 var clientId = _clientRepository.Create(client);
-
+                client.CustomizationId = ProcessIncomingCustomization(client.CreateUserId.Value, client.CustomizationId, client.Customization);
                 client.AssetLogoId = ProcessIncomingImage(client.Id, client.CreateUserId.Value, client.AssetLogoId, null, logo);
                 client.AssetProfileId = ProcessIncomingImage(client.Id, client.CreateUserId.Value, client.AssetProfileId, null, profile);
                 if (client.AssetLogoId != null || client.AssetProfileId != null)
@@ -72,6 +75,31 @@ namespace VirtualTourCore.Core.Services
                 return clientId;
             }
         }
+
+        private int? ProcessIncomingCustomization(int userId, int? customizationId, Customization customization)
+        {
+            var id = customizationId;
+            if(customization != null)
+            {
+                if (id == null)
+                {
+                    //create customization
+                    customization.CreateUserId = userId;
+                    id =_customizationRepository.Create(customization);
+                }
+                else
+                {
+                    //update existing
+                    var existingCustomization = _customizationRepository.GetById(id.Value);
+                    existingCustomization.CustomCSS = customization.CustomCSS;
+                    existingCustomization.CustomJS = customization.CustomJS;
+                    existingCustomization.UpdateUserId = userId;
+                    id = _customizationRepository.UpdateEntity(existingCustomization);
+                }
+            }
+            return id;
+        }
+
         public int? UpdateClient(Client client, HttpPostedFileBase logo, HttpPostedFileBase profile)
         {
             int? resultingId = null;
@@ -98,6 +126,7 @@ namespace VirtualTourCore.Core.Services
             {
                 existingClient.AssetLogoId = ProcessIncomingImage(existingClient.Id, existingClient.CreateUserId.Value, client.AssetLogoId, existingClient.AssetLogoId, logo);
                 existingClient.AssetProfileId = ProcessIncomingImage(existingClient.Id, existingClient.CreateUserId.Value, client.AssetProfileId, existingClient.AssetProfileId, profile);
+                existingClient.CustomizationId = ProcessIncomingCustomization(existingClient.CreateUserId.Value, existingClient.CustomizationId, client.Customization);
                 resultingId = _clientRepository.UpdateEntity(existingClient);
                 if (resultingId != null)
                 {

@@ -89,7 +89,7 @@ namespace VirtualTourCore.Api.Controllers
                 location.UpdateUserId = IdentityService.GetUserIdFromClaim(User);
                 _adminService.UpdateLocation(location, locationImage);
             }
-            return RedirectToAction("ClientLocations", new { id = location.ClientId });
+            return RedirectToAction("Details", new { id = location.Id });
         }
 
         [HttpPost]

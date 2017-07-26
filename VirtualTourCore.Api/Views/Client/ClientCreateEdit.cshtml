@@ -108,20 +108,71 @@ else
     @Html.HiddenFor(model => model.Description)
     @Html.HiddenFor(model => model.DescriptionHtml)
     @Html.HiddenFor(model => model.DescriptionJson)
+    @Html.HiddenFor(model => model.Customization.CreateUserId)
+    @Html.HiddenFor(model => model.Customization.Id)
+    @Html.HiddenFor(model=> model.Customization.CreateDate)
+    @*@Html.LabelFor(model => model.Description)*@
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingOne">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        @Html.Label("Description")
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                <div class="panel-body">
+                    <div id="clientDescription"></div>                
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingTwo">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        @Html.Label("Custom CSS")
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                <div class="form-group col-lg-12">
+                    @Html.TextAreaFor(model => model.Customization.CustomCSS, 20, 6, new { @placeholder = "Add your custom styling here.", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Customization.CustomCSS, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingThree">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        @Html.Label("Custom Javascript")
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                <div class="panel-body">
+                    <div class="form-group col-lg-12">
+                        @Html.TextAreaFor(model => model.Customization.CustomJS, 20, 6, new { @placeholder = "Add your custom Javascript here", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Customization.CustomJS, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     }
-    @Html.LabelFor(model => model.Description)
-    <div id="clientDescription"></div>
-
     <div class="row">
         <div class="form-group col-xs-12">
-            @if (Model != null && Model.Id == 0)
-            {
-                <input type="submit" onclick="$('#clientForm').submit()" value="Create" class="btn btn-default" />
-            }
-            else
-            {
-                <input type="submit" onclick="$('#clientForm').submit()" value="Update" class="btn btn-default" />
-            }
+            <div style="margin-top:10px">
+                @if (Model != null && Model.Id == 0)
+                {
+                    <input type="submit" onclick="$('#clientForm').submit()" value="Create" class="btn btn-default" />
+                }
+                else
+                {
+                    <input type="submit" onclick="$('#clientForm').submit()" value="Update" class="btn btn-default" />
+                }
+            </div>
         </div>
         <div class="col-xs-12">
             @Html.ActionLink("Back to List", "Index")

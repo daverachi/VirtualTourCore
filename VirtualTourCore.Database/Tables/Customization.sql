@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [dbo].[Customization]
 (
 	Id	INT IDENTITY (1, 1) NOT NULL,
-	CustomCSS		NVARCHAR(MAX) NOT NULL,
-	CustomJS		NVARCHAR(MAX) NOT NULL,
+	CustomCSS		NVARCHAR(MAX) NULL,
+	CustomJS		NVARCHAR(MAX) NULL,
     CreateUserId    INT			  NOT NULL,
     CreateDate      DATETIME      NOT NULL,
     UpdateUserID    INT			  NULL,

@@ -95,7 +95,7 @@ namespace VirtualTourCore.Api.Controllers
                 _adminService.UpdateTour(tour, tourThumb, krPanoZip);
             }
             // todo : do something about success or failure
-            return RedirectToAction("ClientTours", new { cId = tour.ClientId, id = tour.AreaId });
+            return RedirectToAction("Details", new { id = tour.Id });
         }
 
         [HttpPost]

@@ -155,4 +155,3 @@ F:\Projects\VirtualTourCore\VirtualTourCore.Api\obj\Debug\VirtualTourCore.Api.pd
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\System.Web.Cors.dll
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\System.Web.Http.Cors.dll
 F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\System.Web.Http.Cors.xml
-F:\Projects\VirtualTourCore\VirtualTourCore.Api\bin\AutoMapper.Net4.dll

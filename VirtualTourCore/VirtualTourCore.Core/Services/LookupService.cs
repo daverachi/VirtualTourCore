@@ -188,6 +188,33 @@ namespace VirtualTourCore.Core.Services
         {
             return PopulateCustomizationById(id);
         }
+
+        public Customization PopulateCustomizationBasedOnEntityValues(int clientId, int locationId, int areaId, int tourId, int? customizationId)
+        {
+            Customization customization = PopulateCustomizationById(customizationId) ?? new Customization();
+            if (tourId > 0)
+            {
+                customization.EntityName = _tourRepository.GetById(tourId)?.Name;
+            }
+            else if (areaId > 0)
+            {
+                customization.EntityName = _areaRepository.GetById(areaId)?.Name;
+            }
+            else if (locationId > 0)
+            {
+                customization.EntityName = _locationRepository.GetById(locationId)?.Name;
+            }
+            else if (clientId > 0)
+            {
+                customization.EntityName = _clientRepository.GetById(clientId)?.Name;
+            }
+            if(string.IsNullOrWhiteSpace(customization.EntityName))
+            {
+                customization.EntityName = "Unknown";
+            }
+            return customization;
+        }
+
         #endregion
 
         #region Validity Helpers
@@ -225,7 +252,7 @@ namespace VirtualTourCore.Core.Services
 
         private Customization PopulateCustomizationById(int? customizationId)
         {
-            Customization customization = null;
+            Customization customization = new Customization();
             if (customizationId != null && customizationId > 0)
             {
                 customization = _customizationRepository.GetById(customizationId.Value);

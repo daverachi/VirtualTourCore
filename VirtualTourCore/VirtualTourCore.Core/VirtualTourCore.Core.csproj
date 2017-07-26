@@ -192,7 +192,6 @@
     <Compile Include="Security\SecurityUserIdentity.cs" />
     <Compile Include="Services\AdminService.cs" />
     <Compile Include="Services\FileService.cs" />
-    <Compile Include="Services\IdentityService.cs" />
     <Compile Include="Services\LookupService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\SecurityService.cs" />

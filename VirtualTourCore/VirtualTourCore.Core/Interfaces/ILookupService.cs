@@ -25,5 +25,6 @@ namespace VirtualTourCore.Core.Interfaces
         bool ValidEmail(string code);
         bool ValidUsername(string code);
         IEnumerable<SelectListItem> BuildSelectList(int? currentId);
+        Customization PopulateCustomizationBasedOnEntityValues(int clientId, int locationId, int areaId, int tourId, int? customizationId);
     }
 }
