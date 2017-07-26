@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="DeploymentScripts\CreateAdminCredentials.sql" />
+    <None Include="DeploymentScripts\Populate.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SchemaCompare\Local.scmp" />

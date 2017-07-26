@@ -153,11 +153,15 @@
     <Compile Include="Models\AssetStore.cs" />
     <Compile Include="Models\Base\ClientEntity.cs" />
     <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\Customization.cs" />
+    <Compile Include="Models\ItemStatus.cs" />
     <Compile Include="Models\Location.cs" />
     <Compile Include="Models\ModelMaps\AreaMap.cs" />
     <Compile Include="Models\ModelMaps\AssetStoreMap.cs" />
     <Compile Include="Models\ModelMaps\BaseMap.cs" />
     <Compile Include="Models\ModelMaps\ClientMap.cs" />
+    <Compile Include="Models\ModelMaps\CustomizationMap.cs" />
+    <Compile Include="Models\ModelMaps\ItemStatusMap.cs" />
     <Compile Include="Models\ModelMaps\LocationMap.cs" />
     <Compile Include="Models\ModelMaps\RegistrationCodeMap.cs" />
     <Compile Include="Models\ModelMaps\SecurityUserClientsMap.cs" />

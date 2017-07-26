@@ -1,6 +1,4 @@
-﻿using System.Data.Entity.ModelConfiguration;
-
-namespace VirtualTourCore.Core.Models.ModelMaps
+﻿namespace VirtualTourCore.Core.Models.ModelMaps
 {
     public class ClientMap : BaseEntityMap<Client>
     {

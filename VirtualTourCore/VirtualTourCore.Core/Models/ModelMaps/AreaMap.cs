@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VirtualTourCore.Core.Models.ModelMaps
+﻿namespace VirtualTourCore.Core.Models.ModelMaps
 {
     public class AreaMap : BaseEntityMap<Area>
     {

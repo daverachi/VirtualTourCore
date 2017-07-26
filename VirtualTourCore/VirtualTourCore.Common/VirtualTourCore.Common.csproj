@@ -107,6 +107,7 @@
     <Compile Include="DataAccess\UnitOfWorkBase.cs" />
     <Compile Include="DataAccess\VTCoreEntity.cs" />
     <Compile Include="Enums\FileExtensions.cs" />
+    <Compile Include="Enums\ItemStatus.cs" />
     <Compile Include="Exceptions\Asserter.cs" />
     <Compile Include="Extensions\AutoMapperExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
